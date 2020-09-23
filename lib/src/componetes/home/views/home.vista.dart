@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/home/views/search.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/views/publicaciones.page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accentColor = Theme.of(context).accentColor;
+    final colorBuscar = Theme.of(context).primaryColor;
     return Scaffold(
            body  : GetBuilder<HomeController>(
                    id: 'bottomBar',
@@ -23,7 +24,8 @@ class HomePage extends StatelessWidget {
                              children: <Widget>[
                                    _cortina(),
                                    _logo(),
-                                   _search(accentColor)
+                                   _search(colorBuscar),
+                                 
                              ],
                              ),
                              PublicacionesPage(),
@@ -33,17 +35,6 @@ class HomePage extends StatelessWidget {
                              
                             ],
                      );
-
-                   /*    if(state.page == 1){
-                        return PublicacionesPage();
-                      }
-                      return Stack(
-                             children: <Widget>[
-                                   _cortina(),
-                                   _logo(),
-                                   _search(accentColor)
-                             ],
-                      ); */
                    }
                    ),
            bottomNavigationBar: CurvedNavigationBar(
@@ -88,18 +79,33 @@ Widget _logo() {
   );
 }
 
-Widget _search(Color accentColor) {
-  return Container(
-         height     : 30,
-         alignment  : Alignment(0.0,-0.5),
-         child      : Text('Buscar'),
-         decoration : BoxDecoration(
-                      border: Border.all(
-                              color: accentColor,
-                              style: BorderStyle.solid,
-                              width: 1)
+Widget _search(Color color) {
+  return GestureDetector(
+         child: Align(
+                alignment: Alignment(0.0,0.5),
+                child: Container(
+                       padding    : EdgeInsets.all(10),
+                       width      : Get.width * 0.7,
+                       height     : 55,
+                       alignment  : Alignment.center,
+                       decoration : BoxDecoration(
+                                    color        : Colors.white,
+                                    borderRadius : BorderRadius.circular(60),
+                                    border       : Border.all(color: color,width: 2.5)
+                                   ),
+                       child     : Row(
+                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                   mainAxisSize: MainAxisSize.max,
+                                   children: <Widget>[
+                                     Text('Buscar',style:TextStyle(fontSize: 20,color: color)),
+                                     Icon(Icons.search,color: color)
+                                   ],
+                       ),
+                     ),
          ),
+         onTap: () => Get.to(SearchPage())
   );
 }
+
 
 }
