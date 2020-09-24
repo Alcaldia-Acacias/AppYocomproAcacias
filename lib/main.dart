@@ -1,5 +1,5 @@
-import 'package:comproacacias/src/componetes/home/views/home.vista.dart';
 import 'package:comproacacias/src/componetes/inyection.dependeci.dart';
+import 'package:comproacacias/src/componetes/login/views/login.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         )
       ),
     
-      home: HomePage()
+      home: LoginPage()
     );
   }
 }
