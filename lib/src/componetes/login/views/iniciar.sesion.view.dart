@@ -23,39 +23,34 @@ class LoginFormPage extends StatelessWidget {
                                     return Padding(
                                            padding: EdgeInsets.all(40.0),
                                            child: Form(
-                                                  key  : state.formKey,
+                                                  key  : state.formKeyLogin,
                                                   child: Column(
                                                          children: <Widget>[
                                                             Image.asset(
                                                            'assets/imagenes/logo.png',
-                                                            height : 300,
-                                                            width  : 300,
+                                                            height : 270,
+                                                            width  : 270,
                                                             ),
                                                             InputForm(
                                                             placeholder       : "Usuario",
-                                                            controller        : state.usuarioController,
-                                                            foco              : state.usuarioFoco,
+                                                            controller        : state.usuarioLoginController,
+                                                            foco              : state.usuarioFocoLogin,
+                                                            leftIcon          : Icons.person,
                                                             requerido         : true,
                                                             isEmail           : true,
-                                                            onEditingComplete : ()=>FocusScope.of(context).requestFocus(state.passwordFoco)
+                                                            onEditingComplete : ()=>FocusScope.of(context).requestFocus(state.passwordFocoLogin)
                                                             ),
                                                             InputForm(
-                                                            placeholder : "Contraseña",
-                                                            controller  : state.passwordController,
-                                                            foco        : state.passwordFoco,
-                                                            obscure     : true,
-                                                            lastInput   : true,
-                                                            requerido   : true,
-                                                            onEditingComplete: ()=> _submit(state.formKey),
+                                                            placeholder       : "Contraseña",
+                                                            controller        : state.passwordLoginController,
+                                                            foco              : state.passwordFocoLogin,
+                                                            leftIcon          : Icons.lock_outline,
+                                                            obscure           : true,
+                                                            lastInput         : true,
+                                                            requerido         : true,
+                                                            onEditingComplete : ()=> _submit(state.formKeyLogin),
                                                             ),
-                                                            MaterialButton(
-                                                            textColor: Colors.white,
-                                                            padding: EdgeInsets.all(20),
-                                                            child: Text('Ingresar'),
-                                                            color: Get.theme.primaryColor,
-                                                            minWidth: double.maxFinite,
-                                                            onPressed:() => _submit(state.formKey)
-                                                            )
+                                                            _buttonSubmit(state.formKeyLogin)
 
                                                          ],
                                              ) 
@@ -68,9 +63,19 @@ class LoginFormPage extends StatelessWidget {
            ),
     );
   }
-
-  _submit(GlobalKey<FormState> formKey) {
-    if(formKey.currentState.validate())
-     print('hola');
+  _buttonSubmit(GlobalKey<FormState> formKey) {
+    return   MaterialButton(
+             textColor : Colors.white,
+             padding   : EdgeInsets.all(15),
+             child     : Text('Ingresar'),
+             color     : Get.theme.accentColor,
+             minWidth  : double.maxFinite,
+             onPressed :() => _submit(formKey)
+    );
   }
+   _submit(GlobalKey<FormState> formKey) {
+    if(formKey.currentState.validate())
+       Get.find<LoginController>().submitFormLogin();
+  }
+
 }

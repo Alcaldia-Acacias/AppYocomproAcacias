@@ -6,22 +6,29 @@ class InputForm extends StatelessWidget {
 
   final TextEditingController controller;
   final String placeholder;
-  final IconData icon;
+  final IconData leftIcon,rightIcon;
   final FocusNode foco;
-  final bool lastInput,requerido,obscure,isEmail;
-  final Function onEditingComplete;
+  final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon;
+  final Function onEditingComplete,onButtonIcon;
+ 
+
+
 
   InputForm({
   Key key, 
   this.placeholder, 
-  this.icon, 
+  this.leftIcon, 
+  this.rightIcon, 
   this.foco, 
   this.controller,
   this.lastInput = false,
   this.obscure   = false,
   this.requerido = false,
   this.isEmail   = false,
-  this.onEditingComplete
+  this.readOnly  = false,
+  this.isButtonIcon  = false,
+  this.onEditingComplete,
+  this.onButtonIcon
   })
       : super(key: key);
 
@@ -30,6 +37,7 @@ class InputForm extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       child: TextFormField(
+             readOnly          : readOnly,
              focusNode         : foco,
              textInputAction   : lastInput
                                  ?
@@ -40,13 +48,41 @@ class InputForm extends StatelessWidget {
              controller        : controller,
              onEditingComplete : onEditingComplete,
              decoration        : InputDecoration(
-                                 hintText : placeholder,
-                                 border   : OutlineInputBorder()
+                                 suffixIcon     : rightIcon == null
+                                                  ?
+                                                  null
+                                                  :
+                                                  isButtonIcon
+                                                  ?
+                                                  IconButton(
+                                                  icon: Icon(rightIcon), 
+                                                  onPressed: onButtonIcon
+                                                  )
+                                                  :
+                                                  Icon(rightIcon),
+                                 prefixIcon      :leftIcon == null
+                                                  ?
+                                                  null
+                                                  :
+                                                  isButtonIcon
+                                                  ?
+                                                  IconButton(
+                                                  icon: Icon(leftIcon), 
+                                                  onPressed: onButtonIcon
+                                                  )
+                                                  :
+                                                  Icon(leftIcon),
+                                 contentPadding : EdgeInsets.all(10),
+                                 hintText       : placeholder,
+                                 border         : OutlineInputBorder()
              ),
              validator         : (texto){
 
-                                 if(texto.isEmpty && requerido) return "es requerido";
-                                 if(!GetUtils.isEmail(texto) && isEmail) return "no es un correo valido";
+                                 if(texto.isEmpty && requerido) 
+                                   return "es requerido";
+                                 if(!GetUtils.isEmail(texto) && isEmail) 
+                                   return "no es un correo valido";
+                                 return null;
                                     
              },
       ),

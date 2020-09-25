@@ -1,14 +1,17 @@
+import 'package:comproacacias/src/componetes/home/views/home.vista.dart';
 import 'package:comproacacias/src/componetes/inyection.dependeci.dart';
 import 'package:comproacacias/src/componetes/login/views/login.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+//import 'package:intl/locale.dart';
 
 void main() {
   Intl.defaultLocale = 'es_ES';
-  initializeDateFormatting('es_ES', null);
+
   Dependecias.init();
   runApp(MyApp());
 }
@@ -24,6 +27,13 @@ class MyApp extends StatelessWidget {
       
    
     return GetMaterialApp(
+      localizationsDelegates: [
+       GlobalMaterialLocalizations.delegate,
+       GlobalWidgetsLocalizations.delegate,
+       GlobalCupertinoLocalizations.delegate,
+       DefaultCupertinoLocalizations.delegate
+      ],
+      supportedLocales: [  const Locale('es'),],
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -42,7 +52,7 @@ class MyApp extends StatelessWidget {
         )
       ),
     
-      home: LoginPage()
+      home: HomePage()
     );
   }
 }

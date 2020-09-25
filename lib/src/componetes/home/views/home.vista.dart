@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:comproacacias/src/componetes/categorias/views/categorias.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/home/views/search.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/views/publicaciones.page.dart';
@@ -29,7 +30,7 @@ class HomePage extends StatelessWidget {
                              ],
                              ),
                              PublicacionesPage(),
-                             Container(),
+                             CategoriasPage(),
                              Container(),
                              Container()
                              

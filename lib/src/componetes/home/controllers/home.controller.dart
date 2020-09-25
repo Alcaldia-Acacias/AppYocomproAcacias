@@ -14,9 +14,13 @@ class HomeController extends GetxController {
 
  void selectPage(int page) {
     this.page = page;
-    if (page == 0) {
-      controller.reset();
-      controller.forward();
+    switch (page) {
+      case  0  : controller?.reset();
+                 controller?.forward();
+                 break;
+      case  2  : print('object');
+                 break;
+      default:
     }
     update(['bottomBar']);
   }
