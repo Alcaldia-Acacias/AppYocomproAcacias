@@ -27,10 +27,18 @@ class PublicacionesRepositorio {
   }
 
   Future<List<Usuario>> getUsuarioLike(int idPublicacion) async {
-    final response =
-        await _dio.get('/publicaciones/likes/$idPublicacion');
+    final response = await _dio.get('/publicaciones/likes/$idPublicacion');
     return response.data
         .map<Usuario>((usuario) => Usuario.toJson(usuario))
+        .toList();
+  }
+
+  Future<List<Publicacion>> getPublicacionesByEmpresa(int id) async {
+    Dio _dio = Get.find<Dio>();
+    final response = await _dio.get('/empresas/publicacion/$id');
+    final publicaciones = response.data;
+    return publicaciones
+        .map<Publicacion>((e) => Publicacion.toJson(e))
         .toList();
   }
 }

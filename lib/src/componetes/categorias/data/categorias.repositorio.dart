@@ -1,4 +1,4 @@
-import 'package:comproacacias/src/componetes/publicaciones/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 

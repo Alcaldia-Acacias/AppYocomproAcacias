@@ -8,11 +8,13 @@ class PublicacionesController extends GetxController {
   final PublicacionesRepositorio repositorio;
 
   PublicacionesController({this.repositorio});
+
   List<Publicacion> publicaciones = [];
+  List<Publicacion> publicacionesByempresa = [];
   ScrollController controller;
   int _pagina = 0;
   TextEditingController comentarioController = TextEditingController();
-  bool loading;
+  bool loading = true;
 
   @override
   void onInit() async {
@@ -25,21 +27,32 @@ class PublicacionesController extends GetxController {
     this.getPublicaciones();
   }
 
-  void getLikesByPublicacion(int idPublicacion) async {
-    print(idPublicacion);
+  void getLikesByPublicacion(int idPublicacion, [bool onlyEmpresa]) async {
     this.loading = true;
-    final index = this.getIndexPublicacion(idPublicacion);
-    this.publicaciones[index].usuariosLike =
-        await this.repositorio.getUsuarioLike(idPublicacion);
-    this.loading = false; 
+    if (onlyEmpresa) {
+      final index = getIndexPublicacionByEmpresa(idPublicacion);
+      this.publicacionesByempresa[index].usuariosLike =
+          await this.repositorio.getUsuarioLike(idPublicacion);
+    } else {
+      final index = getIndexPublicacion(idPublicacion);
+      this.publicaciones[index].usuariosLike =
+          await this.repositorio.getUsuarioLike(idPublicacion);
+    }
+    this.loading = false;
     update(['likes']);
   }
 
-  void getComentarios(int idPublicacion) async {
+  void getComentarios(int idPublicacion, [bool onlyEmpresa]) async {
     this.loading = true;
-    final index = this.getIndexPublicacion(idPublicacion);
-    this.publicaciones[index].comentarios =
-        await this.repositorio.getComentariosByPublicacion(idPublicacion);
+    if (onlyEmpresa) {
+      final index = this.getIndexPublicacionByEmpresa(idPublicacion);
+      this.publicacionesByempresa[index].comentarios =
+          await this.repositorio.getComentariosByPublicacion(idPublicacion);
+    } else {
+      final index = this.getIndexPublicacion(idPublicacion);
+      this.publicaciones[index].comentarios =
+          await this.repositorio.getComentariosByPublicacion(idPublicacion);
+    }
     this.loading = false;
     update(['comentarios']);
   }
@@ -69,4 +82,16 @@ class PublicacionesController extends GetxController {
 
   int getIndexPublicacion(int id) =>
       this.publicaciones.indexWhere((publicacion) => publicacion.id == id);
+
+  int getIndexPublicacionByEmpresa(int id) => this
+      .publicacionesByempresa
+      .indexWhere((publicacion) => publicacion.id == id);
+
+  void getPublicacionesByempresa(int id) async {
+    this.loading = true;
+    this.publicacionesByempresa =
+        await repositorio.getPublicacionesByEmpresa(id);
+    this.loading = false;
+    update(['empresa']);
+  }
 }

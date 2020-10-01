@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:comproacacias/src/componetes/empresas/views/perfil.empresa.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
@@ -11,7 +12,8 @@ class PublicacionCard extends StatelessWidget {
   
   final Publicacion publicacion;
   final int index;
-  PublicacionCard({Key key,this.publicacion,this.index}) : super(key: key);
+  final bool onlyEmpresa;
+  PublicacionCard({Key key,this.publicacion,this.index,this.onlyEmpresa = false}) : super(key: key);
   
   final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
   
@@ -46,24 +48,31 @@ Widget buttonText(String titulo,IconData icono)
   => RawChip(label: null);
 
 Widget _header(Publicacion publicacion) {
-  return   ListTile(
-           contentPadding : EdgeInsets.all(4),
-           leading        : publicacion.empresa.urlLogo == '' 
-                            ? CircleAvatar(backgroundImage: AssetImage('assets/imagenes/logo_no_img.png'))
-                            : CircleAvatar(
-                            radius: 24,
-                            backgroundImage: CachedNetworkImageProvider('$urlImagenLogo/logo/${publicacion.empresa.urlLogo}'),    
+  return   GestureDetector(
+           child: ListTile(
+                  contentPadding : EdgeInsets.all(4),
+                  leading        : publicacion.empresa.urlLogo == '' 
+                                   ? CircleAvatar(backgroundImage: AssetImage('assets/imagenes/logo_no_img.png'))
+                                   : CircleAvatar(
+                                   radius: 24,
+                                   backgroundImage: CachedNetworkImageProvider('$urlImagenLogo/logo/${publicacion.empresa.urlLogo}'),    
+                  ),
+                  title          : Text(
+                                   publicacion.empresa.nombre,
+                                   style:TextStyle(fontWeight:FontWeight.bold)
+                                  ),
+                  subtitle       : Text(publicacion.formatFecha()),
+                  trailing       : IconButton(
+                                   icon: Icon(Icons.more_horiz), 
+                                   onPressed: (){}
+                                   )
            ),
-           title          : Text(
-                            publicacion.empresa.nombre,
-                            style:TextStyle(fontWeight:FontWeight.bold)
-                           ),
-           subtitle       : Text(publicacion.formatFecha()),
-           trailing       : IconButton(
-                            icon: Icon(Icons.more_horiz), 
-                            onPressed: (){}
-                            )
-           );
+           onTap: ()=> Get.to(
+             PerfilEmpresaPage(
+                      empresa: publicacion.empresa,
+           ),
+           )
+  );
 }
 
 Widget _contenido(String texto) {
@@ -85,7 +94,7 @@ Widget _footer(Publicacion publicacion, int index) {
                            child   : Icon(Icons.thumb_up,color:Colors.blue[200]),
                     ),
                     onTap: (){
-                     Get.find<PublicacionesController>().getLikesByPublicacion(publicacion.id);
+                     Get.find<PublicacionesController>().getLikesByPublicacion(publicacion.id,onlyEmpresa);
                      Get.bottomSheet(_bottomSheetLikes(publicacion.id,index));
                     },
                     ),
@@ -104,7 +113,7 @@ Widget _footer(Publicacion publicacion, int index) {
                     RawChip(
                     label: Text('Comentar'),
                     onPressed:(){
-                    Get.find<PublicacionesController>().getComentarios(publicacion.id);
+                    Get.find<PublicacionesController>().getComentarios(publicacion.id,onlyEmpresa);
                     Get.bottomSheet(_bottomSheetComentarios(publicacion.id,index));
                     },
                     avatar:Icon(Icons.textsms,color:Colors.grey[400]),

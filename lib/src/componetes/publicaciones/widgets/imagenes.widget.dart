@@ -19,17 +19,18 @@ class ImagenesWidgetPage extends StatelessWidget {
            ),
            backgroundColor: Colors.black45,
            body: Hero(
-                 tag : id,
-                 child: PageView.builder(
-                        itemCount: imagenes.length,
-                        itemBuilder: (context,i){
-                           return CachedNetworkImage(
-                           imageUrl:'$url/galeria/${imagenes[i]}',
-                           fit: BoxFit.contain,
-                           );
-                        },
+                   tag : id,
+                   child: PageView.builder(
+                          itemCount: imagenes.length,
+                          itemBuilder: (context,i){
+                             return CachedNetworkImage(
+                             imageUrl:'$url/galeria/${imagenes[i]}',
+                             fit: BoxFit.contain,
+                             );
+                          },
+               ),
              ),
-           ),
+           
     );
   }
 }

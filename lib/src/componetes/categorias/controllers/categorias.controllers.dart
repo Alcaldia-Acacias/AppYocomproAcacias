@@ -1,5 +1,5 @@
 import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
-import 'package:comproacacias/src/componetes/publicaciones/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
