@@ -11,4 +11,13 @@ class CategoriaRepositorio {
         .map<Empresa>((empresa) => Empresa.toJson(empresa))
         .toList();
   }
+  Future<List<String>> getCategorias() async {
+    
+     final response = await _dio.get('/categorias');
+     return response.data.map<String>((categoria)=>"${categoria['nombre']}").toList();
+ 
+  }
+
+
+
 }

@@ -1,3 +1,5 @@
+import 'package:comproacacias/src/componetes/categorias/controllers/categorias.controllers.dart';
+import 'package:comproacacias/src/componetes/categorias/views/listCategorias.view.dart';
 import 'package:comproacacias/src/componetes/categorias/views/listEmpresas.view.dart';
 import 'package:comproacacias/src/componetes/categorias/widgets/categoriaCard.widget.dart';
 import 'package:flutter/material.dart';
@@ -25,21 +27,19 @@ class CategoriasPage extends StatelessWidget {
                                  CategoriaCard(
                                  titulo : "Comidas",
                                  imagen : "assets/imagenes/restaurante.png",
-                                 onTap  : () => Get.to(ListEmpresasByCategoria(
-                                                       categoria   : "Comida",
-                                                       imageAppbar : "assets/imagenes/restaurante.png"
-                                                       )
-                                 )
+                                 onTap  : () {
+                                   Get.find<CategoriasController>().getEmpresasByCategoriaInitial("Comida");
+                                   Get.to(ListEmpresasByCategoria(imageAppbar:"assets/imagenes/restaurante.png"));
+                                 }
                                  ),
                                  CategoriaCard(
                                  titulo : "Hospedaje",
                                  imagen : "assets/imagenes/hospedage.png",
-                                 onTap  : () => Get.to(ListEmpresasByCategoria(
-                                                categoria   : "Hospedaje",
-                                                imageAppbar : "assets/imagenes/hospedage.png",
-                                                )
+                                onTap  : () {
+                                   Get.find<CategoriasController>().getEmpresasByCategoriaInitial("Hospedaje");
+                                   Get.to(ListEmpresasByCategoria(imageAppbar:"assets/imagenes/hospedage.png"));
+                                 }
                                  )
-                                 ),
                                 ]
                                ),
                                TableRow(
@@ -47,20 +47,18 @@ class CategoriasPage extends StatelessWidget {
                                  CategoriaCard(
                                  titulo: "Compras",
                                  imagen: "assets/imagenes/compras.png",
-                                 onTap : ()=>Get.to(ListEmpresasByCategoria(
-                                                    categoria   : "Compras",
-                                                    imageAppbar : "assets/imagenes/compras.png",
-                                                    )
-                                 )
+                                 onTap  : () {
+                                   Get.find<CategoriasController>().getEmpresasByCategoriaInitial("Compras");
+                                   Get.to(ListEmpresasByCategoria(imageAppbar:"assets/imagenes/compras.png"));
+                                 }
                                  ),
                                  CategoriaCard(
                                  titulo : "Turismo",
                                  imagen : "assets/imagenes/turismo.png",
-                                 onTap  : ()=>Get.to(ListEmpresasByCategoria(
-                                                     categoria   : "Turismo",
-                                                     imageAppbar : "assets/imagenes/turismo.png"
-                                                     )
-                                 )
+                                  onTap  : () {
+                                   Get.find<CategoriasController>().getEmpresasByCategoriaInitial("Turismo");
+                                   Get.to(ListEmpresasByCategoria(imageAppbar:"assets/imagenes/turismo.png"));
+                                 }
                                  ),
                                 ]
                                ),
@@ -69,15 +67,15 @@ class CategoriasPage extends StatelessWidget {
                                  CategoriaCard(
                                  titulo: "Entretenimiento",
                                  imagen: "assets/imagenes/entrenimiento.png",
-                                 onTap : ()=>Get.to(ListEmpresasByCategoria(
-                                                    categoria   : "Entretenimiento",
-                                                    imageAppbar : "assets/imagenes/entrenimiento.png"
-                                                    )
-                                 )
+                                onTap  : () {
+                                   Get.find<CategoriasController>().getEmpresasByCategoriaInitial("Entretenimiento");
+                                   Get.to(ListEmpresasByCategoria(imageAppbar:"assets/imagenes/entrenimiento.png"));
+                                 }
                                  ),
                                  CategoriaCard(
                                  titulo: "Otras",
                                  imagen: "assets/imagenes/opciones.png",
+                                 onTap: ()=>Get.to(ListCategoriasPage()),
                                  ),
                                 ]
                                ),

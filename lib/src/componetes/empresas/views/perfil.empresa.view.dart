@@ -24,7 +24,7 @@ class PerfilEmpresaPage extends StatelessWidget {
   final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<EmpresasController>(
+    return GetBuilder(
            id: 'empresa',
            init: EmpresasController(repositorio: EmpresaRepositorio()),
            builder: (state){

@@ -10,15 +10,15 @@ import 'package:get/get.dart';
 
 class ListEmpresasByCategoria extends StatelessWidget {
   
-  final String categoria;
+
   final String imageAppbar;
 
-   ListEmpresasByCategoria({Key key,this.categoria,this.imageAppbar}) : super(key: key);
+   ListEmpresasByCategoria({Key key,this.imageAppbar}) : super(key: key);
   final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
   @override
   Widget build(BuildContext context) {
-     return GetBuilder(
-            init: CategoriasController(repositorio: CategoriaRepositorio(),categoria: categoria),
+     return GetBuilder<CategoriasController>(
+            id :'categorias',
             builder: (state){
                 return Scaffold(
                        body: SafeArea(
@@ -27,7 +27,11 @@ class ListEmpresasByCategoria extends StatelessWidget {
                                     child    : CustomScrollView(
                                                  controller: state.controllerListEmpresas,
                                                  slivers: <Widget>[
-                                                           appBarSliver(categoria,imageAppbar),
+                                                           imageAppbar != null
+                                                           ?
+                                                           appBarSliver(state.categoria,imageAppbar)
+                                                           :
+                                                           appBarSliver(state.categoria),
                                                            listEmpresas(state)
                                                  ],
                                     ),
@@ -59,18 +63,21 @@ class ListEmpresasByCategoria extends StatelessWidget {
            ),
    );
   }
-  Widget  appBarSliver(String categoria,String image) {
+  Widget  appBarSliver(String categoria,[String image]) {
   return  SliverAppBar(
           title           : Text(categoria,style:TextStyle(color: Colors.black)),
           floating        : true,
           brightness      : Brightness.light,
           backgroundColor : Colors.white,
-          actions: <Widget>[
-            Padding(
-              padding : EdgeInsets.all(4),
-              child   : Image.asset(image,fit: BoxFit.contain),
-            )
-          ],
+          actions         : image != null
+                            ?
+                            <Widget>[
+                            Padding(
+                              padding : EdgeInsets.all(4),
+                              child   : Image.asset(image,fit: BoxFit.contain),
+                            )
+                           ]
+                           : null
           //pinned: true,
           );
 }

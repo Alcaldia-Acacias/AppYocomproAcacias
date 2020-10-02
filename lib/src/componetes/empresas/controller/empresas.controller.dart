@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmpresasController extends GetxController {
+
   final EmpresaRepositorio repositorio;
 
   EmpresasController({this.repositorio});
@@ -30,8 +31,8 @@ class EmpresasController extends GetxController {
   
   @override
   Future<void> onClose(){
-     print('close');
-    pageViewController?.dispose();
+    if(pageViewController.hasClients)
+       pageViewController?.dispose();
     Get.find<PublicacionesController>().publicacionesByempresa = [];
     return  super.onClose();
   }

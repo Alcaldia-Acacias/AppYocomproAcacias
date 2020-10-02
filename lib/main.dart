@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 //import 'package:intl/locale.dart';
 
 void main() {
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
         )
       ),
     
-      home: HomePage()
+      home: HomePage(),
     );
   }
 }
