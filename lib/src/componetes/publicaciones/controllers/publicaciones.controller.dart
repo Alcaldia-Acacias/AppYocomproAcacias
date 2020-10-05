@@ -14,7 +14,7 @@ class PublicacionesController extends GetxController {
   ScrollController controller;
   int _pagina = 0;
   TextEditingController comentarioController = TextEditingController();
-  bool loading = true;
+  bool loading = false;
 
   @override
   void onInit() async {
@@ -27,40 +27,10 @@ class PublicacionesController extends GetxController {
     this.getPublicaciones();
   }
 
-  void getLikesByPublicacion(int idPublicacion, [bool onlyEmpresa]) async {
-    this.loading = true;
-    if (onlyEmpresa) {
-      final index = getIndexPublicacionByEmpresa(idPublicacion);
-      this.publicacionesByempresa[index].usuariosLike =
-          await this.repositorio.getUsuarioLike(idPublicacion);
-    } else {
-      final index = getIndexPublicacion(idPublicacion);
-      this.publicaciones[index].usuariosLike =
-          await this.repositorio.getUsuarioLike(idPublicacion);
-    }
-    this.loading = false;
-    update(['likes']);
-  }
-
-  void getComentarios(int idPublicacion, [bool onlyEmpresa]) async {
-    this.loading = true;
-    if (onlyEmpresa) {
-      final index = this.getIndexPublicacionByEmpresa(idPublicacion);
-      this.publicacionesByempresa[index].comentarios =
-          await this.repositorio.getComentariosByPublicacion(idPublicacion);
-    } else {
-      final index = this.getIndexPublicacion(idPublicacion);
-      this.publicaciones[index].comentarios =
-          await this.repositorio.getComentariosByPublicacion(idPublicacion);
-    }
-    this.loading = false;
-    update(['comentarios']);
-  }
-
   void getPublicaciones() async {
-    _pagina++;
     publicaciones.addAll(await repositorio.getPublicaciones(_pagina));
     if (_pagina > 1) this._animationFinalController();
+    _pagina++;
     update(['publicaciones']);
   }
 

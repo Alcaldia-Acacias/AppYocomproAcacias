@@ -12,7 +12,7 @@ class Empresa {
       email,
       web;
   final String latitud, longitud;
-  final int popular;
+  final bool popular;
 
   Empresa(
      {this.id,
@@ -32,18 +32,18 @@ class Empresa {
 
 factory Empresa.toJson(Map<String,dynamic> json)
     =>Empresa(
-      id         : json['id_empresa'],
-      nombre     : json['nombre_empresa']      ?? '',
-      urlLogo    : json['logo_empresa']        ?? '',
-      urlPortada : json['portada_empresa']     ?? '',
-      descripcion: json['descripcion_empresa'] ?? '',
-      direccion  : json['direccion_empresa']   ?? '',
-      telefono   : json['telefono_empresa']    ?? '',
-      whatsapp   : json['whatsapp_empresa']    ?? '',
-      email      : json['email_empresa']       ?? '',
-      web        : json['web_empresa']         ?? '',
-      latitud    : json['latidud_empresa']     ?? '',
-      longitud   : json['longitud_empresa']    ?? '',
+      id         : json['id']          ?? 0,
+      nombre     : json['nombre']      ?? '',
+      urlLogo    : json['logo']        ?? '',
+      urlPortada : json['portada']     ?? '',
+      descripcion: json['descripcion'] ?? '',
+      direccion  : json['direccion']   ?? '',
+      telefono   : json['telefono1']   ?? '',
+      whatsapp   : json['whatsapp']    ?? '',
+      email      : json['email']       ?? '',
+      web        : json['web']         ?? '',
+      latitud    : json['lat']         ?? '',
+      longitud   : json['lng']         ?? '',
       popular    : json['popular']
     );
 

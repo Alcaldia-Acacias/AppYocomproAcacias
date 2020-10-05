@@ -94,7 +94,6 @@ Widget _footer(Publicacion publicacion, int index) {
                            child   : Icon(Icons.thumb_up,color:Colors.blue[200]),
                     ),
                     onTap: (){
-                     Get.find<PublicacionesController>().getLikesByPublicacion(publicacion.id,onlyEmpresa);
                      Get.bottomSheet(_bottomSheetLikes(publicacion.id,index));
                     },
                     ),
@@ -113,7 +112,6 @@ Widget _footer(Publicacion publicacion, int index) {
                     RawChip(
                     label: Text('Comentar'),
                     onPressed:(){
-                    Get.find<PublicacionesController>().getComentarios(publicacion.id,onlyEmpresa);
                     Get.bottomSheet(_bottomSheetComentarios(publicacion.id,index));
                     },
                     avatar:Icon(Icons.textsms,color:Colors.grey[400]),
@@ -159,7 +157,7 @@ Widget _listaComentario(int id, int index) {
                        return Column(
                               children: <Widget>[
                                    ListTile(
-                                   leading  : comentarios[i].imagenUsuario == ''
+                                   leading  : comentarios[i].usuario.urlImagen == ''
                                               ?
                                               CircleAvatar(
                                               backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
@@ -167,10 +165,10 @@ Widget _listaComentario(int id, int index) {
                                               :
                                               CircleAvatar(
                                               backgroundImage: CachedNetworkImageProvider(
-                                                '$urlImagenLogo/usuarios/${comentarios[i].imagenUsuario}'
+                                                '$urlImagenLogo/usuarios/${comentarios[i].usuario.urlImagen}'
                                               ),
                                               ),
-                                   title    : Text(comentarios[i].nombreUsuario),
+                                   title    : Text(comentarios[i].usuario.nombre),
                                    subtitle : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
@@ -261,7 +259,7 @@ Widget _listaDelikes(int id, int index) {
                             
                               children: <Widget>[
                                    ListTile(
-                                   leading  : usuarios[i].urlImagen == ''
+                                   leading  : usuarios[i].usuario.urlImagen == ''
                                               ? 
                                               CircleAvatar(
                                                 backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
@@ -269,10 +267,10 @@ Widget _listaDelikes(int id, int index) {
                                               :
                                               CircleAvatar(
                                               backgroundImage: CachedNetworkImageProvider(
-                                                '$urlImagenLogo/usuarios/${usuarios[i].urlImagen}'
+                                                '$urlImagenLogo/usuarios/${usuarios[i].usuario.urlImagen}'
                                               ),
                                               ),
-                                   title    : Text(usuarios[i].nombre),
+                                   title    : Text(usuarios[i].usuario.nombre),
                                    subtitle : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[

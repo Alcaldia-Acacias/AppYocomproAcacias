@@ -1,6 +1,7 @@
 import 'package:comproacacias/src/componetes/publicaciones/models/categoria.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/cometario.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/publicaciones/models/like.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:intl/intl.dart';
 
@@ -11,11 +12,11 @@ class Publicacion {
   final Empresa empresa;
   final Usuario usuario;
   final Categoria categoria;
-  List<Comentario> comentarios = [];
+  final List<Comentario> comentarios;
   final List<String> imagenes;
-  List<Usuario> usuariosLike = [];
+  final List<LikePublicacion> usuariosLike;
 
-  Publicacion(
+  Publicacion( 
       {this.id,
       this.likes,
       this.numeroComentarios,
@@ -25,20 +26,22 @@ class Publicacion {
       this.empresa,
       this.usuario,
       this.categoria,
-      this.imagenes});
+      this.imagenes,
+      this.comentarios, 
+      this.usuariosLike,});
 
 factory Publicacion.toJson(Map<String,dynamic> json,)
    =>Publicacion(
-     id                : json['id_publicacion'] ?? 0,
+     id                : json['id'] ?? 0,
      likes             : json['likes'] ?? '',
      numeroComentarios : json['numero_comentarios'],
      texto             : json['texto'] ?? '',
-     imagenes          : json['imagenes'].map<String>((imagen)=>'$imagen.jpg').toList() ?? '',
+     imagenes          : json['imagenes'].map<String>((imagen)=>'${imagen['nombre']}.jpg').toList() ?? '',
      tipo              : json['tipo'] ?? '',
-     fecha             : json['fecha_publicacion'] ?? '',
-     empresa           : Empresa.toJson(json) ?? '',
-     categoria         : Categoria.toJson(json) ?? '',
-     usuario           : Usuario.toJson(json)  ?? '' 
+     fecha             : json['fecha'] ?? '',
+     empresa           : Empresa.toJson(json['empresa']) ?? '',
+     comentarios       : json['comentarios'].map<Comentario>((comentario)=> Comentario.toJson(comentario)).toList(),
+     usuariosLike      : json["likes_usuarios"].map<LikePublicacion>((like)=> LikePublicacion.toJson(like)).toList() 
    );
 
    String formatFecha() => DateFormat("dd MMMM 'del' yyyy  h:mm a")
