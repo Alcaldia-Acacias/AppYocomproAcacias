@@ -39,7 +39,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                    body : Column(
                                           children: <Widget>[
                                                     _header(),
-                                                    SizedBox(height:75),
+                                                    SizedBox(height:30),
                                                     _titulo(state.titulo,state.pagina),
                                                     Expanded(
                                                     child: PageView(
@@ -67,7 +67,7 @@ class PerfilEmpresaPage extends StatelessWidget {
 
  Widget _header() {
      return  SizedBox(
-             height : Get.height * 0.32,
+             height : 280,
              width  : Get.width,
              child  : Stack(
                       overflow : Overflow.visible,
@@ -98,7 +98,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                 ),
                                 ),
                                 Align(
-                                alignment: Alignment(0.0,-0.1),
+                                alignment: Alignment(0.0,-0.2),
                                 child: Text(empresa.nombre,
                                             style : TextStyle(
                                                     color      : Colors.white,
@@ -108,7 +108,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                            ),
                                 ),
                                 Align(
-                                alignment: Alignment(0.0,0.2),
+                                alignment: Alignment(0.0,0.05),
                                 child: CalificacionWidget()
                                 ),
                                 Align(
@@ -124,7 +124,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                        )
                                 ),
                                 Align(
-                                alignment : Alignment(0.0, 1.9),
+                                alignment : Alignment(0.0, 1.5),
                                 child     : CircleAvatar(
                                             radius          : 75,
                                             backgroundImage : empresa.urlLogo == ''

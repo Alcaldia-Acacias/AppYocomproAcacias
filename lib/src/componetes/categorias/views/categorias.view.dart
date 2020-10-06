@@ -18,7 +18,7 @@ class CategoriasPage extends StatelessWidget {
                            elevation : 0,
                            ),
                    body  : Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 20,vertical:40),
+                     padding: const EdgeInsets.symmetric(horizontal: 20,vertical:20),
                      child: Table(
                              //border: TableBorder.all(),
                              children: [

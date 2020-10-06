@@ -23,13 +23,13 @@ class CategoriaCard extends StatelessWidget {
                                                   Text(titulo,
                                                   style:TextStyle(
                                                         fontWeight : FontWeight.bold,
-                                                        fontSize   : 16
+                                                        fontSize   : 13
                                                   )
                                                   ),
                                                   SizedBox(height: 10),
                                                   Image.asset(imagen,
-                                                  height : 100,
-                                                  width  : 100,
+                                                  height : 80,
+                                                  width  : 80,
                                                   )
                                         ],
                               ),
