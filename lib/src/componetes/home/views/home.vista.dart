@@ -3,6 +3,7 @@ import 'package:comproacacias/src/componetes/categorias/views/categorias.view.da
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/home/views/search.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/views/publicaciones.page.dart';
+import 'package:comproacacias/src/componetes/usuario/views/menu.view.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,7 @@ class HomePage extends StatelessWidget {
                              PublicacionesPage(),
                              CategoriasPage(),
                              Container(),
-                             Container()
+                             MenuUsuarioPage()
                              
                             ],
                      );
