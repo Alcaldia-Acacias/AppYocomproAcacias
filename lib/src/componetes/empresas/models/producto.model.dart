@@ -7,9 +7,9 @@ Producto({this.nombre, this.imagen, this.precio});
 
 factory Producto.toJson(Map<String,dynamic> json)
         => Producto(
-           nombre: json['nombre_producto'] ?? '',
+           nombre: json['nombre'] ?? '',
            precio: json['precio'],
-           imagen: json['imagen_producto'] == "" ? '' : '${json['imagen_producto']}.jpg' 
+           imagen: json['imagen'] == "" ? '' : '${json['imagen']}.jpg' 
         );
 
 }

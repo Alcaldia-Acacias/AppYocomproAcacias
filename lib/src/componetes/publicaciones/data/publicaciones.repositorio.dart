@@ -8,7 +8,6 @@ class PublicacionesRepositorio {
   Future<List<Publicacion>> getPublicaciones(int page) async {
     final response =
         await _dio.get('/publicaciones', queryParameters: {'page': page});
-        print(response.data);
     return response.data
         .map<Publicacion>((publicacion) => Publicacion.toJson(publicacion))
         .toList();
@@ -19,7 +18,7 @@ class PublicacionesRepositorio {
 
   Future<List<Publicacion>> getPublicacionesByEmpresa(int id) async {
     Dio _dio = Get.find<Dio>();
-    final response = await _dio.get('/empresas/publicacion/$id');
+    final response = await _dio.get('/publicaciones/empresa/$id');
     final publicaciones = response.data;
     return publicaciones
         .map<Publicacion>((e) => Publicacion.toJson(e))

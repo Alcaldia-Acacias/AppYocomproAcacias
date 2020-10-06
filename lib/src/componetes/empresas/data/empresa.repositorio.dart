@@ -7,8 +7,7 @@ class EmpresaRepositorio {
 
   Future<List<Producto>> getProductosByEmpresa(int idpublicaciones) async {
     final response =
-        await this._dio.get('/empresas/productos/$idpublicaciones');
-
+        await this._dio.get('/productos/empresa/$idpublicaciones');
     return response.data
         .map<Producto>((producto) => Producto.toJson(producto))
         .toList();
