@@ -1,21 +1,31 @@
-import 'package:comproacacias/src/componetes/categorias/controllers/categorias.controllers.dart';
-import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
+import 'dart:io';
+
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
-import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
-import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
+import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
+import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'login/controller/login.controller.dart';
 
 class Dependecias {
-
+ 
   static init() {
-    
-  Get.put(LoginController());
-  Get.put(HomeController());
-  Get.lazyPut(()=>Dio(BaseOptions(baseUrl: 'http://localhost:8000')));
-  Get.put(PublicacionesController(repositorio: PublicacionesRepositorio()));
-  Get.put(CategoriasController(repositorio: CategoriaRepositorio()));
+  final box = GetStorage();
+  final token = box.read('token');
+
+  Get.lazyPut(()=>LoginController(repositorio:LoginRepositorio()));
+  Get.lazyPut(()=>Dio(
+                  BaseOptions(
+                      baseUrl: 'http://localhost:8000',
+                      contentType: Headers.jsonContentType,
+                      headers:{HttpHeaders.authorizationHeader: 'Bearer $token'}
+                  )
+  ));
+  Get.put(HomeController(repositorio:HomeRepocitorio()));
+
+  
+  
 
   }
 }

@@ -3,7 +3,7 @@
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 
 class PublicacionesPage extends StatelessWidget {
   const PublicacionesPage({Key key}) : super(key: key);
@@ -28,6 +28,15 @@ class PublicacionesPage extends StatelessWidget {
                          ),
                        ),
                        backgroundColor: Colors.grey[300],
+                       floatingActionButton: FloatingActionButton.extended(
+                                             heroTag: 'publicar',
+                                             label : Text('Publicar',
+                                                     style: TextStyle(color: Colors.white),
+                                             ),
+                                             icon  : Icon(Icons.edit,color:Colors.white),
+                                             backgroundColor: Get.theme.primaryColor,
+                                             onPressed: (){}, 
+                                             )
                     )
  );
     

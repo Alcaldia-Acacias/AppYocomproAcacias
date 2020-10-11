@@ -31,20 +31,20 @@ class Empresa {
      });
 
 factory Empresa.toJson(Map<String,dynamic> json)
-    =>Empresa(
-      id         : json['id']          ?? 0,
-      nombre     : json['nombre']      ?? '',
-      urlLogo    : json['logo']        ?? '',
-      urlPortada : json['portada']     ?? '',
-      descripcion: json['descripcion'] ?? '',
-      direccion  : json['direccion']   ?? '',
-      telefono   : json['telefono1']   ?? '',
-      whatsapp   : json['whatsapp']    ?? '',
-      email      : json['email']       ?? '',
-      web        : json['web']         ?? '',
-      latitud    : json['lat']         ?? '',
-      longitud   : json['lng']         ?? '',
-      popular    : json['popular']
+    => Empresa(
+       id         : json['id']          ?? 0,
+       nombre     : json['nombre']      ?? '',
+       urlLogo    : json['logo']        ?? '',
+       urlPortada : json['portada']     ?? '',
+       descripcion: json['descripcion'] ?? '',
+       direccion  : json['direccion']   ?? '',
+       telefono   : json['telefono1']   ?? '',
+       whatsapp   : json['whatsapp']    ?? '',
+       email      : json['email']       ?? '',
+       web        : json['web']         ?? '',
+       latitud    : json['lat']         ?? '',
+       longitud   : json['lng']         ?? '',
+       popular    : json['popular']
     );
 
 

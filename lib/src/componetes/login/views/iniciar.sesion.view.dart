@@ -48,7 +48,7 @@ class LoginFormPage extends StatelessWidget {
                                                             obscure           : true,
                                                             lastInput         : true,
                                                             requerido         : true,
-                                                            onEditingComplete : ()=> _submit(state.formKeyLogin),
+                                                            onEditingComplete : ()=> _submit(),
                                                             ),
                                                             _buttonSubmit(state.formKeyLogin)
 
@@ -70,11 +70,10 @@ class LoginFormPage extends StatelessWidget {
              child     : Text('Ingresar'),
              color     : Get.theme.accentColor,
              minWidth  : double.maxFinite,
-             onPressed :() => _submit(formKey)
+             onPressed :() => _submit()
     );
   }
-   _submit(GlobalKey<FormState> formKey) {
-    if(formKey.currentState.validate())
+   _submit() {
        Get.find<LoginController>().submitFormLogin();
   }
 

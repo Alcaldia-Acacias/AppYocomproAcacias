@@ -1,15 +1,24 @@
+import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
+import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   
+  final HomeRepocitorio repositorio;
+  HomeController({this.repositorio});
   AnimationController controller;
   int page = 0;
   String urlImegenes = 'http://localhost:8000/imagenes';
+  Usuario usuario;
 
+
+  
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    if(this.usuario.isNullOrBlank)
+    this.usuario = await repositorio.getUsuario();
   }
 
  void selectPage(int page) {

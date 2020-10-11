@@ -1,5 +1,7 @@
 
 
+import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+
 class Usuario {
   final int id;
   final String 
@@ -11,7 +13,7 @@ class Usuario {
       numero,
       email,
       fechaCreacion;
-
+  final List<Empresa> empresas;
   Usuario(
       {this.id,
       this.urlImagen,
@@ -21,11 +23,14 @@ class Usuario {
       this.fechaNacimiento,
       this.numero,
       this.email,
-      this.fechaCreacion});
+      this.fechaCreacion,
+      this.empresas
+      });
 
   factory Usuario.toJson(Map<String, dynamic> json) 
     => json == null
-       ? Usuario()
+       ?
+       Usuario()
        :
        Usuario(
        id              : json['id']                 ?? 0,
@@ -36,7 +41,9 @@ class Usuario {
        fechaNacimiento : json['nacimiento']         ?? '',
        numero          : json['numero']             ?? '',
        email           : json['correo']             ?? '',
-       fechaCreacion   : json['fecha']              ?? ''
+       fechaCreacion   : json['fecha']              ?? '',
+       empresas        : json['empresas']?.map<Empresa>((empresa)=>Empresa.toJson(empresa))?.toList()       
 
     );
+
 }

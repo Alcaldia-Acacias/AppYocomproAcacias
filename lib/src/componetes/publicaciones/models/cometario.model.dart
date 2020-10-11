@@ -14,14 +14,11 @@ class Comentario {
       this.fecha});
 
   factory Comentario.toJson(Map<String,dynamic> json)
-          => json == null
-             ? Comentario()
-             :
-             Comentario(
+          => Comentario(
              id            : json['id'] ?? 0,
              comentario    : json['comentario'] ?? '',
              fecha         : json['fecha'] ?? '',
-             usuario       : Usuario.toJson(json['usuario']) 
+             usuario       : Usuario?.toJson(json['usuario']) 
           );
     String formatFecha() => DateFormat("dd MMMM 'del' yyyy  h:mm a")
                           .format(DateTime.parse(this.fecha));

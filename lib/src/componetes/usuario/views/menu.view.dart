@@ -1,3 +1,6 @@
+import 'package:comproacacias/src/componetes/usuario/views/actulizarDatos.view.dart';
+import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
+import 'package:comproacacias/src/componetes/usuario/views/empresas.view.dart';
 import 'package:comproacacias/src/componetes/usuario/widgets/menu.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,17 +30,17 @@ Widget _menu() {
              MenuItemUsuario(
              icon   : Icons.lock_outline,
              titulo : 'Cambiar Contraseña', 
-             onTap  : (){
-    
-             }, 
+             onTap  : () => Get.to(CambiarPasswordPage()), 
              ),
              MenuItemUsuario(
              icon: Icons.business,
-             titulo: 'Empresas',  
+             titulo: 'Empresas',
+             onTap: ()=>Get.to(ListEmpresasPage()),
              ),
              MenuItemUsuario(
              icon: Icons.refresh,
-             titulo: 'Actulizar Datos',  
+             titulo: 'Actulizar Datos', 
+             onTap : ()=>Get.to(UpdateDataUsuario()), 
              ),
              MenuItemUsuario(
              icon: Icons.info,

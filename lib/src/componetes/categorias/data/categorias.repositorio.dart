@@ -8,13 +8,13 @@ class CategoriaRepositorio {
   Future<List<Empresa>> getEmpresasByCategoria(String categoria,int page) async {
     final response = await _dio.get('/empresas/$categoria',queryParameters: {'page': page});
     return response.data
-        .map<Empresa>((empresa) => Empresa.toJson(empresa))
-        .toList();
+        ?.map<Empresa>((empresa) => Empresa.toJson(empresa))
+        ?.toList();
   }
   Future<List<String>> getCategorias() async {
     
      final response = await _dio.get('/categorias');
-     return response.data.map<String>((categoria)=>"${categoria['nombre']}").toList();
+     return response.data?.map<String>((categoria)=>"${categoria['nombre']}")?.toList();
  
   }
 

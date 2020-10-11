@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/categorias/controllers/categorias.controllers.dart';
-import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/views/perfil.empresa.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
