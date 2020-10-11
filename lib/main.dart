@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   PublicacionesRepositorio repoPublicaciones = PublicacionesRepositorio();
   @override
   Widget build(BuildContext context) {
-     final box  = GetStorage();
+    final box  = GetStorage();
     return GetMaterialApp(
       localizationsDelegates: [
        GlobalMaterialLocalizations.delegate,

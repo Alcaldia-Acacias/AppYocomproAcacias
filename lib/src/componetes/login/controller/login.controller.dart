@@ -50,8 +50,6 @@ class LoginController extends GetxController {
   }
 
   void submitFormSingIn() {
-    print(confirmPasswordSinginController.text);
-    print(passwordSinginController.text);
     if (formKeySingin.currentState.validate() && this.comparePassword())
       print('listo');
     if (!this.comparePassword())
