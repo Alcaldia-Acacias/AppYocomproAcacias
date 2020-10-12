@@ -11,13 +11,14 @@ import 'login/controller/login.controller.dart';
 class Dependecias {
  
   static init() {
+
   final box = GetStorage();
   final token = box.read('token');
 
   Get.lazyPut(()=>LoginController(repositorio:LoginRepositorio()));
   Get.lazyPut(()=>Dio(
                   BaseOptions(
-                      baseUrl: 'http://localhost:8000',
+                      baseUrl: 'http://10.0.2.2:8000',
                       contentType: Headers.jsonContentType,
                       headers:{HttpHeaders.authorizationHeader: 'Bearer $token'}
                   )

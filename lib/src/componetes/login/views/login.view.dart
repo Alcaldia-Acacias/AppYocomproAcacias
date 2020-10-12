@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/views/iniciar.sesion.view.dart';
 import 'package:comproacacias/src/componetes/login/views/registro.view.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return GetBuilder(
+    return GetBuilder<LoginController>(
            builder: (state){
               return Scaffold(
                      body:  Stack(

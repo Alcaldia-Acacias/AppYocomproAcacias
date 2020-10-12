@@ -4,7 +4,7 @@ import 'package:comproacacias/src/componetes/usuario/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/updateresponse.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class UpdateDataController extends GetxController {

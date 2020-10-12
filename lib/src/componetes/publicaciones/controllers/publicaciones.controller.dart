@@ -39,12 +39,11 @@ class PublicacionesController extends GetxController {
     update(['publicaciones']);
   }
 
-  @override
-  Future<void> onClose() {
-    controller?.dispose();
-    return super.onClose();
+ @override
+  void onClose() {
+     controller?.dispose();
+    super.onClose();
   }
-
   void _animationFinalController() {
     controller.animateTo(controller.position.pixels + 100,
         duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);

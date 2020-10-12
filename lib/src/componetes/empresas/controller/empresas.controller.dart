@@ -23,18 +23,17 @@ class EmpresasController extends GetxController {
 
 
   @override
-  void onReady() {
+  void onInit() {
     pageViewController = PageController(initialPage: 0);
-    super.onReady();
+    super.onInit();
    }
 
-  
-  @override
-  Future<void> onClose(){
-    if(pageViewController.hasClients)
+ @override
+  void onClose() {
+     if(pageViewController.hasClients)
        pageViewController?.dispose();
     Get.find<PublicacionesController>().publicacionesByempresa = [];
-    return  super.onClose();
+    super.onClose();
   }
 
   void getTitulo(int page) async {

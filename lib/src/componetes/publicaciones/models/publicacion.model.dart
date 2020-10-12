@@ -41,10 +41,11 @@ factory Publicacion.toJson(Map<String,dynamic> json,)
      fecha             : json['fecha'] ?? '',
      empresa           : Empresa?.toJson(json['empresa']) ?? '',
      comentarios       : json['comentarios']?.map<Comentario>((comentario)=> Comentario.toJson(comentario))?.toList(),
-     usuariosLike      : json["likes_usuarios"]?.map<LikePublicacion>((like)=> LikePublicacion?.toJson(like))?.toList() 
+     usuariosLike      : json["likes_usuarios"]?.map<LikePublicacion>((like)=> LikePublicacion.toJson(like))?.toList() 
    );
 
    String formatFecha() => DateFormat("dd MMMM 'del' yyyy  h:mm a")
                           .format(DateTime.parse(this.fecha));
   
 }
+        
