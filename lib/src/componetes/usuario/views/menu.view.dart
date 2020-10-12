@@ -1,3 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
+import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/actulizarDatos.view.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
 import 'package:comproacacias/src/componetes/usuario/views/empresas.view.dart';
@@ -10,19 +14,24 @@ class MenuUsuarioPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-           body: Column(
-                 children: [
-                     _header(),
-                     Expanded(
-                     child: _menu()
-                     )
-                 ],
-           ),
+    return GetBuilder<HomeController>(
+           builder:(state) 
+             => Scaffold(
+                body: Column(
+                      children: [
+                          if(state.usuario != null)
+                          _header(state.usuario),
+                          if(state.usuario != null)
+                          Expanded(
+                          child: _menu(state.usuario)
+                          )
+                      ],
+             ),
+      ),
     );
   }
 
-Widget _menu() {
+Widget _menu(Usuario usuario) {
   return GridView.count(
           padding: EdgeInsets.all(10),
           crossAxisCount: 3,
@@ -30,7 +39,7 @@ Widget _menu() {
              MenuItemUsuario(
              icon   : Icons.lock_outline,
              titulo : 'Cambiar Contraseña', 
-             onTap  : () => Get.to(CambiarPasswordPage()), 
+             onTap  : () => Get.to(CambiarPasswordPage(usuario:usuario)), 
              ),
              MenuItemUsuario(
              icon: Icons.business,
@@ -40,7 +49,7 @@ Widget _menu() {
              MenuItemUsuario(
              icon: Icons.refresh,
              titulo: 'Actulizar Datos', 
-             onTap : ()=>Get.to(UpdateDataUsuario()), 
+             onTap : ()=>Get.to(UpdateDataUsuario(usuario:usuario)), 
              ),
              MenuItemUsuario(
              icon: Icons.info,
@@ -59,7 +68,7 @@ Widget _menu() {
           );
 }
 
-Widget  _header() {
+Widget  _header(Usuario usuario) {
   return  Container(
           alignment : AlignmentDirectional.center,
           height    : 300,
@@ -69,7 +78,7 @@ Widget  _header() {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                                  SizedBox(height: 10),
-                                 Text('Alan Fabian Herrera',
+                                 Text( usuario?.nombre,
                                        style: TextStyle(
                                               color    : Colors.white,
                                               fontSize : 25
@@ -80,7 +89,9 @@ Widget  _header() {
                                    children: [
                                      CircleAvatar(
                                      radius          : 70,
-                                     backgroundImage : AssetImage('assets/imagenes/logo_no_img.png'),
+                                     backgroundImage : usuario.urlImagen != ''
+                                                       ? CachedNetworkImageProvider(usuario.urlImagen)
+                                                       : AssetImage('assets/imagenes/logo_no_img.png'),
                                      ),
                                      Positioned(
                                      bottom : 0,

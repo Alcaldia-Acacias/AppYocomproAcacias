@@ -13,7 +13,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 class LoginController extends GetxController {
-
   final LoginRepositorio repositorio;
 
   LoginController({this.repositorio});
@@ -40,8 +39,11 @@ class LoginController extends GetxController {
 
   DateTime fechaNacimiento = DateTime.now();
   Usuario usuario;
+  bool loading = false;
+  Future dialog;
   void submitFormLogin() async {
     if (formKeyLogin.currentState.validate()) {
+      this._openDialog();
       final response = await repositorio.login(
           usuarioLoginController.text, passwordLoginController.text);
       if (response is ErrorLogin) this._loginError(response.error);
@@ -49,9 +51,25 @@ class LoginController extends GetxController {
     }
   }
 
-  void submitFormSingIn() {
-    if (formKeySingin.currentState.validate() && this.comparePassword())
-      print('listo');
+  void submitFormSingIn() async {
+    if (formKeySingin.currentState.validate() && this.comparePassword()) {
+      this._openDialog();
+      final usuario = {
+        "imagen": '',
+        "biografia": '',
+        "sexo": 'M',
+        "numero": '',
+        "rol": 0,
+        "codigo_recuperacion": '',
+        "nombre": nombreSinginController.text,
+        "pass": passwordSinginController.text,
+        "nacimiento": fechaNacimiento,
+        "correo": usuarioSinginController.text
+      };
+      final response = await repositorio.addUsuario(usuario);
+      if (response is ErrorLogin) this._loginError(response.error);
+      if (response is UsuarioModelLogin) this._loginOk(response);
+    }
     if (!this.comparePassword())
       Get.snackbar("Error", "no coinciden las contraseñas");
   }
@@ -68,10 +86,13 @@ class LoginController extends GetxController {
   }
 
   void _loginError(String error) {
+    Get.back();
     if (error == 'DATA_INCORRECT')
       Get.snackbar('Datos Incorrectos', 'Contraseña no valida');
     if (error == 'USER_NO_EXITS')
       Get.snackbar('Usuario no existe', 'Registrese');
+    if (error == 'USER_EXITS')
+      Get.snackbar('Usuario ya Registrado', 'Inicia Session');
   }
 
   void _loginOk(UsuarioModelLogin response) async {
@@ -83,6 +104,18 @@ class LoginController extends GetxController {
     };
     Get.find<HomeController>().usuario = response.usuario;
     Get.offNamed('/home');
-    
+  }
+
+  void _openDialog() {
+    Get.dialog(
+        AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: SizedBox(
+              height: 40, child: Center(child: CircularProgressIndicator())),
+          title: Text('Iniciando', textAlign: TextAlign.center),
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 25),
+          elevation: 0,
+        ),
+        barrierDismissible: false);
   }
 }

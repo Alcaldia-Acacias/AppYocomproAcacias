@@ -50,7 +50,7 @@ class LoginFormPage extends StatelessWidget {
                                                             requerido         : true,
                                                             onEditingComplete : ()=> _submit(),
                                                             ),
-                                                            _buttonSubmit(state.formKeyLogin)
+                                                            _buttonSubmit(state.loading)
 
                                                          ],
                                              ) 
@@ -63,12 +63,12 @@ class LoginFormPage extends StatelessWidget {
            ),
     );
   }
-  _buttonSubmit(GlobalKey<FormState> formKey) {
+  _buttonSubmit(bool loading) {
     return   MaterialButton(
              textColor : Colors.white,
              padding   : EdgeInsets.all(15),
-             child     : Text('Ingresar'),
-             color     : Get.theme.accentColor,
+             child     : loading ? Center(child:CircularProgressIndicator()) : Text('Ingresar'),
+             color     : loading ?Colors.white : Get.theme.accentColor,
              minWidth  : double.maxFinite,
              onPressed :() => _submit()
     );

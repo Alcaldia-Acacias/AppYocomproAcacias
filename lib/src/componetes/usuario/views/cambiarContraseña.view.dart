@@ -1,10 +1,13 @@
 import 'package:comproacacias/src/componetes/usuario/controllers/changePassword.controller.dart';
+import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
+import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CambiarPasswordPage extends StatelessWidget {
-  const CambiarPasswordPage({Key key}) : super(key: key);
+  final Usuario usuario;
+  CambiarPasswordPage({Key key, this.usuario}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class CambiarPasswordPage extends StatelessWidget {
                   onTap : ()=>FocusScope.of(context).unfocus(),
                   child : SingleChildScrollView(
                           child : GetBuilder<ChangePasswordController>(
-                                  init: ChangePasswordController(),
+                                  init: ChangePasswordController(usuario:usuario,repositorio:UsuarioRepocitorio()),
                                   builder: (state){
                                     return Padding(
                                            padding: EdgeInsets.all(40.0),
@@ -58,7 +61,7 @@ class CambiarPasswordPage extends StatelessWidget {
                                                             requerido         : true,
                                                             onEditingComplete : (){},
                                                             ),
-                                                            _buttonCambiar()
+                                                            _buttonCambiar(state)
                                                          ],
                                              ) 
                                              ),
@@ -70,14 +73,14 @@ class CambiarPasswordPage extends StatelessWidget {
            ),
     );
   }
-   _buttonCambiar() {
+   _buttonCambiar(ChangePasswordController state) {
     return   MaterialButton(
              textColor : Colors.white,
              padding   : EdgeInsets.all(15),
              child     : Text('Cambiar'),
              color     : Get.theme.primaryColor,
              minWidth  : double.maxFinite,
-             onPressed :() {}
+             onPressed :() => state.changePassword()
     );
   }
 }

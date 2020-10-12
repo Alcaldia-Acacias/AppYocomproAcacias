@@ -1,5 +1,3 @@
-
-
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 
 class Usuario {
@@ -45,5 +43,28 @@ class Usuario {
        empresas        : json['empresas']?.map<Empresa>((empresa)=>Empresa.toJson(empresa))?.toList()       
 
     );
-
+Usuario copyWith({
+  int     id,
+  String  urlImagen,
+  String  nombre,
+  String  biografia,
+  String  sexo,
+  String  fechaNacimiento,
+  String  numero,
+  String  email,
+  String  fechaCreacion,
+  List<Empresa> empresas
+})
+=> Usuario(  
+   id              : id               ?? this.id,   
+   urlImagen       : urlImagen        ?? this.urlImagen,
+   nombre          : nombre           ?? this.nombre,
+   biografia       : nombre           ?? this.biografia,
+   sexo            : sexo             ?? this.sexo,
+   fechaNacimiento : fechaNacimiento  ?? this.fechaNacimiento,
+   numero          : numero           ?? this.numero,
+   email           : email            ?? this.email,
+   fechaCreacion   : fechaCreacion    ?? this.fechaCreacion,
+   empresas        : empresas         ?? this.empresas,
+);
 }

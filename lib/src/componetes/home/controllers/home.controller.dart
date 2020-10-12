@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  
   final HomeRepocitorio repositorio;
   HomeController({this.repositorio});
   AnimationController controller;
@@ -12,23 +11,28 @@ class HomeController extends GetxController {
   String urlImegenes = 'http://localhost:8000/imagenes';
   Usuario usuario;
 
-
-  
   @override
   void onInit() async {
     super.onInit();
-    if(this.usuario.isNullOrBlank)
-    this.usuario = await repositorio.getUsuario();
+    if (this.usuario.isNullOrBlank)
+      this.usuario = await repositorio.getUsuario();
   }
 
- void selectPage(int page) {
+  void updateUsuario(Usuario usuario) {
+    this.usuario = usuario;
+    update();
+  }
+
+  void selectPage(int page) {
     this.page = page;
     switch (page) {
-      case  0  : controller?.reset();
-                 controller?.forward();
-                 break;
-      case  2  : print('object');
-                 break;
+      case 0:
+        controller?.reset();
+        controller?.forward();
+        break;
+      case 2:
+        print('object');
+        break;
       default:
     }
     update(['bottomBar']);

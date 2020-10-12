@@ -79,8 +79,8 @@ class InputForm extends StatelessWidget {
              validator         : (texto){
                                  if(texto.isEmpty && requerido) 
                                    return "es requerido";
-                                 if((!GetUtils.isEmail(texto) && !GetUtils.hasMatch(texto,r'^[3]{1}[0-8]{2}\d{7}')) && isEmail) 
-                                   return "no es un correo valido";
+                                 if((!GetUtils.isEmail(texto) && !GetUtils.hasMatch(texto,r'^[3]{1}[0-8]{2}\d{7}')) && isEmail)
+                                   return "no es un correo o numero valido";
                                  
                                  return null;
                                     

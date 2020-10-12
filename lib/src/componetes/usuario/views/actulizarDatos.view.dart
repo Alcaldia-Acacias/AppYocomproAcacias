@@ -1,10 +1,14 @@
 import 'package:comproacacias/src/componetes/usuario/controllers/updateData.controller.dart';
+import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
+import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UpdateDataUsuario extends StatelessWidget {
-  const UpdateDataUsuario({Key key}) : super(key: key);
+  
+  final Usuario usuario;
+  UpdateDataUsuario({Key key, this.usuario}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +20,12 @@ class UpdateDataUsuario extends StatelessWidget {
                   onTap : ()=>FocusScope.of(context).unfocus(),
                   child : SingleChildScrollView(
                           child : GetBuilder<UpdateDataController>(
-                                  init: UpdateDataController(),
+                                  init: UpdateDataController(usuario:usuario,repositorio: UsuarioRepocitorio()),
                                   builder: (state){
                                     return Padding(
                                            padding: EdgeInsets.all(40.0),
                                            child: Form(
+                                                  key: state.formKey,
                                                   child: Column(
                                                          children: <Widget>[
                                                             Image.asset(
@@ -61,10 +66,11 @@ class UpdateDataUsuario extends StatelessWidget {
                                                               lastDate: DateTime(2050),
                                                               ).then((fecha){
                                                                 state.fechaController.text = state.formatFecha(fecha);
+                                                                state.fechaNacimiento = fecha;
                                                               });
                                                             },
                                                             ),
-                                                           _button()
+                                                           _button(state)
                                                          ],
                                              ) 
                                              ),
@@ -76,14 +82,14 @@ class UpdateDataUsuario extends StatelessWidget {
            ),
     );
   }
-   _button() {
+   _button(UpdateDataController state) {
     return   MaterialButton(
              textColor : Colors.white,
              padding   : EdgeInsets.all(15),
              child     : Text('Actulizar Datos'),
              color     : Get.theme.primaryColor,
              minWidth  : double.maxFinite,
-             onPressed :(){}
+             onPressed :()=>state.updateData()
     );
   }
 }
