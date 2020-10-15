@@ -157,7 +157,7 @@ Widget _listaComentario(int id, int index) {
                        return Column(
                               children: <Widget>[
                                    ListTile(
-                                   leading  : comentarios[i].usuario.urlImagen == ''
+                                   leading  : comentarios[i].usuario.imagen == ''
                                               ?
                                               CircleAvatar(
                                               backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
@@ -165,7 +165,7 @@ Widget _listaComentario(int id, int index) {
                                               :
                                               CircleAvatar(
                                               backgroundImage: CachedNetworkImageProvider(
-                                                '$urlImagenLogo/usuarios/${comentarios[i].usuario.urlImagen}'
+                                                '$urlImagenLogo/usuarios/${comentarios[i].usuario.imagen}'
                                               ),
                                               ),
                                    title    : Text(comentarios[i].usuario.nombre),
@@ -259,7 +259,7 @@ Widget _listaDelikes(int id, int index) {
                             
                               children: <Widget>[
                                    ListTile(
-                                   leading  : usuarios[i].usuario.urlImagen == ''
+                                   leading  : usuarios[i].usuario.imagen== ''
                                               ? 
                                               CircleAvatar(
                                                 backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
@@ -267,7 +267,7 @@ Widget _listaDelikes(int id, int index) {
                                               :
                                               CircleAvatar(
                                               backgroundImage: CachedNetworkImageProvider(
-                                                '$urlImagenLogo/usuarios/${usuarios[i].usuario.urlImagen}'
+                                                '$urlImagenLogo/usuarios/${usuarios[i].usuario.imagen}'
                                               ),
                                               ),
                                    title    : Text(usuarios[i].usuario.nombre),

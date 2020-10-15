@@ -3,23 +3,15 @@ import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart'
 class Usuario {
   final int id;
   final String 
-      urlImagen,
+      imagen,
       nombre,
-      biografia,
-      sexo,
-      fechaNacimiento,
-      numero,
       email,
       fechaCreacion;
   final List<Empresa> empresas;
   Usuario(
       {this.id,
-      this.urlImagen,
+      this.imagen,
       this.nombre,
-      this.biografia,
-      this.sexo,
-      this.fechaNacimiento,
-      this.numero,
       this.email,
       this.fechaCreacion,
       this.empresas
@@ -32,20 +24,16 @@ class Usuario {
        :
        Usuario(
        id              : json['id']                 ?? 0,
-       urlImagen       : json['imagen']             ?? '',
+       imagen          : json['imagen']             ?? '',
        nombre          : json['nombre']             ?? '',
-       biografia       : json['biografia']          ?? '',
-       sexo            : json['sexo']               ?? '',
-       fechaNacimiento : json['nacimiento']         ?? '',
-       numero          : json['numero']             ?? '',
-       email           : json['correo']             ?? '',
+       email           : json['usuario']            ?? '',
        fechaCreacion   : json['fecha']              ?? '',
        empresas        : json['empresas']?.map<Empresa>((empresa)=>Empresa.toJson(empresa))?.toList()       
 
     );
 Usuario copyWith({
   int     id,
-  String  urlImagen,
+  String  imagen,
   String  nombre,
   String  biografia,
   String  sexo,
@@ -57,12 +45,8 @@ Usuario copyWith({
 })
 => Usuario(  
    id              : id               ?? this.id,   
-   urlImagen       : urlImagen        ?? this.urlImagen,
+   imagen          : imagen           ?? this.imagen,
    nombre          : nombre           ?? this.nombre,
-   biografia       : nombre           ?? this.biografia,
-   sexo            : sexo             ?? this.sexo,
-   fechaNacimiento : fechaNacimiento  ?? this.fechaNacimiento,
-   numero          : numero           ?? this.numero,
    email           : email            ?? this.email,
    fechaCreacion   : fechaCreacion    ?? this.fechaCreacion,
    empresas        : empresas         ?? this.empresas,

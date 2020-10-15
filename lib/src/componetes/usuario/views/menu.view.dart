@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
-import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/actulizarDatos.view.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
-import 'package:comproacacias/src/componetes/usuario/views/empresas.view.dart';
+import 'package:comproacacias/src/componetes/empresas/views/empresas.view.dart';
 import 'package:comproacacias/src/componetes/usuario/widgets/menu.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,7 +43,7 @@ Widget _menu(Usuario usuario) {
              MenuItemUsuario(
              icon: Icons.business,
              titulo: 'Empresas',
-             onTap: ()=>Get.to(ListEmpresasPage()),
+             onTap: ()=>Get.to(ListEmpresasPage(empresas:usuario.empresas)),
              ),
              MenuItemUsuario(
              icon: Icons.refresh,
@@ -89,8 +88,8 @@ Widget  _header(Usuario usuario) {
                                    children: [
                                      CircleAvatar(
                                      radius          : 70,
-                                     backgroundImage : usuario.urlImagen != ''
-                                                       ? CachedNetworkImageProvider(usuario.urlImagen)
+                                     backgroundImage : usuario.imagen != ''
+                                                       ? CachedNetworkImageProvider('http://localhost:8000/imagenes/usuarios/${usuario.imagen}')
                                                        : AssetImage('assets/imagenes/logo_no_img.png'),
                                      ),
                                      Positioned(

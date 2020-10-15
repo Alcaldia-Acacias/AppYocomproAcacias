@@ -9,7 +9,7 @@ factory Producto.toJson(Map<String,dynamic> json)
         => Producto(
            nombre: json['nombre'] ?? '',
            precio: json['precio'],
-           imagen: json['imagen'] == "" ? '' : '${json['imagen']}.jpg' 
+           imagen: json['imagen'] == "" ? '' : '${json['imagen']}' 
         );
 
 }

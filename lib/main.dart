@@ -9,19 +9,20 @@ import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaci
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 //import 'package:intl/locale.dart';
 
  main() async {
   Intl.defaultLocale = 'es_ES';
   await GetStorage.init();
-  //await GetStorage().erase();
+  // await GetStorage().erase();
   Dependecias.init();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
 }
 
@@ -33,20 +34,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final box  = GetStorage();
     return GetMaterialApp(
-      builder: (context, widget) => ResponsiveWrapper.builder(
-         BouncingScrollWrapper.builder(context, widget),
-          maxWidth: 1200,
-          minWidth: 450,
-          defaultScale: true,
-          breakpoints: [
-            ResponsiveBreakpoint.resize(480, name: MOBILE),
-            ResponsiveBreakpoint.autoScale(800, name: TABLET),
-            ResponsiveBreakpoint.resize(1000, name: TABLET),
-            ResponsiveBreakpoint.resize(1200, name: DESKTOP),
-            ResponsiveBreakpoint.autoScale(2460, name: "4K"),
-          ],
-
-      ),
       localizationsDelegates: [
        GlobalMaterialLocalizations.delegate,
        GlobalWidgetsLocalizations.delegate,
@@ -60,6 +47,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Color.fromRGBO(255,57,163, 1),
         accentColor : Color.fromRGBO(0, 201, 211, 1),
         visualDensity: VisualDensity.adaptivePlatformDensity,
+
         appBarTheme: AppBarTheme(
                      brightness: Brightness.light,
                      color: Colors.white,

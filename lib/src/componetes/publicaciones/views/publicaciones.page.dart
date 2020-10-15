@@ -16,6 +16,7 @@ class PublicacionesPage extends StatelessWidget {
            builder: (state)
                     => Scaffold(
                        body: SafeArea(
+                             top: false,
                              child: RefreshIndicator(
                                     onRefresh: ()  async  => state.getNewPublicaciones(),
                                     child    : CustomScrollView(

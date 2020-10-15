@@ -13,13 +13,10 @@ class UpdateDataController extends GetxController {
   UpdateDataController({this.usuario, this.repositorio});
 
   TextEditingController nombreController = TextEditingController();
-  TextEditingController fechaController = TextEditingController();
   TextEditingController usuarioController = TextEditingController();
 
   FocusNode nombreFoco = FocusNode();
-  FocusNode fechaFoco = FocusNode();
   FocusNode usuarioFoco = FocusNode();
-  DateTime fechaNacimiento;
 
   GlobalKey<FormState> formKey = GlobalKey();
 
@@ -31,10 +28,8 @@ class UpdateDataController extends GetxController {
 
   void updateData() async {
     if (this.formKey.currentState.validate()) {
-      print(fechaNacimiento.toString());
       final update = {
         "correo": usuarioController.text,
-        "nacimiento": fechaNacimiento.toString(),
         "nombre": nombreController.text
       };
       final response = await this.repositorio.updateUsuario(usuario.id, update);
@@ -57,8 +52,6 @@ class UpdateDataController extends GetxController {
   void _initialValues() {
     usuarioController.text = usuario.email;
     nombreController.text = usuario.nombre;
-    fechaController.text = this.formatFechaString(usuario.fechaNacimiento);
-    fechaNacimiento = DateTime.parse(usuario.fechaNacimiento);
     update();
   }
 
@@ -67,13 +60,15 @@ class UpdateDataController extends GetxController {
   }
 
   void _updateOK(UpdateResponse response) {
-    print(response.update);
-    final usuarioupdate = usuario.copyWith(
-    email: usuarioController.text,
-    nombre: nombreController.text,
-    fechaNacimiento: fechaNacimiento.toString()
-    );
-    Get.find<HomeController>().updateUsuario(usuarioupdate);
-    update();
+    if (response.update) {
+      final usuarioupdate = usuario.copyWith(
+        email: usuarioController.text,
+        nombre: nombreController.text,
+      );
+      Get.find<HomeController>().updateUsuario(usuarioupdate);
+      Get.snackbar('Datos Actulizados', '');
+      update();
+    } else
+      Get.snackbar('Ocurrio un error', '');
   }
 }

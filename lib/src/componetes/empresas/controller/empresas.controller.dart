@@ -9,9 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class EmpresasController extends GetxController {
 
+  List<Empresa> empresas;
   final EmpresaRepositorio repositorio;
-
-  EmpresasController({this.repositorio});
+  EmpresasController({this.repositorio,this.empresas});
   Empresa empresa;
   PageController pageViewController;
   String titulo = "Información";
@@ -20,7 +20,8 @@ class EmpresasController extends GetxController {
   List<Producto> productos = [];
   bool loading = true;
   List<bool> startValue = List.generate(5, (index) => false);
-
+  
+  
 
   @override
   void onInit() {

@@ -19,6 +19,7 @@ class UpdateDataUsuario extends StatelessWidget {
            body: GestureDetector(
                   onTap : ()=>FocusScope.of(context).unfocus(),
                   child : SingleChildScrollView(
+                           
                           child : GetBuilder<UpdateDataController>(
                                   init: UpdateDataController(usuario:usuario,repositorio: UsuarioRepocitorio()),
                                   builder: (state){
@@ -49,26 +50,7 @@ class UpdateDataUsuario extends StatelessWidget {
                                                             foco              : state.nombreFoco,
                                                             leftIcon          : Icons.person_add,
                                                             requerido         : true,
-                                                            ),
-                                                            InputForm(
-                                                            placeholder       : "Fecha Nacimiento",
-                                                            controller        : state.fechaController,
-                                                            requerido         : true,
-                                                            readOnly          : true,
-                                                            isButtonIcon      : true,
-                                                            rightIcon         : Icons.date_range,
-                                                            onButtonIcon      : (){
-                                                              showDatePicker(
-                                                              locale: Locale('es'),
-                                                              context: context, 
-                                                              initialDate: DateTime.now(), 
-                                                              firstDate: DateTime(1900), 
-                                                              lastDate: DateTime(2050),
-                                                              ).then((fecha){
-                                                                state.fechaController.text = state.formatFecha(fecha);
-                                                                state.fechaNacimiento = fecha;
-                                                              });
-                                                            },
+                                                            onEditingComplete : ()=>state.updateData()
                                                             ),
                                                            _button(state)
                                                          ],

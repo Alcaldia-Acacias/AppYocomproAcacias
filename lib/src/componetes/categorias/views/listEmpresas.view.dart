@@ -21,6 +21,7 @@ class ListEmpresasByCategoria extends StatelessWidget {
             builder: (state){
                 return Scaffold(
                        body: SafeArea(
+                             top: false,
                              child: RefreshIndicator(
                                     onRefresh: () async {},
                                     child    : CustomScrollView(
