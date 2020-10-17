@@ -1,5 +1,6 @@
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
+import 'package:comproacacias/src/componetes/publicaciones/models/cometario.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/like.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
@@ -67,40 +68,59 @@ class PublicacionesController extends GetxController {
 
   void megustaAction(int idPublicacion, int index) async {
     final usuario = Get.find<HomeController>().usuario;
-    final response =
-        await repositorio.meGustaPublicacion(idPublicacion, idUsuario);
-    final likes = publicaciones[index].likes;
-    publicaciones[index] =
-        publicaciones[index].copyWith(megusta: true, likes: (likes + 1));
-    publicaciones[index].usuariosLike.add(this._addusuarioLike(usuario));
-    print(response);
+    await repositorio.meGustaPublicacion(idPublicacion, idUsuario);
+    this._addusuarioLike(usuario, index);
     update(['publicaciones']);
   }
 
   void noMegustaAction(int idPublicacion, int index) async {
-    final response =
-        await repositorio.noMeGustaPublicacion(idPublicacion, idUsuario);
+   await repositorio.noMeGustaPublicacion(idPublicacion, idUsuario);
+    this._removeUsuarioLike(index);
+    update(['publicaciones']);
+  }
+
+  void comentarPublicacion(int idPublicacion, int index) async {
+    final usuario = Get.find<HomeController>().usuario;
+    if (comentarioController.text.isNotEmpty) {
+       await repositorio.comentarPublicacion(
+          comentarioController.text, idPublicacion, idUsuario);
+      this._addComentario(usuario, index);
+      comentarioController?.clear();
+      update(['comentarios','publicaciones']);
+    }
+  }
+
+  void _addComentario(Usuario usuario, int index) {
+    final comentarios = publicaciones[index].numeroComentarios;
+    final comentario = Comentario(
+                       comentario : comentarioController.text,
+                       fecha      : DateTime.now().toString(),
+                       usuario    : Usuario(
+                                    nombre : usuario.nombre,
+                                    imagen : usuario.imagen,
+                                    id     : usuario.id
+                       )
+    );
+    publicaciones[index].comentarios.insert(0,comentario);
+    publicaciones[index] = publicaciones[index].copyWith(numeroComentarios: (comentarios+1));
+  }
+
+  void _addusuarioLike(Usuario usuario, int index) {
+    final likes = publicaciones[index].likes;
+    publicaciones[index] =
+        publicaciones[index].copyWith(megusta: true, likes: (likes + 1));
+    publicaciones[index].usuariosLike.add(LikePublicacion(
+        fecha: DateTime.now().toString(),
+        usuario: Usuario(
+            id: usuario.id, imagen: usuario.imagen, nombre: usuario.nombre)));
+  }
+
+  void _removeUsuarioLike(int index) {
     final likes = publicaciones[index].likes;
     publicaciones[index] =
         publicaciones[index].copyWith(megusta: false, likes: (likes - 1));
-    publicaciones[index].usuariosLike.removeAt(
-        this._removeUsuarioLike(publicaciones[index].usuariosLike, idUsuario));
-    update(['publicaciones']);
+    publicaciones[index].usuariosLike.removeAt(publicaciones[index]
+        .usuariosLike
+        .indexWhere((like) => like.usuario.id == idUsuario));
   }
-  void comentarPublicacion(){
-  
-
-  }
-  LikePublicacion _addusuarioLike(Usuario usuario) {
-    return LikePublicacion(
-        fecha: DateTime.now().toString(),
-        usuario: Usuario(
-            id: usuario.id, imagen: usuario.imagen, nombre: usuario.nombre));
-  }
-
-  int _removeUsuarioLike(List<LikePublicacion> likes, int idUsuario) {
-    return likes.indexWhere((like) => like.usuario.id == idUsuario);
-  }
-
-
 }

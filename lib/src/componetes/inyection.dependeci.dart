@@ -13,7 +13,7 @@ class Dependecias {
 
   Get.lazyPut(()=>Dio(
                   BaseOptions(
-                      baseUrl: 'http://10.0.2.2:8000',
+                      baseUrl: 'http://localhost:8000',
                       contentType: Headers.jsonContentType,
                       headers:{HttpHeaders.authorizationHeader: 'Bearer $token'}
                   )

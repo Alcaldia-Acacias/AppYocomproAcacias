@@ -180,9 +180,9 @@ Widget _listaComentario(int id, int index) {
                                    subtitle : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                 Text(comentarios[0].comentario),
+                                                 Text(comentarios[i].comentario),
                                                  SizedBox(height: 4),
-                                                 Text(comentarios[0].formatFecha(),style: TextStyle(fontWeight: FontWeight.bold),)
+                                                 Text(comentarios[i].formatFecha(),style: TextStyle(fontWeight: FontWeight.bold),)
                                               ],
                                    )
                                    ),
@@ -200,6 +200,7 @@ Widget _listaComentario(int id, int index) {
 
 Widget _textField() {
   return GetBuilder<PublicacionesController>(
+         id: 'comentarios',
          builder: (state) 
            => SafeArea(
               child:  Padding(
@@ -215,7 +216,7 @@ Widget _textField() {
                                     suffixIcon     : IconButton(
                                                      icon: Icon(Icons.send), 
                                                      onPressed: (){
-                                                       print("object");
+                                                       state.comentarPublicacion(publicacion.id, index);
                                                      }
                                                      ),
                                     contentPadding : EdgeInsets.all(10),

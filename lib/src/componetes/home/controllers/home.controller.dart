@@ -9,7 +9,7 @@ class HomeController extends GetxController {
   HomeController({this.repositorio});
   AnimationController controller;
   int page = 0;
-  String urlImegenes = 'http://10.0.2.2:8000/imagenes';
+  String urlImegenes = 'http://localhost:8000/imagenes';
   Usuario usuario;
 
   @override
