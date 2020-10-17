@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MenuItemUsuario extends StatelessWidget {
 
@@ -16,13 +17,10 @@ class MenuItemUsuario extends StatelessWidget {
                    child: Padding(
                           padding : EdgeInsets.all(8.0),
                           child   : GridTile(
-                                    child: Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: Icon(
-                                                   icon,
-                                                   size  : 50,
-                                                   color : Colors.grey
-                                            ),
+                                    child: Icon(
+                                           icon,
+                                           size  : Get.height * 0.07,
+                                           color : Colors.grey
                                     ),
                                     footer: Text(titulo,
                                             textAlign: TextAlign.center,

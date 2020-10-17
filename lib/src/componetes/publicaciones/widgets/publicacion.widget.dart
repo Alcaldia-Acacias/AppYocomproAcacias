@@ -103,11 +103,17 @@ Widget _footer(Publicacion publicacion, int index) {
                     child   : Icon(Icons.textsms,color:Colors.blue[200]),
                     ),
                     Text('${publicacion.numeroComentarios}'),
-                     RawChip(
+                    RawChip(
                     label: Text('Me gusta'),
-                    onPressed:(){},
-                    avatar:Icon(Icons.thumb_up,color:Colors.grey[400]),
-                    backgroundColor: Colors.transparent
+                    labelStyle: TextStyle(color:publicacion.megusta ? Colors.white : Colors.grey[400]),
+                    onPressed:()=>   publicacion.megusta 
+                                     ? Get.find<PublicacionesController>().noMegustaAction(publicacion.id,index)
+                                     : Get.find<PublicacionesController>().megustaAction(publicacion.id,index),
+                    avatar:Icon(
+                           Icons.thumb_up,
+                           color: publicacion.megusta ? Colors.white : Colors.grey[400]
+                    ),
+                    backgroundColor: publicacion.megusta ? Get.theme.primaryColor : Colors.transparent
                     ),
                     RawChip(
                     label: Text('Comentar'),
@@ -145,7 +151,9 @@ Widget _listaComentario(int id, int index) {
    return GetBuilder<PublicacionesController>(
           id: 'comentarios',
           builder: (state){
-           final comentarios = state.publicaciones[index].comentarios;
+           final comentarios = onlyEmpresa
+                               ? state.publicacionesByempresa[index].comentarios
+                               : state.publicaciones[index].comentarios;
            if(state.loading)
              return Expanded(child: Center(child: CircularProgressIndicator()));
            if(comentarios.length == 0)
@@ -246,7 +254,9 @@ Widget _listaDelikes(int id, int index) {
    return GetBuilder<PublicacionesController>(
           id: 'likes',
           builder: (state){
-           final usuarios = state.publicaciones[index].usuariosLike;
+           final usuarios = onlyEmpresa
+                            ?state.publicacionesByempresa[index].usuariosLike
+                            :state.publicaciones[index].usuariosLike;
            if(state.loading)
              return Expanded(child: Center(child: CircularProgressIndicator()));
            if(usuarios.length == 0)

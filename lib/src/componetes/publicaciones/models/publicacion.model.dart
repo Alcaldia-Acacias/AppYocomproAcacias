@@ -13,6 +13,7 @@ class Publicacion {
   final List<Comentario> comentarios;
   final List<String> imagenes;
   final List<LikePublicacion> usuariosLike;
+  final bool megusta;
 
   Publicacion( 
       {this.id,
@@ -24,7 +25,8 @@ class Publicacion {
       this.usuario,
       this.imagenes,
       this.comentarios, 
-      this.usuariosLike,});
+      this.usuariosLike,
+      this.megusta});
 
 factory Publicacion.toJson(Map<String,dynamic> json,)
    =>Publicacion(
@@ -34,6 +36,7 @@ factory Publicacion.toJson(Map<String,dynamic> json,)
      texto             : json['texto'] ?? '',
      imagenes          : json['imagenes'].map<String>((imagen)=>'${imagen['nombre']}').toList() ?? '',
      fecha             : json['fecha'] ?? '',
+     megusta           : json['megusta'] ?? false,
      empresa           : Empresa?.toJson(json['empresa']) ?? '',
      comentarios       : json['data_comentarios']?.map<Comentario>((comentario)=> Comentario.toJson(comentario))?.toList(),
      usuariosLike      : json["likes_usuarios"]?.map<LikePublicacion>((like)=> LikePublicacion.toJson(like))?.toList() 
@@ -42,5 +45,31 @@ factory Publicacion.toJson(Map<String,dynamic> json,)
    String formatFecha() => DateFormat("dd MMMM 'del' yyyy  h:mm a")
                           .format(DateTime.parse(this.fecha));
   
+   Publicacion copyWith(
+     {int id, 
+      int likes, 
+      int numeroComentarios,
+      String  texto, 
+      String fecha,
+      Empresa empresa,
+      Usuario usuario,
+      List<Comentario> comentarios,
+      List<String> imagenes,
+      List<LikePublicacion> usuariosLike,
+      bool megusta
+     }
+   ) => Publicacion(
+        id                : id                ?? this.id,
+        likes             : likes             ?? this.likes,
+        numeroComentarios : numeroComentarios ?? this.numeroComentarios,
+        texto             : texto             ?? this.texto,
+        fecha             : fecha             ?? this.fecha,
+        empresa           : empresa           ?? this.empresa,
+        usuario           : usuario           ?? this.usuario,
+        comentarios       : comentarios       ?? this.comentarios,
+        imagenes          : imagenes          ?? this.imagenes,
+        usuariosLike      : usuariosLike      ?? this.usuariosLike,
+        megusta           : megusta           ?? this.megusta
+    );
 }
         

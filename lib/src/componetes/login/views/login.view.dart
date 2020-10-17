@@ -55,7 +55,7 @@ Widget _logo() {
    return Align(
           alignment : titulo == 'Iniciar Sesion'
                       ?
-                      Alignment(0.0,0.5)
+                      Alignment(0.0,0.45)
                       :
                       Alignment(0.0,0.7),
           child     : SizedBox(

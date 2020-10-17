@@ -60,7 +60,8 @@ Widget _menu(Usuario usuario) {
              ),
              MenuItemUsuario(
              icon: Icons.power_settings_new,
-             titulo: 'Cerrar Sesion'
+             titulo: 'Cerrar Sesion',
+             onTap: ()=>Get.find<HomeController>().logOut(),
              ),
             
           ],
@@ -70,7 +71,7 @@ Widget _menu(Usuario usuario) {
 Widget  _header(Usuario usuario) {
   return  Container(
           alignment : AlignmentDirectional.center,
-          height    : 300,
+          height    : Get.height * 0.4,
           width     : Get.width,
           child     : Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

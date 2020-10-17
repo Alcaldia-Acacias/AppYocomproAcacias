@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/models/error.model.dart';
 import 'package:comproacacias/src/componetes/login/models/usuariologin.model.dart';
@@ -102,7 +100,6 @@ class LoginController extends GetxController {
     Get.find<Dio>().options.headers = {
       HttpHeaders.authorizationHeader: 'Bearer ${box.read('token')}'
     };
-    Get.find<HomeController>().usuario = response.usuario;
     Get.offNamed('/home');
   }
 

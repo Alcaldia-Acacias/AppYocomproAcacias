@@ -4,6 +4,8 @@ import 'package:comproacacias/src/componetes/home/controllers/home.controller.da
 import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/views/home.vista.dart';
 import 'package:comproacacias/src/componetes/inyection.dependeci.dart';
+import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
+import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/views/login.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
@@ -20,7 +22,7 @@ import 'package:intl/intl.dart';
  main() async {
   Intl.defaultLocale = 'es_ES';
   await GetStorage.init();
-  // await GetStorage().erase();
+  //await GetStorage().erase();
   Dependecias.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
@@ -74,6 +76,9 @@ class MyApp extends StatelessWidget {
         GetPage(
         name: '/', 
         page: ()=>LoginPage(),
+        bindings: [
+            BindingsBuilder.put( () => LoginController(repositorio:LoginRepositorio())),
+        ]
         ),
       ],
     );
