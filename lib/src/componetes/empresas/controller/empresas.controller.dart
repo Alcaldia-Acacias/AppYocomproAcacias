@@ -1,17 +1,18 @@
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/producto.model.dart';
+import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmpresasController extends GetxController {
-
   List<Empresa> empresas;
   final EmpresaRepositorio repositorio;
-  EmpresasController({this.repositorio,this.empresas});
+  EmpresasController({this.repositorio, this.empresas});
   Empresa empresa;
   PageController pageViewController;
   String titulo = "Información";
@@ -20,19 +21,16 @@ class EmpresasController extends GetxController {
   List<Producto> productos = [];
   bool loading = true;
   List<bool> startValue = List.generate(5, (index) => false);
-  
-  
 
   @override
   void onInit() {
     pageViewController = PageController(initialPage: 0);
     super.onInit();
-   }
+  }
 
- @override
+  @override
   void onClose() {
-     if(pageViewController.hasClients)
-       pageViewController?.dispose();
+    if (pageViewController.hasClients) pageViewController?.dispose();
     Get.find<PublicacionesController>().publicacionesByempresa = [];
     super.onClose();
   }
@@ -53,7 +51,6 @@ class EmpresasController extends GetxController {
         break;
       default:
         break;
-      
     }
     update(['empresa']);
   }
@@ -88,6 +85,7 @@ class EmpresasController extends GetxController {
       throw 'Could not launch $url';
     }
   }
+
   void getPublicaciones(int id) async {
     Get.find<PublicacionesController>().getPublicacionesByempresa(id);
   }
@@ -99,12 +97,36 @@ class EmpresasController extends GetxController {
     update();
   }
 
-  void calificarEmpresa(int start){
+  void calificarEmpresa(int start) {
     this.startValue = List.generate(5, (index) => false);
     for (var i = 0; i <= start; i++) {
-        this.startValue[i] = true;
+      this.startValue[i] = true;
     }
     update();
-  
+  }
+
+  void addEmpresa(Empresa empresa) {
+    this.empresas.insert(0, empresa);
+    update(['empresas']);
+  }
+
+  void updateEmpresa(Empresa empresa){
+   final index = this.empresas.indexWhere((empresaItem) => empresaItem.id == empresa.id);
+   this.empresas[index] = empresa;
+   update(['empresas']);
+  }
+
+  void deleteEmpresa(int index, int id) async {
+    final response = await this.repositorio.deleteEmpresa(id);
+    if (response is ErrorResponse) {
+      print(response.error.error);
+    }
+    if (response is ResponseEmpresa) {
+      if (response.delete) {
+        this.empresas.removeAt(index);
+        Get.back();
+        update(['empresas']);
+      }
+    }
   }
 }

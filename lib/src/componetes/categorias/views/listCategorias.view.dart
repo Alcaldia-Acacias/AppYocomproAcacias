@@ -1,4 +1,5 @@
 import 'package:comproacacias/src/componetes/categorias/controllers/categorias.controllers.dart';
+import 'package:comproacacias/src/componetes/categorias/models/categoria.model.dart';
 import 'package:comproacacias/src/componetes/categorias/views/listEmpresas.view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +31,7 @@ class ListCategoriasPage extends StatelessWidget {
    ); 
  }
 
-  _listCategorias(List<String> categorias) {
+  _listCategorias(List<Categoria> categorias) {
       return  SliverPadding(
            padding: EdgeInsets.all(4),
            sliver : SliverList(
@@ -45,7 +46,7 @@ class ListCategoriasPage extends StatelessWidget {
                                         );
                                  }
                                  return ListTile(
-                                        title: Text(categorias[i]),
+                                        title: Text(categorias[i].nombre),
                                         leading: CircleAvatar(
                                                  child: Text('${i +1}',style:TextStyle(color: Colors.white)),
                                                  backgroundColor: Get.theme.primaryColor,
@@ -53,7 +54,7 @@ class ListCategoriasPage extends StatelessWidget {
                                         ),
                                         trailing: Icon(Icons.arrow_forward_ios),
                                         onTap: (){
-                                           Get.find<CategoriasController>().getEmpresasByCategoriaInitial(categorias[i]);
+                                           Get.find<CategoriasController>().getEmpresasByCategoriaInitial(categorias[i].nombre);
                                            Get.to(ListEmpresasByCategoria());
                                         },
                                  );

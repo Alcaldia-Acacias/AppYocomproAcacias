@@ -8,10 +8,9 @@ class InputForm extends StatelessWidget {
   final String placeholder;
   final IconData leftIcon,rightIcon;
   final FocusNode foco;
-  final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon;
+  final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon,textarea,autofocus;
   final Function onEditingComplete,onButtonIcon;
  
-
 
 
   InputForm({
@@ -27,8 +26,10 @@ class InputForm extends StatelessWidget {
   this.isEmail   = false,
   this.readOnly  = false,
   this.isButtonIcon  = false,
+  this.textarea = false,
+  this.autofocus   = false,
   this.onEditingComplete,
-  this.onButtonIcon
+  this.onButtonIcon,
   })
       : super(key: key);
 
@@ -37,18 +38,22 @@ class InputForm extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       child: TextFormField(
+             key               : ValueKey(placeholder),
              readOnly          : readOnly,
              focusNode         : foco,
+             autofocus         : autofocus,
              textInputAction   : lastInput
                                  ?
                                  TextInputAction.done
                                  :
                                  TextInputAction.next,
+             maxLines          : textarea ? null : 1,
+             keyboardType      : textarea ? TextInputType.multiline : null,
              obscureText       : obscure,
              controller        : controller,
              onEditingComplete : onEditingComplete,
              decoration        : InputDecoration(
-                                 suffixIcon     : rightIcon == null
+                                 suffixIcon       : rightIcon == null
                                                   ?
                                                   null
                                                   :
@@ -72,7 +77,7 @@ class InputForm extends StatelessWidget {
                                                   )
                                                   :
                                                   Icon(leftIcon),
-                                 contentPadding : EdgeInsets.all(10),
+                                 contentPadding : textarea ? EdgeInsets.only(top:0,bottom:70) :EdgeInsets.all(10),
                                  hintText       : placeholder,
                                  border         : OutlineInputBorder()
              ),

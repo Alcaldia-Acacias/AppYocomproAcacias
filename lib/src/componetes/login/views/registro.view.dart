@@ -46,26 +46,15 @@ class RegistroFormPage extends StatelessWidget {
                                                      foco              : state.nombreFocoSingin,
                                                      leftIcon          : Icons.person_add,
                                                      requerido         : true,
-                                                     onEditingComplete : ()=>FocusScope.of(context).requestFocus(state.passwordFocoSingin)
+                                                     onEditingComplete : ()=>FocusScope.of(context).requestFocus(state.cedulaFocoSingin)
                                                      ),
                                                      InputForm(
-                                                     placeholder       : "Fecha Nacimiento",
-                                                     controller        : state.fechaSinginController,
+                                                     placeholder       : "Cedula",
+                                                     controller        : state.cedulaSinginController,
+                                                     leftIcon          : Icons.credit_card,
+                                                     foco              : state.cedulaFocoSingin,
                                                      requerido         : true,
-                                                     readOnly          : true,
-                                                     isButtonIcon      : true,
-                                                     rightIcon         : Icons.date_range,
-                                                     onButtonIcon      : (){
-                                                       showDatePicker(
-                                                       locale: Locale('es'),
-                                                       context: context, 
-                                                       initialDate: DateTime.now(), 
-                                                       firstDate: DateTime(1900), 
-                                                       lastDate: DateTime(2050),
-                                                       ).then((fecha){
-                                                         state.fechaSinginController.text = state.formatFecha(fecha);
-                                                       });
-                                                     },
+                                                     onEditingComplete : ()=>FocusScope.of(context).requestFocus(state.passwordFocoSingin)
                                                      ),
                                                      InputForm(
                                                      placeholder       : "Contraseña",

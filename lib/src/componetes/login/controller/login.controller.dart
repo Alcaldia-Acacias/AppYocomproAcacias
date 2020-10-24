@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
-import 'package:comproacacias/src/componetes/login/models/error.model.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/login/models/usuariologin.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:dio/dio.dart';
@@ -25,17 +25,17 @@ class LoginController extends GetxController {
   GlobalKey<FormState> formKeySingin = GlobalKey<FormState>();
   TextEditingController usuarioSinginController = TextEditingController();
   TextEditingController nombreSinginController = TextEditingController();
-  TextEditingController fechaSinginController = TextEditingController();
+  TextEditingController cedulaSinginController = TextEditingController();
   TextEditingController passwordSinginController = TextEditingController();
   TextEditingController confirmPasswordSinginController =
       TextEditingController();
 
   FocusNode usuarioFocoSingin = FocusNode();
   FocusNode nombreFocoSingin = FocusNode();
+  FocusNode cedulaFocoSingin = FocusNode();
   FocusNode passwordFocoSingin = FocusNode();
   FocusNode confirmPasswordFocoSingin = FocusNode();
 
-  DateTime fechaNacimiento = DateTime.now();
   Usuario usuario;
   bool loading = false;
   Future dialog;
@@ -44,8 +44,8 @@ class LoginController extends GetxController {
       this._openDialog();
       final response = await repositorio.login(
           usuarioLoginController.text, passwordLoginController.text);
-      if (response is ErrorLogin) this._loginError(response.error);
-      if (response is UsuarioModelLogin) this._loginOk(response);
+      if (response is ErrorResponse) this._loginError(response.getError);
+      if (response is UsuarioModelResponse) this._loginOk(response);
     }
   }
 
@@ -54,19 +54,15 @@ class LoginController extends GetxController {
       this._openDialog();
       final usuario = {
         "imagen": '',
-        "biografia": '',
-        "sexo": 'M',
-        "numero": '',
-        "rol": 0,
+        "cedula": cedulaSinginController.text,
         "codigo_recuperacion": '',
         "nombre": nombreSinginController.text,
-        "pass": passwordSinginController.text,
-        "nacimiento": fechaNacimiento,
-        "correo": usuarioSinginController.text
+        "password": passwordSinginController.text,
+        "usuario": usuarioSinginController.text
       };
       final response = await repositorio.addUsuario(usuario);
-      if (response is ErrorLogin) this._loginError(response.error);
-      if (response is UsuarioModelLogin) this._loginOk(response);
+      if (response is ErrorResponse) this._loginError(response.getError);
+      if (response is UsuarioModelResponse) this._loginOk(response);
     }
     if (!this.comparePassword())
       Get.snackbar("Error", "no coinciden las contraseñas");
@@ -91,9 +87,12 @@ class LoginController extends GetxController {
       Get.snackbar('Usuario no existe', 'Registrese');
     if (error == 'USER_EXITS')
       Get.snackbar('Usuario ya Registrado', 'Inicia Session');
+    if (error == 'Connection refused')
+      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
+    
   }
 
-  void _loginOk(UsuarioModelLogin response) async {
+  void _loginOk(UsuarioModelResponse response) async {
     final box = GetStorage();
     await box.write('token', response.token);
     await box.write('id', response.usuario.id);

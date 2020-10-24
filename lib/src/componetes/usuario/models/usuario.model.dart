@@ -6,12 +6,14 @@ class Usuario {
       imagen,
       nombre,
       email,
+      cedula,
       fechaCreacion;
   final List<Empresa> empresas;
   Usuario(
       {this.id,
       this.imagen,
       this.nombre,
+      this.cedula,
       this.email,
       this.fechaCreacion,
       this.empresas
@@ -26,6 +28,7 @@ class Usuario {
        id              : json['id']                 ?? 0,
        imagen          : json['imagen']             ?? '',
        nombre          : json['nombre']             ?? '',
+       cedula          : json['cedula']             ?? '',
        email           : json['usuario']            ?? '',
        fechaCreacion   : json['fecha']              ?? '',
        empresas        : json['empresas']?.map<Empresa>((empresa)=>Empresa.toJson(empresa))?.toList()       
@@ -35,6 +38,7 @@ Usuario copyWith({
   int     id,
   String  imagen,
   String  nombre,
+  String  cedula,
   String  biografia,
   String  sexo,
   String  fechaNacimiento,
@@ -47,6 +51,7 @@ Usuario copyWith({
    id              : id               ?? this.id,   
    imagen          : imagen           ?? this.imagen,
    nombre          : nombre           ?? this.nombre,
+   cedula          : cedula           ?? this.cedula,
    email           : email            ?? this.email,
    fechaCreacion   : fechaCreacion    ?? this.fechaCreacion,
    empresas        : empresas         ?? this.empresas,

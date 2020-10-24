@@ -1,4 +1,5 @@
 import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
+import 'package:comproacacias/src/componetes/categorias/models/categoria.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,7 @@ class CategoriasController extends GetxController {
   CategoriasController({this.repositorio});
   String categoria = '';
   List<Empresa> empresas = [];
-  List<String> categorias = [];
+  List<Categoria> categorias = [];
   ScrollController controllerListEmpresas;
   int _pagina = 0;
 

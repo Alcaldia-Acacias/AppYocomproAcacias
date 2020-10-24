@@ -50,6 +50,7 @@ class LoginFormPage extends StatelessWidget {
                                                             requerido         : true,
                                                             onEditingComplete : ()=> _submit(),
                                                             ),
+                                                            _olvidoPassword(),
                                                             _buttonSubmit(state.loading)
 
                                                          ],
@@ -75,6 +76,17 @@ class LoginFormPage extends StatelessWidget {
   }
    _submit() {
        Get.find<LoginController>().submitFormLogin();
+  }
+
+  _olvidoPassword() {
+    return GestureDetector(
+           child: Container(
+                  height    : 30,
+                  alignment : Alignment.topRight,
+                  child     :Text('Olvido su contraseña ?',style:TextStyle(color: Colors.blue))
+                  ),
+           onTap: ()=>print('olvide')
+    );
   }
 
 }

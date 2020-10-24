@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
                      brightness: Brightness.light,
                      color: Colors.white,
                      textTheme: TextTheme(
-                                title: TextStyle(color:Colors.black,fontSize: 28)
+                                title: TextStyle(color:Colors.black,fontSize: 20)
                      ),
                      iconTheme:  IconThemeData(
                                  color: Colors.black

@@ -19,11 +19,12 @@ class MenuItemUsuario extends StatelessWidget {
                           child   : GridTile(
                                     child: Icon(
                                            icon,
-                                           size  : Get.height * 0.07,
+                                           size  : Get.height * 0.065,
                                            color : Colors.grey
                                     ),
                                     footer: Text(titulo,
                                             textAlign: TextAlign.center,
+                                            
                                     )
                      ),
                    ),

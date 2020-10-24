@@ -41,5 +41,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Habilite los permisos de ubicacion.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Habilite los permisos de ubicacion en segundo plano.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Habilite los permisos de acceso a archivos.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Habilite los permisos para aceder ala camara.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Habilite los permisos de microfono.</string>
 </dict>
 </plist>
