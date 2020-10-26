@@ -8,7 +8,8 @@ class ErrorResponse  extends ResponseModel{
   final DioError error;
   ErrorResponse(this.error);
 
-  get getError {
+  String get getError {
+    print(error.response.data['error']);
    if(error.error is SocketException)
       return this.error.error.osError.message;
    return error.response.data['error'];

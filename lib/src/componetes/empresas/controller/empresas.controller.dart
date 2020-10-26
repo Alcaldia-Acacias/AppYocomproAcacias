@@ -1,4 +1,5 @@
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
+import 'package:comproacacias/src/componetes/empresas/models/calificacion.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
@@ -7,6 +8,7 @@ import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.mo
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmpresasController extends GetxController {
@@ -19,8 +21,11 @@ class EmpresasController extends GetxController {
   int pagina = 0;
   List<Publicacion> publicaciones = [];
   List<Producto> productos = [];
+  List<Calificacion> calificaciones = [];
   bool loading = true;
   List<bool> startValue = List.generate(5, (index) => false);
+  int extrellas = 0;
+  final box = GetStorage();
 
   @override
   void onInit() {
@@ -46,6 +51,10 @@ class EmpresasController extends GetxController {
         this.getPublicaciones(empresa.id);
         break;
       case 2:
+        this.titulo = "Calificaciones";
+        this.getCalificaciones(empresa.id);
+        break;
+      case 3:
         this.titulo = "Vitrina";
         this.getProductosByEmpresa(empresa.id);
         break;
@@ -97,11 +106,19 @@ class EmpresasController extends GetxController {
     update();
   }
 
+  void getCalificaciones(int id) async {
+    this.loading = true;
+    this.calificaciones = await this.repositorio.getCalificacionesByEmpresa(id);
+    this.loading = false;
+    update();
+  }
+
   void calificarEmpresa(int start) {
     this.startValue = List.generate(5, (index) => false);
     for (var i = 0; i <= start; i++) {
       this.startValue[i] = true;
     }
+    this.extrellas = start + 1;
     update();
   }
 
@@ -110,10 +127,11 @@ class EmpresasController extends GetxController {
     update(['empresas']);
   }
 
-  void updateEmpresa(Empresa empresa){
-   final index = this.empresas.indexWhere((empresaItem) => empresaItem.id == empresa.id);
-   this.empresas[index] = empresa;
-   update(['empresas']);
+  void updateEmpresa(Empresa empresa) {
+    final index =
+        this.empresas.indexWhere((empresaItem) => empresaItem.id == empresa.id);
+    this.empresas[index] = empresa;
+    update(['empresas']);
   }
 
   void deleteEmpresa(int index, int id) async {
@@ -127,6 +145,37 @@ class EmpresasController extends GetxController {
         Get.back();
         update(['empresas']);
       }
+    }
+  }
+
+  void addCalificacionEmpresa() async {
+    this.startValue = List.generate(5, (index) => false);
+    final idUsuario = box.read('id');
+    if (extrellas > 0) {
+      final response = await this
+          .repositorio
+          .calificarEmpresa(idUsuario, empresa.id, extrellas);
+      if (response is ErrorResponse) this._error(response.getError);
+      if (response is ResponseEmpresa){
+        Get.back();
+        Get.snackbar('Tu calificacion $extrellas', 'Gracias por calificar',
+          snackPosition: SnackPosition.BOTTOM);
+        update();
+      }
+    }
+    if (extrellas == 0) {
+      Get.back();
+      Get.snackbar('Error', 'Debes Calificar',
+          snackPosition: SnackPosition.BOTTOM);
+    }
+
+  }
+
+  void _error(String error) {
+    if (error == 'CALIFICACION_EXITS') {
+      Get.back();
+      Get.snackbar('Error', 'Ya calificaste esta empresa',
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 }

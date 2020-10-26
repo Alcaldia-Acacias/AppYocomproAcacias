@@ -12,15 +12,15 @@ class CalificarWidget extends StatelessWidget {
              return Container(
                child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(5, (page)=>
+                      children: List.generate(5, (start)=>
                        IconButton(
-                       icon: state.startValue[page] 
+                       icon: state.startValue[start] 
                              ?
                              Icon(Icons.star,color:Colors.yellow)
                              :
                              Icon(Icons.star_border),
                        onPressed: (){
-                         state.calificarEmpresa(page);
+                         state.calificarEmpresa(start);
                        },
                        iconSize: 33,
                        )

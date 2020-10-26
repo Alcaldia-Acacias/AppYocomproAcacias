@@ -4,7 +4,7 @@ import 'package:comproacacias/src/componetes/empresas/controller/empresas.contro
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificacion.widget.dart';
-import 'package:comproacacias/src/componetes/empresas/widgets/calificar1.widget.dart';
+import 'package:comproacacias/src/componetes/empresas/widgets/calificar.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/datosCard.widget.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
@@ -47,6 +47,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                                            children: <Widget>[
                                                               _datos(),
                                                               _publicaciones(),
+                                                              _calificaciones(),
                                                               _productos()
                                                            ],
                                                            onPageChanged: (page)=>state.getTitulo(page)
@@ -107,10 +108,10 @@ class PerfilEmpresaPage extends StatelessWidget {
                                                     )
                                            ),
                                 ),
-                                Align(
+                                /* Align(
                                 alignment: Alignment(0.0,0.05),
                                 child: CalificacionWidget()
-                                ),
+                                ), */
                                 Align(
                                 alignment: Alignment(0.92,1),
                                 child: RawChip(
@@ -314,7 +315,7 @@ void _calificar() {
             ),
    cancel: FlatButton(
             color: Get.theme.primaryColor,
-            onPressed: (){},
+            onPressed: ()=>Get.find<EmpresasController>().addCalificacionEmpresa(),
             child: Text('Calificar',style:TextStyle(color: Colors.white)),
             ),
    );
@@ -372,6 +373,41 @@ Widget _precio(int precio) {
                   )
                   )
            );
+}
+
+Widget _calificaciones() {
+  return GetBuilder<EmpresasController>(
+          builder: (state){
+           final calificaciones = state.calificaciones;
+           if(state.loading)
+              return Center(child: CircularProgressIndicator()); 
+           if(calificaciones.length == 0)
+              return Center(child: Text('No hay Calificaciones'));
+          return ListView.builder(
+                 padding  : EdgeInsets.all(10),
+                 itemCount: calificaciones.length,
+                 itemBuilder: (_,i){
+                   return Card(
+                          elevation: 0,
+                          color    : Colors.white,
+                          shape    : RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)
+                          ),
+                          child    : ListTile(
+                                     leading: CircleAvatar(
+                                              backgroundImage: calificaciones[i].usuario.imagen == ''
+                                                               ? AssetImage('assets/imagenes/logo_no_img.png')
+                                                               : CachedNetworkImageProvider('$urlImagenLogo/usuarios/${calificaciones[i].usuario.imagen}'),
+                                     ),
+                                     title    : CalificacionWidget(extrellas: calificaciones[i].extrellas,principal: false),
+                                     subtitle : Text(calificaciones[i].usuario.nombre)
+                          ),
+                   );
+                 }
+                 );
+          }
+          );
+
 }
 
 }

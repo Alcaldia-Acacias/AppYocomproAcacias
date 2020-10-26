@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/empresas/controller/empresas.controller.dart';
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
@@ -68,7 +69,7 @@ Widget _listEmpresas(List<Empresa> empresas, EmpresasController state) {
                                                         placeholder: AssetImage('assets/imagenes/load_image.png'), 
                                                         image      : empresas[i].urlLogo == ''
                                                                      ? AssetImage('assets/imagenes/logo_no_img.png')
-                                                                     : NetworkImage('$urlImagenes/logo/${empresas[i].urlLogo}')  
+                                                                     : CachedNetworkImageProvider('$urlImagenes/logo/${empresas[i].urlLogo}')  
                                           ),
                           ),                 
                           title: Text(empresas[i].nombre),

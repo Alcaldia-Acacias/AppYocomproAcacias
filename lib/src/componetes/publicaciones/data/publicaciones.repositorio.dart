@@ -46,6 +46,7 @@ class PublicacionesRepositorio {
 
   Future<List<Publicacion>> getPublicacionesByEmpresa(
       int idEmpresa, int idUsuario) async {
+    await new Future.delayed(new Duration(milliseconds: 500));
     final response = await _dio.get('/publicaciones/empresa/$idEmpresa',
         queryParameters: {'id': idUsuario});
     final publicaciones = response.data;
