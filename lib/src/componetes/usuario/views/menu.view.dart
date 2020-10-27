@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/actulizarDatos.view.dart';
@@ -9,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MenuUsuarioPage extends StatelessWidget {
-  const MenuUsuarioPage({Key key}) : super(key: key);
-
+   MenuUsuarioPage({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
@@ -19,7 +17,7 @@ class MenuUsuarioPage extends StatelessWidget {
                 body: Column(
                       children: [
                           if(state.usuario != null)
-                          _header(state.usuario),
+                          _header(state),
                           if(state.usuario != null)
                           Expanded(
                           child: _menu(state.usuario)
@@ -68,7 +66,7 @@ Widget _menu(Usuario usuario) {
           );
 }
 
-Widget  _header(Usuario usuario) {
+Widget  _header(HomeController state) {
   return  Container(
           alignment : AlignmentDirectional.center,
           height    : Get.height * 0.4,
@@ -78,7 +76,7 @@ Widget  _header(Usuario usuario) {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                                  SizedBox(height: 10),
-                                 Text( usuario?.nombre,
+                                 Text( state.usuario?.nombre,
                                        style: TextStyle(
                                               color    : Colors.white,
                                               fontSize : 25
@@ -87,18 +85,14 @@ Widget  _header(Usuario usuario) {
                                  Stack(
                                  overflow: Overflow.visible,
                                    children: [
-                                     CircleAvatar(
-                                     radius          : 70,
-                                     backgroundImage : usuario.imagen != ''
-                                                       ? CachedNetworkImageProvider('http://localhost:8000/imagenes/usuarios/${usuario.imagen}')
-                                                       : AssetImage('assets/imagenes/logo_no_img.png'),
-                                     ),
+                                     _imageUsuario(state),
                                      Positioned(
                                      bottom : 0,
                                      right  : -10,
                                      child  : RawChip(
                                               label  : Text('Editar'),
                                               avatar : Icon(Icons.photo_camera),
+                                              onPressed: ()=>_buttomSheep(state)                            
                                      )
                                      )
                                    ],
@@ -115,4 +109,64 @@ Widget  _header(Usuario usuario) {
                  ),
            );
 }
+
+  _imageUsuario(HomeController state) {
+   if(state.image?.path == null && state.usuario.imagen == '')
+       return  CircleAvatar(
+                      backgroundColor : Colors.grey[300],
+                      radius          : 70,
+                      child           : Icon(
+                                        Icons.person,
+                                        color : Colors.grey[400],
+                                        size  : 100
+                      )
+                      );
+   
+   
+  if(state.image?.path != null)
+   return ClipRRect(
+         borderRadius: BorderRadius.circular(100),
+         child:  FadeInImage(
+                 height : 140,
+                 width  : 140,
+                 fit    : BoxFit.cover,
+                 placeholder: AssetImage('assets/imagenes/load_image.png'), 
+                 image: AssetImage(state.image.path)
+                 ),
+   ); 
+   return ClipRRect(
+    borderRadius: BorderRadius.circular(300),
+    child:  FadeInImage(
+            height : 140,
+            width  : 140,
+            fit    : BoxFit.cover,
+            placeholder: AssetImage('assets/imagenes/load_image.png'), 
+            image: NetworkImage('${state.urlImegenes}/usuarios/${state.usuario.imagen}')
+            ),
+);
+}
+  _buttomSheep(HomeController state) {
+     Get.defaultDialog(
+      title  : 'Escoje tu Imagen',
+      content:Container(
+              height : 150,
+              width: 300,
+              color  : Colors.white,
+              child  : ListView(
+                       children: [
+                        ListTile(
+                        leading: Icon(Icons.folder),
+                        title: Text('Seleciona desde Archivo'),
+                        onTap: ()=>state.getImage('archivo')
+                        ),
+                        ListTile(
+                        leading: Icon(Icons.photo_camera),
+                        title: Text('Toma la foto'),
+                        onTap: ()=>state.getImage('camara')
+                        )
+                       ]
+                       ),
+              )
+     );
+  }
 }

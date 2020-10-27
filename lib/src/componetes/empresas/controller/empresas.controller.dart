@@ -12,9 +12,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmpresasController extends GetxController {
+
   List<Empresa> empresas;
   final EmpresaRepositorio repositorio;
   EmpresasController({this.repositorio, this.empresas});
+
   Empresa empresa;
   PageController pageViewController;
   String titulo = "Información";
@@ -26,6 +28,7 @@ class EmpresasController extends GetxController {
   List<bool> startValue = List.generate(5, (index) => false);
   int extrellas = 0;
   final box = GetStorage();
+  TextEditingController calificarController = TextEditingController();
 
   @override
   void onInit() {
@@ -149,12 +152,11 @@ class EmpresasController extends GetxController {
   }
 
   void addCalificacionEmpresa() async {
-    this.startValue = List.generate(5, (index) => false);
     final idUsuario = box.read('id');
     if (extrellas > 0) {
       final response = await this
           .repositorio
-          .calificarEmpresa(idUsuario, empresa.id, extrellas);
+          .calificarEmpresa(idUsuario, empresa.id, extrellas,calificarController.text);
       if (response is ErrorResponse) this._error(response.getError);
       if (response is ResponseEmpresa){
         Get.back();
@@ -168,7 +170,7 @@ class EmpresasController extends GetxController {
       Get.snackbar('Error', 'Debes Calificar',
           snackPosition: SnackPosition.BOTTOM);
     }
-
+    this._initCalificacion();
   }
 
   void _error(String error) {
@@ -177,5 +179,11 @@ class EmpresasController extends GetxController {
       Get.snackbar('Error', 'Ya calificaste esta empresa',
           snackPosition: SnackPosition.BOTTOM);
     }
+  }
+
+  void _initCalificacion() {
+    this.startValue = List.generate(5, (index) => false);
+    this.extrellas  = 0;
+    this.calificarController.clear();
   }
 }

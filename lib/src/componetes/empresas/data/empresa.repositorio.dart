@@ -70,11 +70,12 @@ class EmpresaRepositorio {
     }
   }
 
-  Future<ResponseModel> calificarEmpresa(int idUsuario,int idEmpresa,int extrellas) async {
+  Future<ResponseModel> calificarEmpresa(int idUsuario,int idEmpresa,int extrellas,[String comentario]) async {
     final data = jsonEncode({
        "id_usuario" : idUsuario,
        "id_empresa" : idEmpresa,
-       "extrellas"  : extrellas
+       "extrellas"  : extrellas,
+       "comentario" : comentario
     });
     try {
       final response = await this._dio.post('/calificaciones/add',data:data);

@@ -14,6 +14,7 @@ class CambiarPasswordPage extends StatelessWidget {
     return Scaffold(
            appBar: AppBar(
                    title: Text('Cambiar Contraseña'),
+                   elevation: 0,
            ),
            body: GestureDetector(
                   onTap : ()=>FocusScope.of(context).unfocus(),

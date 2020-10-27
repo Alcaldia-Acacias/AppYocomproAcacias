@@ -39,6 +39,7 @@ class InputForm extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 20),
       child: TextFormField(
              key               : ValueKey(placeholder),
+             textAlign         : textarea ? TextAlign.center : TextAlign.start,
              readOnly          : readOnly,
              focusNode         : foco,
              autofocus         : autofocus,

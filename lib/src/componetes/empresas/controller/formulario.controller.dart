@@ -7,6 +7,7 @@ import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart'
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -42,9 +43,7 @@ class FormEmpresaController extends GetxController {
   FocusNode latitudFoco = FocusNode();
   FocusNode longitudFoco = FocusNode();
   FocusNode nitFoco = FocusNode();
-
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   int currentPage = 0;
   String titulo = 'Escoje tu Logo';
   final box = GetStorage();
@@ -53,6 +52,7 @@ class FormEmpresaController extends GetxController {
   PickedFile pickedFile;
   int idCategoria;
   String urlImagen = '';
+  ImageCapture imageCapture = Get.find<ImageCapture>();
 
   @override
   void onInit() {
@@ -70,7 +70,7 @@ class FormEmpresaController extends GetxController {
       urlImagen = empresa.urlLogo;
       idCategoria = empresa.idCategoria;
     }
-
+   
     super.onInit();
   }
 
@@ -142,16 +142,12 @@ class FormEmpresaController extends GetxController {
   }
 
   void getImage(String tipo) async {
-    if (tipo == 'camara')
-      pickedFile = await picker.getImage(source: ImageSource.camera);
-    if (tipo == 'archivo')
-      pickedFile = await picker.getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      image = File(pickedFile.path);
+    image = await imageCapture.getImage(tipo);
+    if (!image.isNullOrBlank) {
       Get.back();
       update(['formulario_empresa']);
     }
-    if (pickedFile == null) {
+    if (image.isNullOrBlank) {
       Get.back();
       Get.snackbar('No seleciono ninguna Imagen', '',
           snackPosition: SnackPosition.BOTTOM);

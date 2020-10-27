@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
+import 'package:comproacacias/src/componetes/home/models/update.model.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
+import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -11,7 +16,9 @@ class HomeController extends GetxController {
   int page = 0;
   String urlImegenes = 'http://localhost:8000/imagenes';
   Usuario usuario;
-
+  File image;
+  ImageCapture imageCapture = Get.find<ImageCapture>();
+  
   @override
   void onInit() async {
     super.onInit();
@@ -40,7 +47,29 @@ class HomeController extends GetxController {
   }
 
   void logOut() async {
-  await GetStorage().erase();
-  Get.offAllNamed('/');
+    await GetStorage().erase();
+    Get.offAllNamed('/');
+  }
+
+  void getImage(String tipo) async {
+    image = await imageCapture.getImage(tipo);
+    if (!image.isNullOrBlank) {
+      final response = await repositorio.updateImagen(image.path, usuario.id);
+      if(response is UpdateImageResponse){
+      Get.back();
+      update();
+      }
+      if(response is ErrorResponse)this._errorResponse(response.getError);
+    }
+    if (image.isNullOrBlank) {
+      Get.back();
+      Get.snackbar('No seleciono ninguna Imagen', '',
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  void _errorResponse(String error) {
+    if (error == 'Connection refused')
+      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
   }
 }

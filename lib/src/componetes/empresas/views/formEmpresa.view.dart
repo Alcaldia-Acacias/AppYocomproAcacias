@@ -309,18 +309,16 @@ if(state.image?.path != null)
                  ),
 );
 if(state.actualizar)
-  return SizedBox(
-         child: ClipRRect(
-           borderRadius: BorderRadius.circular(300),
-           child:  FadeInImage(
-                   height : 200,
-                   width  : 200,
-                   fit    : BoxFit.cover,
-                   placeholder: AssetImage('assets/imagenes/load_image.png'), 
-                   image: NetworkImage('$urlImagenes/logo/${state.empresa.urlLogo}')
-                   ),
-),
-  );
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(300),
+    child:  FadeInImage(
+            height : 200,
+            width  : 200,
+            fit    : BoxFit.cover,
+            placeholder: AssetImage('assets/imagenes/load_image.png'), 
+            image: NetworkImage('$urlImagenes/logo/${state.empresa.urlLogo}')
+            ),
+);
 
 return Container();
 

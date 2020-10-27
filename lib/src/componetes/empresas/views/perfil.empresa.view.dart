@@ -10,6 +10,7 @@ import 'package:comproacacias/src/componetes/home/controllers/home.controller.da
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/imagenes.widget.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.widget.dart';
+import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -307,7 +308,18 @@ void _calificar() {
    content:  Container(
              color: Colors.white,
              height: Get.height * 0.2,
-             child: CalificarWidget(),
+             child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CalificarWidget(),
+                      InputForm(
+                      controller  : Get.find<EmpresasController>().calificarController,
+                      placeholder : "Escribe un Comentario",
+                      autofocus   : true, 
+                      textarea    : true, 
+                      )
+                    ],
+             )
              ),
    confirm: FlatButton(
             onPressed: ()=>Get.back(),
@@ -393,15 +405,35 @@ Widget _calificaciones() {
                           shape    : RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15)
                           ),
-                          child    : ListTile(
-                                     leading: CircleAvatar(
-                                              backgroundImage: calificaciones[i].usuario.imagen == ''
-                                                               ? AssetImage('assets/imagenes/logo_no_img.png')
-                                                               : CachedNetworkImageProvider('$urlImagenLogo/usuarios/${calificaciones[i].usuario.imagen}'),
-                                     ),
-                                     title    : CalificacionWidget(extrellas: calificaciones[i].extrellas,principal: false),
-                                     subtitle : Text(calificaciones[i].usuario.nombre)
-                          ),
+                          child    : Padding(
+                            padding:  EdgeInsets.symmetric(horizontal: 4,vertical: 10),
+                            child: Column(
+                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                       children: [
+                                         ListTile(
+                                         leading: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundImage: calificaciones[i].usuario.imagen == ''
+                                                                   ? AssetImage('assets/imagenes/logo_no_img.png')
+                                                                   : CachedNetworkImageProvider('$urlImagenLogo/usuarios/${calificaciones[i].usuario.imagen}'),
+                                         ),
+                                         title    : Text(calificaciones[i].usuario.nombre),
+                                         ),
+                                         Padding(
+                                           padding: EdgeInsets.only(left: 25),
+                                           child: CalificacionWidget(
+                                           extrellas:calificaciones[i].extrellas,
+                                           centrado: false,
+                                           size: 20
+                                           ),
+                                         ),
+                                         Padding(
+                                           padding: const EdgeInsets.only(left: 30),
+                                           child: Text(calificaciones[i].comentario),
+                                         )
+                                       ],
+                             ),
+                          )
                    );
                  }
                  );
