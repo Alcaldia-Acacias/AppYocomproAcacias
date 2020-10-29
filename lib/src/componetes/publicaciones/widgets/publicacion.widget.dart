@@ -105,15 +105,15 @@ Widget _footer(Publicacion publicacion, int index) {
                     Text('${publicacion.numeroComentarios}'),
                     RawChip(
                     label: Text('Me gusta'),
-                    labelStyle: TextStyle(color:publicacion.megusta ? Colors.white : Colors.grey[400]),
+                    labelStyle: TextStyle(color:publicacion.megusta ? Colors.pink[300] : Colors.grey[400]),
                     onPressed:()=>   publicacion.megusta 
                                      ? Get.find<PublicacionesController>().noMegustaAction(publicacion.id,index)
                                      : Get.find<PublicacionesController>().megustaAction(publicacion.id,index),
                     avatar:Icon(
                            Icons.thumb_up,
-                           color: publicacion.megusta ? Colors.white : Colors.grey[400]
+                           color: publicacion.megusta ? Colors.pink[300] : Colors.grey[400]
                     ),
-                    backgroundColor: publicacion.megusta ? Get.theme.primaryColor : Colors.transparent
+                    backgroundColor: Colors.transparent
                     ),
                     RawChip(
                     label: Text('Comentar'),

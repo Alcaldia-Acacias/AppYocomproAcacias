@@ -4,6 +4,7 @@ import 'package:comproacacias/src/componetes/usuario/views/actulizarDatos.view.d
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
 import 'package:comproacacias/src/componetes/empresas/views/empresas.view.dart';
 import 'package:comproacacias/src/componetes/usuario/widgets/menu.widget.dart';
+import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,7 +36,7 @@ Widget _menu(Usuario usuario) {
           children: [
              MenuItemUsuario(
              icon   : Icons.lock_outline,
-             titulo : 'Cambiar Contraseña', 
+             titulo : 'Contraseña', 
              onTap  : () => Get.to(CambiarPasswordPage(usuario:usuario)), 
              ),
              MenuItemUsuario(
@@ -92,7 +93,11 @@ Widget  _header(HomeController state) {
                                      child  : RawChip(
                                               label  : Text('Editar'),
                                               avatar : Icon(Icons.photo_camera),
-                                              onPressed: ()=>_buttomSheep(state)                            
+                                              onPressed: ()=>DialogImagePicker.openDialog(
+                                                             titulo: 'Escoje tu Imagen',
+                                                             onTapArchivo : () => state.getImage('archivo'),
+                                                             onTapCamera  : () => state.getImage('camara')
+                                              )                           
                                      )
                                      )
                                    ],
@@ -145,28 +150,5 @@ Widget  _header(HomeController state) {
             ),
 );
 }
-  _buttomSheep(HomeController state) {
-     Get.defaultDialog(
-      title  : 'Escoje tu Imagen',
-      content:Container(
-              height : 150,
-              width: 300,
-              color  : Colors.white,
-              child  : ListView(
-                       children: [
-                        ListTile(
-                        leading: Icon(Icons.folder),
-                        title: Text('Seleciona desde Archivo'),
-                        onTap: ()=>state.getImage('archivo')
-                        ),
-                        ListTile(
-                        leading: Icon(Icons.photo_camera),
-                        title: Text('Toma la foto'),
-                        onTap: ()=>state.getImage('camara')
-                        )
-                       ]
-                       ),
-              )
-     );
-  }
+
 }

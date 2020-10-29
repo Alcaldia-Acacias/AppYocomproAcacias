@@ -5,7 +5,6 @@ import 'package:comproacacias/src/componetes/empresas/controller/empresas.contro
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
-import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
@@ -195,7 +194,6 @@ class FormEmpresaController extends GetxController {
 
   void _updateEmpresa(ResponseEmpresa response) async {
     if (response.update) {
-      final urlimg = Get.find<HomeController>().urlImegenes;
       Get.find<EmpresasController>()
           .updateEmpresa(this._getEmpresa(id: empresa.id));
       Get.back();

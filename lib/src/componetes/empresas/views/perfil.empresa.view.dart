@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/empresas/controller/empresas.controller.dart';
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/empresas/views/addproduct.view.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificacion.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificar.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/datosCard.widget.dart';
@@ -21,7 +22,8 @@ import 'package:get/state_manager.dart';
 class PerfilEmpresaPage extends StatelessWidget {
 
   final Empresa empresa;
-  PerfilEmpresaPage({Key key,this.empresa}) : super(key: key);
+  final bool propia;
+  PerfilEmpresaPage({Key key,this.empresa,this.propia = false}) : super(key: key);
   final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
   @override
   Widget build(BuildContext context) {
@@ -55,10 +57,16 @@ class PerfilEmpresaPage extends StatelessWidget {
                                                           ,
                                                     ),
                                                     )
-                                                    
-
-                                                    ],
-                                   ),    
+                                          ],
+                                   ), 
+                                   floatingActionButton: propia && state.pagina == 3
+                                                         ? FloatingActionButton.extended(
+                                                           backgroundColor : Get.theme.primaryColor,
+                                                           label           : Text('Agregar',style: TextStyle(color:Colors.white)),
+                                                           icon            : Icon(Icons.add,color: Colors.white),
+                                                           onPressed       : ()=>Get.to(AddProducto()) 
+                                                           )
+                                                          : null
                             ),
             );
            }
@@ -112,7 +120,8 @@ class PerfilEmpresaPage extends StatelessWidget {
                                 /* Align(
                                 alignment: Alignment(0.0,0.05),
                                 child: CalificacionWidget()
-                                ), */
+                                ),*/
+                                if(!propia)
                                 Align(
                                 alignment: Alignment(0.92,1),
                                 child: RawChip(
@@ -441,6 +450,8 @@ Widget _calificaciones() {
           );
 
 }
+
+
 
 }
 

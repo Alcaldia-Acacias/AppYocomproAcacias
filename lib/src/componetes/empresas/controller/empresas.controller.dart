@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/calificacion.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
@@ -6,13 +7,14 @@ import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.mode
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 class EmpresasController extends GetxController {
-
   List<Empresa> empresas;
   final EmpresaRepositorio repositorio;
   EmpresasController({this.repositorio, this.empresas});
@@ -27,8 +29,22 @@ class EmpresasController extends GetxController {
   bool loading = true;
   List<bool> startValue = List.generate(5, (index) => false);
   int extrellas = 0;
-  final box = GetStorage();
+  File image;
+  ImageCapture imageCapture = Get.find<ImageCapture>();
+
   TextEditingController calificarController = TextEditingController();
+
+  TextEditingController nombreProductoController = TextEditingController();
+  TextEditingController descripcionProductoController = TextEditingController();
+  TextEditingController precioProductoController = TextEditingController();
+
+  FocusNode nombreProductoFoco = FocusNode();
+  FocusNode descripcionProductoFoco = FocusNode();
+  FocusNode precioProductoFoco = FocusNode();
+
+  final box = GetStorage();
+  final formKey = GlobalKey<FormState>();
+  final uid = Uuid();
 
   @override
   void onInit() {
@@ -47,7 +63,7 @@ class EmpresasController extends GetxController {
     this.pagina = page;
     switch (page) {
       case 0:
-        this.titulo = "Informacion";
+        this.titulo= "Informacion";
         break;
       case 1:
         this.titulo = "Publicaciones";
@@ -154,14 +170,13 @@ class EmpresasController extends GetxController {
   void addCalificacionEmpresa() async {
     final idUsuario = box.read('id');
     if (extrellas > 0) {
-      final response = await this
-          .repositorio
-          .calificarEmpresa(idUsuario, empresa.id, extrellas,calificarController.text);
+      final response = await this.repositorio.calificarEmpresa(
+          idUsuario, empresa.id, extrellas, calificarController.text);
       if (response is ErrorResponse) this._error(response.getError);
-      if (response is ResponseEmpresa){
+      if (response is ResponseEmpresa) {
         Get.back();
         Get.snackbar('Tu calificacion $extrellas', 'Gracias por calificar',
-          snackPosition: SnackPosition.BOTTOM);
+            snackPosition: SnackPosition.BOTTOM);
         update();
       }
     }
@@ -173,6 +188,28 @@ class EmpresasController extends GetxController {
     this._initCalificacion();
   }
 
+  void addProducto() async {
+    if (formKey.currentState.validate()) {
+      final producto = this._getProducto();
+      final response = await repositorio.addProducto(producto, empresa.id,
+          path: this._fileExist());
+      if (response is ErrorResponse) this._error(response.getError);
+      if (response is ResponseEmpresa)
+        this._addProductoList(response.idProducto, producto);
+    } else
+      Get.snackbar('Error', 'Faltan Datos');
+  }
+
+  void getImage(String tipo) async {
+    image = await imageCapture.getImage(tipo);
+    if (!image.isNullOrBlank) Get.back();
+    if (image.isNullOrBlank) {
+      Get.back();
+      Get.snackbar('No seleciono ninguna Imagen', '',
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
   void _error(String error) {
     if (error == 'CALIFICACION_EXITS') {
       Get.back();
@@ -181,9 +218,41 @@ class EmpresasController extends GetxController {
     }
   }
 
+  void _addProductoList(int idProducto, Producto producto) {
+    final newProducto = producto.copyWith(id: idProducto);
+    productos.add(newProducto);
+    this._resetFormProductos();
+    Get.back();
+    update();
+  }
+
+  Producto _getProducto() {
+    return Producto(
+        nombre: nombreProductoController.text,
+        descripcion: descripcionProductoController.text,
+        imagen: image?.path == null ? '' : '${uid.v4()}.jpg',
+        precio: int.parse(precioProductoController.text));
+  }
+
+  String _fileExist() {
+    String path;
+    if (image.existsSync())
+      path = image?.path;
+    else
+      path = null;
+    return path;
+  }
+
   void _initCalificacion() {
     this.startValue = List.generate(5, (index) => false);
-    this.extrellas  = 0;
+    this.extrellas = 0;
     this.calificarController.clear();
+  }
+
+  void _resetFormProductos() {
+    nombreProductoController.text = '';
+    descripcionProductoController.text = '';
+    precioProductoController.text = '';
+    image.delete();
   }
 }

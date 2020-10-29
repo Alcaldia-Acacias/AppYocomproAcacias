@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/categorias/controllers/categorias.controllers.dart';
 import 'package:comproacacias/src/componetes/categorias/models/categoria.model.dart';
 import 'package:comproacacias/src/componetes/empresas/controller/formulario.controller.dart';
@@ -6,6 +5,7 @@ import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.d
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
+import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -231,7 +231,11 @@ class FormEmpresaPage extends StatelessWidget {
                       color     : Get.theme.primaryColor,
                       textColor : Colors.white,
                       shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      onPressed : ()=>_buttomSheep(state), 
+                      onPressed : ()=>DialogImagePicker.openDialog(
+                                      titulo: 'Escoje tu Logo',
+                                      onTapArchivo: ()=> state.getImage('archivo'),
+                                      onTapCamera : ()=> state.getImage('camara')
+                      ) 
                 )
              ]        
       ),
@@ -239,30 +243,6 @@ class FormEmpresaPage extends StatelessWidget {
 
  }
 
-  _buttomSheep(FormEmpresaController state) {
-     Get.defaultDialog(
-      title  : 'Escoje tu Logo',
-      content:Container(
-              height : 150,
-              width: 300,
-              color  : Colors.white,
-              child  : ListView(
-                       children: [
-                        ListTile(
-                        leading: Icon(Icons.folder),
-                        title: Text('Seleciona desde Archivo'),
-                        onTap: ()=>state.getImage('archivo')
-                        ),
-                        ListTile(
-                        leading: Icon(Icons.photo_camera),
-                        title: Text('Toma la foto'),
-                        onTap: ()=>state.getImage('camara')
-                        )
-                       ]
-                       ),
-              )
-     );
-  }
 
 Widget _datosCategoria(FormEmpresaController state) {
   return ListView.builder(

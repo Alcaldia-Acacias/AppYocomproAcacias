@@ -70,18 +70,37 @@ class EmpresaRepositorio {
     }
   }
 
-  Future<ResponseModel> calificarEmpresa(int idUsuario,int idEmpresa,int extrellas,[String comentario]) async {
+  Future<ResponseModel> calificarEmpresa(
+      int idUsuario, int idEmpresa, int extrellas,
+      [String comentario]) async {
     final data = jsonEncode({
-       "id_usuario" : idUsuario,
-       "id_empresa" : idEmpresa,
-       "extrellas"  : extrellas,
-       "comentario" : comentario
+      "id_usuario": idUsuario,
+      "id_empresa": idEmpresa,
+      "extrellas": extrellas,
+      "comentario": comentario
     });
     try {
-      final response = await this._dio.post('/calificaciones/add',data:data);
+      final response = await this._dio.post('/calificaciones/add', data: data);
       return ResponseEmpresa(calificacion: Calificacion.toJson(response.data));
     } on DioError catch (error) {
       return ErrorResponse(error);
     }
   }
+   Future<ResponseModel> addProducto(Producto producto,int idEmpresa,{String path}) async {
+   try {
+      FormData data = FormData.fromMap({
+        ...producto.toMap(idEmpresa),
+        "file": path.isNull
+            ? null
+            : await MultipartFile.fromFile(path, filename: "${producto.imagen}")
+      });
+      final response = await this._dio.post('/productos/add', data: data);
+      print(response.data);
+      return ResponseEmpresa(idProducto:response.data);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+
+   }
+
 }

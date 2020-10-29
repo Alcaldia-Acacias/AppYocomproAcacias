@@ -5,6 +5,8 @@ class ResponseEmpresa extends ResponseModel {
   final int id;
   final bool delete;
   final bool update;
+  final int  idProducto;
   final Calificacion calificacion;
-  ResponseEmpresa({this.id,this.delete,this.update,this.calificacion});
+  ResponseEmpresa(
+      {this.id, this.delete, this.update, this.calificacion, this.idProducto});
 }
