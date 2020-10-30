@@ -3,7 +3,7 @@ import 'package:comproacacias/src/componetes/categorias/data/categorias.reposito
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/views/home.vista.dart';
-import 'package:comproacacias/src/componetes/inyection.dependeci.dart';
+import 'package:comproacacias/src/plugins/inyection.dependeci.dart';
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/views/login.view.dart';

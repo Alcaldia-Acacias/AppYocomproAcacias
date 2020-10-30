@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/empresas/controller/empresas.controller.dart';
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/empresas/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/empresas/views/addproduct.view.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificacion.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificar.widget.dart';
@@ -14,6 +15,7 @@ import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.w
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 
@@ -272,36 +274,30 @@ Widget _productos() {
               return Center(child: Text('No hay Productos'));
            return  ListView.builder(
                    itemExtent   : 120,
-                   padding      : EdgeInsets.all(10),
+                   padding      : EdgeInsets.all(20),
                    itemCount    : state.productos.length,
-                   itemBuilder  : (_, i) 
-                     => Card(
-                        child: Padding(
-                         padding: const EdgeInsets.all(10.0),
-                         child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                         state.productos[i].imagen.isEmpty
-                                                  ?
-                                                  Image.asset('assets/imagenes/no_product.png')
-                                                  :
-                                                  _imagen(state.productos[i].imagen,i),
-                                        Expanded(
-                                        child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: <Widget>[
-                                            _nombre(state.productos[i].nombre),
-                                            _precio(state.productos[i].precio)
-                                          ],
-                                          ),
-                                        )
-
-                                ],
-                         ),
-                       )
-                       )
+                   itemBuilder  : (_, i) {
+                     if(propia)
+                       return Slidable(
+                              secondaryActions: <Widget>[
+                                                IconSlideAction(
+                                                caption : 'Editar',
+                                                color   : Colors.green,
+                                                icon    : Icons.edit,
+                                                onTap:  () {}
+                                                ),
+                                                IconSlideAction(
+                                                caption : 'Eliminar',
+                                                color   : Colors.red,
+                                                icon    : Icons.delete,
+                                                onTap:  (){}
+                                                ),
+                                                ],
+                               actionPane: SlidableDrawerActionPane(),
+                               child: _cardProducto(state.productos, i)
+                       );
+                     return _cardProducto(state.productos, i);
+                   }
            );
 
 
@@ -451,7 +447,35 @@ Widget _calificaciones() {
 
 }
 
-
+Widget _cardProducto(List<Producto> productos,int i){
+  return Card(
+         child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       mainAxisSize: MainAxisSize.max,
+                       children: <Widget>[
+                                productos[i].imagen.isEmpty
+                                         ?
+                                         Image.asset('assets/imagenes/no_product.png')
+                                         :
+                                         _imagen(productos[i].imagen,i),
+                               Expanded(
+                               child: Column(
+                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               crossAxisAlignment: CrossAxisAlignment.end,
+                               children: <Widget>[
+                                   _nombre(productos[i].nombre),
+                                   _precio(productos[i].precio)
+                                 ],
+                                 ),
+                    
+                               )
+                       ],
+                ),
+              )
+              );
+}
 
 }
 
