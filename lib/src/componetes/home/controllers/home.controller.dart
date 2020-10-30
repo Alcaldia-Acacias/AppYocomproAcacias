@@ -14,14 +14,18 @@ class HomeController extends GetxController {
   HomeController({this.repositorio});
   AnimationController controller;
   int page = 0;
-  String urlImegenes = 'http://localhost:8000/imagenes';
+  String urlImegenes;
   Usuario usuario;
   File image;
   ImageCapture imageCapture = Get.find<ImageCapture>();
-  
+
   @override
   void onInit() async {
     super.onInit();
+    if (GetPlatform.isAndroid)
+      urlImegenes = 'http://10.0.2.2:8000/imagenes';
+    else
+      urlImegenes = 'http://localhost:8000/imagenes';
     if (this.usuario.isNullOrBlank)
       this.usuario = await repositorio.getUsuario();
   }
@@ -55,11 +59,11 @@ class HomeController extends GetxController {
     image = await imageCapture.getImage(tipo);
     if (!image.isNullOrBlank) {
       final response = await repositorio.updateImagen(image.path, usuario.id);
-      if(response is UpdateImageResponse){
-      Get.back();
-      update();
+      if (response is UpdateImageResponse) {
+        Get.back();
+        update();
       }
-      if(response is ErrorResponse)this._errorResponse(response.getError);
+      if (response is ErrorResponse) this._errorResponse(response.getError);
     }
     if (image.isNullOrBlank) {
       Get.back();

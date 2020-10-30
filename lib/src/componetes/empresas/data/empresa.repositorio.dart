@@ -86,7 +86,8 @@ class EmpresaRepositorio {
       return ErrorResponse(error);
     }
   }
-   Future<ResponseModel> addProducto(Producto producto,int idEmpresa,{String path}) async {
+  
+  Future<ResponseModel> addProducto(Producto producto,int idEmpresa,{String path}) async {
    try {
       FormData data = FormData.fromMap({
         ...producto.toMap(idEmpresa),
@@ -102,5 +103,32 @@ class EmpresaRepositorio {
     }
 
    }
+  
+  Future<ResponseModel> deleteProducto(int idProducto,String imagen) async {
+   try {
+      final response = await this._dio.delete('/productos/delete/$idProducto/$imagen');
+      return ResponseEmpresa(delete:response.data);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
 
+   }
+  Future<ResponseModel> updateProducto(Producto producto,int idEmpresa,{String path}) async {
+   try {
+      FormData data = FormData.fromMap({
+        "id" : producto.id,
+        ...producto.toMap(idEmpresa),
+        "file": path.isNull
+            ? null
+            : await MultipartFile.fromFile(path, filename: "${producto.imagen}")
+      });
+      final response = await this._dio.put('/productos/update',data:data);
+      return ResponseEmpresa(update:response.data);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+
+   }
+
+   
 }

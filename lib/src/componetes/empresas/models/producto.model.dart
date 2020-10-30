@@ -23,7 +23,7 @@ class Producto {
           precio: precio ?? this.precio,
           imagen: imagen ?? this.imagen);
 
-  Map<String,dynamic> toMap(int idEmpresa)=>{
+  Map<String,dynamic> toMap([int idEmpresa])=>{
    "nombre"      : nombre,
    "precio"      : precio,
    "descripcion" : descripcion,

@@ -63,7 +63,7 @@ class EmpresasController extends GetxController {
     this.pagina = page;
     switch (page) {
       case 0:
-        this.titulo= "Informacion";
+        this.titulo = "Informacion";
         break;
       case 1:
         this.titulo = "Publicaciones";
@@ -199,22 +199,74 @@ class EmpresasController extends GetxController {
     } else
       Get.snackbar('Error', 'Faltan Datos');
   }
+  
+  void updateProducto() async {
+     if (formKey.currentState.validate()) {
+      final producto = this._getProducto();
+      final response = await repositorio.updateProducto(producto, empresa.id,
+          path: this._fileExist());
+      if (response is ErrorResponse) this._error(response.getError);
+      if (response is ResponseEmpresa)
+        print(response.update);
+    } else
+      Get.snackbar('Error', 'Faltan Datos');
+  }
+ 
+  void deleteProducto(int idProducto, String imagen, int index) async {
+    final response = await repositorio.deleteProducto(idProducto, imagen);
+    if (response is ErrorResponse) this._error(response.getError);
+    if (response is ResponseEmpresa) {
+      if (response.delete) this.productos.removeAt(index);
+      Get.back();
+      update();
+    }
+  }
 
   void getImage(String tipo) async {
     image = await imageCapture.getImage(tipo);
-    if (!image.isNullOrBlank) Get.back();
+    if (!image.isNullOrBlank){
+      Get.back();
+      update();
+    }
     if (image.isNullOrBlank) {
       Get.back();
       Get.snackbar('No seleciono ninguna Imagen', '',
           snackPosition: SnackPosition.BOTTOM);
     }
   }
+  
+  void initUpdateProducto(int index) async {
+     nombreProductoController.text = this.productos[index].nombre;
+     descripcionProductoController.text = this.productos[index].descripcion;
+     precioProductoController.text =  this.productos[index].precio.toString();
+     if(image?.path != null) await image.delete();
+  }
+  
+  void updateOrAddProducto(bool update){
+   if(update)this.updateProducto();
+   else this.addProducto();
 
+  }
+  
   void _error(String error) {
     if (error == 'CALIFICACION_EXITS') {
       Get.back();
       Get.snackbar('Error', 'Ya calificaste esta empresa',
           snackPosition: SnackPosition.BOTTOM);
+    }
+    if (error == 'ERROR_DATA_BASE') {
+      Get.back();
+      Get.snackbar('Error', 'ocurrio un error',
+          snackPosition: SnackPosition.BOTTOM);
+    }
+    if (error == 'ERROR_DATA_BASE') {
+      Get.back();
+      Get.snackbar('Error', 'ocurrio un error',
+          snackPosition: SnackPosition.BOTTOM);
+    }
+    if (error == 'Connection refused' || error == 'Network is unreachable') {
+      if (Get.isDialogOpen) Get.back();
+      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
     }
   }
 
@@ -235,12 +287,12 @@ class EmpresasController extends GetxController {
   }
 
   String _fileExist() {
-    String path;
-    if (image.existsSync())
-      path = image?.path;
-    else
-      path = null;
-    return path;
+
+     if(image.existsSync() == null)
+      return null;
+     if(image.existsSync())
+     return image?.path;
+     else return null;
   }
 
   void _initCalificacion() {

@@ -79,7 +79,7 @@ class PerfilEmpresaPage extends StatelessWidget {
 
  Widget _header() {
      return  SizedBox(
-             height : 280,
+             height : 260,
              width  : Get.width,
              child  : Stack(
                       overflow : Overflow.visible,
@@ -274,7 +274,7 @@ Widget _productos() {
               return Center(child: Text('No hay Productos'));
            return  ListView.builder(
                    itemExtent   : 120,
-                   padding      : EdgeInsets.all(20),
+                   padding      : EdgeInsets.only(top: 10,left: 20,right: 20,bottom: 70),
                    itemCount    : state.productos.length,
                    itemBuilder  : (_, i) {
                      if(propia)
@@ -284,13 +284,13 @@ Widget _productos() {
                                                 caption : 'Editar',
                                                 color   : Colors.green,
                                                 icon    : Icons.edit,
-                                                onTap:  () {}
+                                                onTap:  () => Get.to(AddProducto(index: i,update: true))
                                                 ),
                                                 IconSlideAction(
                                                 caption : 'Eliminar',
                                                 color   : Colors.red,
                                                 icon    : Icons.delete,
-                                                onTap:  (){}
+                                                onTap:  ()=>_dialogDeleteProducto(state.productos[i],i)
                                                 ),
                                                 ],
                                actionPane: SlidableDrawerActionPane(),
@@ -312,7 +312,7 @@ void _calificar() {
    title: "Califica este Negocio",
    content:  Container(
              color: Colors.white,
-             height: Get.height * 0.2,
+             height: Get.height * 0.25,
              child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -321,7 +321,7 @@ void _calificar() {
                       controller  : Get.find<EmpresasController>().calificarController,
                       placeholder : "Escribe un Comentario",
                       autofocus   : true, 
-                      textarea    : true, 
+                      textcenter  : true, 
                       )
                     ],
              )
@@ -336,7 +336,6 @@ void _calificar() {
             child: Text('Calificar',style:TextStyle(color: Colors.white)),
             ),
    );
-  
   }
 
 Widget  _imagen(String imagen,int i) {
@@ -348,8 +347,8 @@ Widget  _imagen(String imagen,int i) {
                         child: CachedNetworkImage(
                           imageUrl    : '$urlImagenLogo/galeria/$imagen',
                           errorWidget : (_,url,error) => Icon(Icons.error),
-                          width:  110,
-                          height: 120,
+                          width:  80,
+                          height: 80,
                           fit: BoxFit.cover
                           ),
                  ),
@@ -476,6 +475,27 @@ Widget _cardProducto(List<Producto> productos,int i){
               )
               );
 }
+
+void _dialogDeleteProducto(Producto producto, int index) {
+   Get.defaultDialog(
+   title: 'Desea borrar el producto',
+   content: Container(),
+   actions: [
+       RaisedButton(
+       textColor: Colors.white,
+       color: Get.theme.primaryColor,
+       child: Text('Eliminar'),
+       onPressed: ()=>Get.find<EmpresasController>().deleteProducto(producto.id, producto.imagen,index)
+      ),
+       RaisedButton(
+       color: Colors.transparent,
+       child: Text('Cancelar'),
+       onPressed: ()=>Get.back()
+      )
+   ]
+   );
+
+  }
 
 }
 

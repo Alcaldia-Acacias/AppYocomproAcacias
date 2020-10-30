@@ -6,11 +6,15 @@ import 'package:get_storage/get_storage.dart';
 
 class Dependecias {
   static init() {
+    String urlApi;
     final box = GetStorage();
     final token = box.read('token');
+    if(GetPlatform.isAndroid)
+       urlApi = '10.0.2.2';
+    else urlApi = 'localhost';
 
     Get.lazyPut(() => Dio(BaseOptions(
-        baseUrl: 'http://localhost:8000',
+        baseUrl: 'http://$urlApi:8000',
         contentType: Headers.jsonContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'})));
     Get.put(ImageCapture());
