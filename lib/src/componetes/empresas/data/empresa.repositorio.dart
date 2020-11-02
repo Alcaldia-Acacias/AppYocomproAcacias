@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:comproacacias/src/componetes/empresas/models/calificacion.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
-import 'package:comproacacias/src/componetes/empresas/models/producto.model.dart';
+import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
@@ -104,9 +104,9 @@ class EmpresaRepositorio {
 
    }
   
-  Future<ResponseModel> deleteProducto(int idProducto,String imagen) async {
+  Future<ResponseModel> deleteProducto(int idProducto) async {    
    try {
-      final response = await this._dio.delete('/productos/delete/$idProducto/$imagen');
+      final response = await this._dio.delete('/productos/delete/$idProducto');
       return ResponseEmpresa(delete:response.data);
     } on DioError catch (error) {
       return ErrorResponse(error);

@@ -1,30 +1,43 @@
-import 'package:comproacacias/src/componetes/empresas/controller/empresas.controller.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
+import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
+import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AddProducto extends StatelessWidget {
+class FormProducto extends StatelessWidget {
+
  final bool update;
- final int index;
- AddProducto({Key key,this.update = false,this.index}) : super(key: key);
+ final int idEmpresa;
+ final Producto producto;
+
+ FormProducto({
+    Key key,
+    this.update = false,
+    this.idEmpresa,
+    this.producto}
+ ) : super(key: key);
+
+
 final String urlImagenes = Get.find<HomeController>().urlImegenes;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
            child: Scaffold(
                   appBar: AppBar(
-                          title: Text('Agregar un producto'),
+                          title: Text('${update ? 'Actualizar' : 'Agregar '} Producto'),
                           elevation: 0,
                   ),
-                  body: GetBuilder<EmpresasController>(
-                        initState: (state){
-                         if(update){
-                            Get.find<EmpresasController>().initUpdateProducto(index);
-                         }
-                    
-                        },
+                  body: GetBuilder<ProductosController>(
+                        init: ProductosController(
+                              repositorio: ProductosRepositorio(),
+                              idEmpresa  : idEmpresa,
+                              producto   : producto,
+                              actualizar : update
+                              ),
+
                         builder: (state){
                         return SingleChildScrollView(
                             padding: EdgeInsets.all(40),
@@ -70,7 +83,7 @@ final String urlImagenes = Get.find<HomeController>().urlImegenes;
       onTap : ()=>FocusScope.of(context).unfocus(),
     );
   }
-  Widget _addImagenWidget(EmpresasController state) {
+  Widget _addImagenWidget(ProductosController state) {
     return Container(
            margin: EdgeInsets.only(bottom: 20),
            child: Row(
@@ -95,56 +108,50 @@ final String urlImagenes = Get.find<HomeController>().urlImegenes;
     );
   }
 
-Widget _button(EmpresasController state) {
+Widget _button(ProductosController state) {
   return MaterialButton(
          padding: EdgeInsets.all(16),
          color: Get.theme.primaryColor,
          textColor: Colors.white,
-         child: Text('Agregar'),
+         child: Text('${update ? 'Actualizar' : 'Agregar'}'),
          minWidth: double.maxFinite,
          onPressed: ()=>state.updateOrAddProducto(update)
          );
 }
 
-Widget _imageProducto(EmpresasController state)  {
-   if(update && state.image?.path == null)
-      return ClipRRect(
-      borderRadius: BorderRadius.circular(300),
-      child:  FadeInImage(
-            height : 100,
-            width  : 100,
-            fit    : BoxFit.cover,
-            placeholder: AssetImage('assets/imagenes/load_image.png'), 
-            image: NetworkImage('$urlImagenes/galeria/${state.productos[index].imagen}'),
-     ),
-);
-     if(state.image?.path != null && !state.image.existsSync() && update)
-       return ClipRRect(
-      borderRadius: BorderRadius.circular(300),
-      child:  FadeInImage(
-            height : 100,
-            width  : 100,
-            fit    : BoxFit.cover,
-            placeholder: AssetImage('assets/imagenes/load_image.png'), 
-            image: NetworkImage('$urlImagenes/galeria/${state.productos[index].imagen}'),
-     ),
-);
-    if(state.image?.path == null ||  !state.image.existsSync())
-       return CircleAvatar(
-       radius: 40,
-       backgroundImage: AssetImage('assets/imagenes/no_product.png'),
-    );
-    if(state.image?.path != null)
-        return ClipRRect(
-      borderRadius: BorderRadius.circular(300),
-      child:  FadeInImage(
-            height : 100,
-            width  : 100,
-            fit    : BoxFit.cover,
-            placeholder: AssetImage('assets/imagenes/load_image.png'), 
-            image: AssetImage(state.image.path),
-     ),
-);
+Widget _imageProducto(ProductosController state)  {
+   
+  switch (state.selectImage()) {
+    case ImageSelect.NO_IMAGE:  return CircleAvatar(
+                                       radius: 40,
+                                       backgroundImage: AssetImage('assets/imagenes/no_product.png'),
+                                 );
+                                 break;
+    case ImageSelect.PATH_IMAGE: return ClipRRect(
+                                        borderRadius: BorderRadius.circular(300),
+                                        child:  FadeInImage(
+                                              height : 100,
+                                              width  : 100,
+                                              fit    : BoxFit.cover,
+                                              placeholder: AssetImage('assets/imagenes/load_image.png'), 
+                                              image: AssetImage(state.image.path),
+                                       )
+                                 );
+                                 break;
+    case ImageSelect.URL:  return ClipRRect(
+                                  borderRadius: BorderRadius.circular(300),
+                                  child:  FadeInImage(
+                                          height : 100,
+                                          width  : 100,
+                                          fit    : BoxFit.cover,
+                                          placeholder: AssetImage('assets/imagenes/load_image.png'), 
+                                          image: NetworkImage('$urlImagenes/galeria/${producto.imagen}'),
+                                  ),
+                           );
+                           break;
+    default:break;
+  }
+
     
     return Container();
 

@@ -1,10 +1,9 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/empresas/controller/empresas.controller.dart';
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
-import 'package:comproacacias/src/componetes/empresas/models/producto.model.dart';
-import 'package:comproacacias/src/componetes/empresas/views/addproduct.view.dart';
+import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
+import 'package:comproacacias/src/componetes/productos/views/formproduct.view.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificacion.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificar.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/datosCard.widget.dart';
@@ -66,7 +65,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                                            backgroundColor : Get.theme.primaryColor,
                                                            label           : Text('Agregar',style: TextStyle(color:Colors.white)),
                                                            icon            : Icon(Icons.add,color: Colors.white),
-                                                           onPressed       : ()=>Get.to(AddProducto()) 
+                                                           onPressed       : ()=>Get.to(FormProducto(idEmpresa:empresa.id)) 
                                                            )
                                                           : null
                             ),
@@ -284,7 +283,7 @@ Widget _productos() {
                                                 caption : 'Editar',
                                                 color   : Colors.green,
                                                 icon    : Icons.edit,
-                                                onTap:  () => Get.to(AddProducto(index: i,update: true))
+                                                onTap:  () => Get.to(FormProducto(update: true,producto:state.productos[i],idEmpresa:empresa.id))
                                                 ),
                                                 IconSlideAction(
                                                 caption : 'Eliminar',
@@ -485,7 +484,7 @@ void _dialogDeleteProducto(Producto producto, int index) {
        textColor: Colors.white,
        color: Get.theme.primaryColor,
        child: Text('Eliminar'),
-       onPressed: ()=>Get.find<EmpresasController>().deleteProducto(producto.id, producto.imagen,index)
+       onPressed: ()=>Get.find<EmpresasController>().deleteProducto(producto.id,index)
       ),
        RaisedButton(
        color: Colors.transparent,

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/calificacion.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
-import 'package:comproacacias/src/componetes/empresas/models/producto.model.dart';
+import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
@@ -188,32 +188,8 @@ class EmpresasController extends GetxController {
     this._initCalificacion();
   }
 
-  void addProducto() async {
-    if (formKey.currentState.validate()) {
-      final producto = this._getProducto();
-      final response = await repositorio.addProducto(producto, empresa.id,
-          path: this._fileExist());
-      if (response is ErrorResponse) this._error(response.getError);
-      if (response is ResponseEmpresa)
-        this._addProductoList(response.idProducto, producto);
-    } else
-      Get.snackbar('Error', 'Faltan Datos');
-  }
-  
-  void updateProducto() async {
-     if (formKey.currentState.validate()) {
-      final producto = this._getProducto();
-      final response = await repositorio.updateProducto(producto, empresa.id,
-          path: this._fileExist());
-      if (response is ErrorResponse) this._error(response.getError);
-      if (response is ResponseEmpresa)
-        print(response.update);
-    } else
-      Get.snackbar('Error', 'Faltan Datos');
-  }
- 
-  void deleteProducto(int idProducto, String imagen, int index) async {
-    final response = await repositorio.deleteProducto(idProducto, imagen);
+ void deleteProducto(int idProducto, int index) async {
+    final response = await repositorio.deleteProducto(idProducto);
     if (response is ErrorResponse) this._error(response.getError);
     if (response is ResponseEmpresa) {
       if (response.delete) this.productos.removeAt(index);
@@ -234,29 +210,11 @@ class EmpresasController extends GetxController {
           snackPosition: SnackPosition.BOTTOM);
     }
   }
-  
-  void initUpdateProducto(int index) async {
-     nombreProductoController.text = this.productos[index].nombre;
-     descripcionProductoController.text = this.productos[index].descripcion;
-     precioProductoController.text =  this.productos[index].precio.toString();
-     if(image?.path != null) await image.delete();
-  }
-  
-  void updateOrAddProducto(bool update){
-   if(update)this.updateProducto();
-   else this.addProducto();
 
-  }
-  
-  void _error(String error) {
+ void _error(String error) {
     if (error == 'CALIFICACION_EXITS') {
       Get.back();
       Get.snackbar('Error', 'Ya calificaste esta empresa',
-          snackPosition: SnackPosition.BOTTOM);
-    }
-    if (error == 'ERROR_DATA_BASE') {
-      Get.back();
-      Get.snackbar('Error', 'ocurrio un error',
           snackPosition: SnackPosition.BOTTOM);
     }
     if (error == 'ERROR_DATA_BASE') {
@@ -270,41 +228,19 @@ class EmpresasController extends GetxController {
     }
   }
 
-  void _addProductoList(int idProducto, Producto producto) {
-    final newProducto = producto.copyWith(id: idProducto);
-    productos.add(newProducto);
-    this._resetFormProductos();
-    Get.back();
+  void addProductoList(Producto producto) {
+    productos.add(producto);
     update();
   }
-
-  Producto _getProducto() {
-    return Producto(
-        nombre: nombreProductoController.text,
-        descripcion: descripcionProductoController.text,
-        imagen: image?.path == null ? '' : '${uid.v4()}.jpg',
-        precio: int.parse(precioProductoController.text));
+  void updateProductoList(Producto producto) {
+   final index = this.productos.indexWhere((productoList) => producto.id == productoList.id);
+   this.productos[index] = producto;
+   update();
   }
-
-  String _fileExist() {
-
-     if(image.existsSync() == null)
-      return null;
-     if(image.existsSync())
-     return image?.path;
-     else return null;
-  }
-
   void _initCalificacion() {
     this.startValue = List.generate(5, (index) => false);
     this.extrellas = 0;
     this.calificarController.clear();
   }
 
-  void _resetFormProductos() {
-    nombreProductoController.text = '';
-    descripcionProductoController.text = '';
-    precioProductoController.text = '';
-    image.delete();
-  }
 }
