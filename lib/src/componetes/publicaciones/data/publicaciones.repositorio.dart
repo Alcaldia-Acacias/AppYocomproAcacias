@@ -1,6 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:comproacacias/src/componetes/publicaciones/models/imageFile.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
+import 'package:comproacacias/src/componetes/publicaciones/models/reponse.model.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/componetes/response/models/response.model.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
@@ -53,5 +58,25 @@ class PublicacionesRepositorio {
     return publicaciones
         .map<Publicacion>((e) => Publicacion.toJson(e))
         .toList();
+  }
+
+  Future<ResponseModel> addPublicacion(
+      Publicacion publicacion, List<ImageFile> imagenes) async {
+    FormData data = FormData.fromMap({...publicacion.toMap()});
+
+    imagenes.forEach((imagen) async {
+      data.files.add(MapEntry(
+        imagen.nombre,
+        MultipartFile.fromFileSync(imagen.path,
+            filename: imagen.nombre),
+      ));
+    });
+
+    try {
+      final response = await _dio.post('/publicaciones/add', data: data);
+      return ResponsePublicacion(id: response.data);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
   }
 }

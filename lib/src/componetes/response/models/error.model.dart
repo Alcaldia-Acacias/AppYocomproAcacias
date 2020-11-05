@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 
 
 class ErrorResponse  extends ResponseModel{
+  
   final DioError error;
   ErrorResponse(this.error);
 

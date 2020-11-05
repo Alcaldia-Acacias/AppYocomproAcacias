@@ -1,7 +1,6 @@
 import 'package:comproacacias/src/componetes/publicaciones/models/cometario.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/like.model.dart';
-import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:intl/intl.dart';
 
 class Publicacion {
@@ -9,7 +8,6 @@ class Publicacion {
   final int id, likes, numeroComentarios;
   final String  texto,fecha;
   final Empresa empresa;
-  final Usuario usuario;
   final List<Comentario> comentarios;
   final List<String> imagenes;
   final List<LikePublicacion> usuariosLike;
@@ -22,7 +20,6 @@ class Publicacion {
       this.texto,
       this.fecha,
       this.empresa,
-      this.usuario,
       this.imagenes,
       this.comentarios, 
       this.usuariosLike,
@@ -52,7 +49,6 @@ factory Publicacion.toJson(Map<String,dynamic> json,)
       String  texto, 
       String fecha,
       Empresa empresa,
-      Usuario usuario,
       List<Comentario> comentarios,
       List<String> imagenes,
       List<LikePublicacion> usuariosLike,
@@ -65,11 +61,19 @@ factory Publicacion.toJson(Map<String,dynamic> json,)
         texto             : texto             ?? this.texto,
         fecha             : fecha             ?? this.fecha,
         empresa           : empresa           ?? this.empresa,
-        usuario           : usuario           ?? this.usuario,
         comentarios       : comentarios       ?? this.comentarios,
         imagenes          : imagenes          ?? this.imagenes,
         usuariosLike      : usuariosLike      ?? this.usuariosLike,
         megusta           : megusta           ?? this.megusta
     );
+
+ Map<String,dynamic> toMap() => {
+  "id"          : id ?? null,
+  "texto"       : texto,
+  "fecha"       : fecha,
+  "comentarios" : numeroComentarios,
+  "likes"       : likes,
+  "id_empresa"  : empresa.id
+ };
 }
         

@@ -1,6 +1,7 @@
 
 
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
+import 'package:comproacacias/src/componetes/publicaciones/views/addpublicacion.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,7 +37,7 @@ class PublicacionesPage extends StatelessWidget {
                                              ),
                                              icon  : Icon(Icons.edit,color:Colors.white),
                                              backgroundColor: Get.theme.primaryColor,
-                                             onPressed: (){}, 
+                                             onPressed: ()=>Get.to(FormPublicacionPage()), 
                                              )
                     )
  );

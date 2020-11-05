@@ -32,7 +32,6 @@ class HomePage extends StatelessWidget {
                              ),
                              PublicacionesPage(),
                              CategoriasPage(),
-                             Container(),
                              MenuUsuarioPage(),
                              
                             ],
@@ -46,7 +45,7 @@ class HomePage extends StatelessWidget {
                                         Icon(Icons.home, size: 30,color: Colors.white),
                                         Icon(Icons.message, size: 30,color: Colors.white),
                                         Icon(Icons.list, size: 30,color: Colors.white),
-                                        Icon(Icons.star, size: 30,color: Colors.white),
+                                        //Icon(Icons.star, size: 30,color: Colors.white),
                                         Icon(Icons.more_vert, size: 30,color: Colors.white),
                                 ],
                                 color: Theme.of(context).primaryColor,

@@ -43,7 +43,7 @@ class PublicacionesController extends GetxController {
   }
 
   void getNewPublicaciones() async {
-    publicaciones = await repositorio.getPublicaciones(1, idUsuario);
+    publicaciones = await repositorio.getPublicaciones(0, idUsuario);
     update(['publicaciones']);
   }
 
@@ -122,5 +122,10 @@ class PublicacionesController extends GetxController {
     publicaciones[index].usuariosLike.removeAt(publicaciones[index]
         .usuariosLike
         .indexWhere((like) => like.usuario.id == idUsuario));
+  }
+
+  void addPublicacion(Publicacion publicacion){
+    this.publicaciones.insert(0, publicacion);
+    update(['publicaciones']);
   }
 }
