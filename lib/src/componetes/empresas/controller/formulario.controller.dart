@@ -6,6 +6,7 @@ import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.d
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -141,12 +142,13 @@ class FormEmpresaController extends GetxController {
   }
 
   void getImage(String tipo) async {
-    image = await imageCapture.getImage(tipo);
-    if (!image.isNullOrBlank) {
+    final imagecapture = await imageCapture.getImage(tipo);
+    if (!imagecapture.isNullOrBlank) {
+       image =  await CompressImagePlugin.getImage(imagecapture);
       Get.back();
       update(['formulario_empresa']);
     }
-    if (image.isNullOrBlank) {
+    if (imagecapture.isNullOrBlank) {
       Get.back();
       Get.snackbar('No seleciono ninguna Imagen', '',
           snackPosition: SnackPosition.BOTTOM);

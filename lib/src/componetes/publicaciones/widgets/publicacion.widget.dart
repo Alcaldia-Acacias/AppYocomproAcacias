@@ -37,6 +37,8 @@ class PublicacionCard extends StatelessWidget {
                            );
                        },
                        ),
+                       if(publicacion.imagenes.length > 1)
+                       _imagenes(publicacion.imagenes),
                        _contenido(publicacion.texto),
                        _footer(publicacion,index),
                      ],
@@ -145,8 +147,7 @@ Widget _footer(Publicacion publicacion, int index) {
            ),
            color  : Colors.white, 
     );
-  }
-
+ }
 Widget _listaComentario(int id, int index) {
    return GetBuilder<PublicacionesController>(
           id: 'comentarios',
@@ -240,14 +241,14 @@ Widget _textField() {
 
 Widget _imagenprincipal(String imagen) {
     return SizedBox(
-           height: 300,
-           width: Get.height,
-           child: CachedNetworkImage(
-           imageUrl: '$urlImagenLogo/galeria/$imagen',
-           placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-           errorWidget: (context, url, error) => Icon(Icons.error),
-           fit: BoxFit.cover,
-    ),
+           height : 300,
+           width  : Get.height,
+           child  : CachedNetworkImage(
+                    imageUrl    : '$urlImagenLogo/galeria/$imagen',
+                    placeholder : (context, url) => Center(child: CircularProgressIndicator()),
+                    errorWidget : (context, url, error) => Icon(Icons.error),
+                    fit         : BoxFit.cover,
+           ),
     );
 }
 
@@ -322,6 +323,42 @@ Widget _listaDelikes(int id, int index) {
            color  : Colors.white, 
     );
   }
+
+Widget _imagenes(List<String> imagenes) {
+  return SizedBox(
+    child: Row(
+           mainAxisSize: MainAxisSize.max,
+           mainAxisAlignment: MainAxisAlignment.start,
+           children: [
+            ...imagenes.skip(1).map((imagen) => 
+                 Expanded(
+                   child: AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: FittedBox(
+                                 fit: imagenes.length == 2 ? BoxFit.contain : BoxFit.fill,
+                                 alignment: Alignment.topLeft,
+                                 child  : Container(
+                                     decoration: BoxDecoration(
+                                                 border: Border.all(
+                                                    width: 10,
+                                                    color: Colors.white
+                                                 )
+                                     ),
+                                     child: CachedNetworkImage(
+                                            imageUrl    : '$urlImagenLogo/galeria/$imagen',
+                                            placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.png'),
+                                            errorWidget : (context, url, error) => Icon(Icons.error),
+                              ),
+                            ),
+                     ),
+                   ),
+                 )
+            
+            )
+           ],
+    ),
+  );
+}
 
 
 }

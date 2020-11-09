@@ -4,6 +4,7 @@ import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/models/update.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
+import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,7 @@ class HomeController extends GetxController {
   String urlImegenes;
   Usuario usuario;
   File image;
-  ImageCapture imageCapture = Get.find<ImageCapture>();
+  ImageCaptureAvatar imageCapture = ImageCaptureAvatar();
 
   @override
   void onInit() async {
@@ -58,7 +59,10 @@ class HomeController extends GetxController {
   void getImage(String tipo) async {
     image = await imageCapture.getImage(tipo);
     if (!image.isNullOrBlank) {
-      final response = await repositorio.updateImagen(image.path, usuario.id);
+      final imageComprimida = await CompressImagePlugin.getImage(
+          image, imageCapture.height, imageCapture.width);
+      final response =
+          await repositorio.updateImagen(imageComprimida.path, usuario.id);
       if (response is UpdateImageResponse) {
         Get.back();
         update();

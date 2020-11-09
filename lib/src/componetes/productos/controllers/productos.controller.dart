@@ -4,6 +4,7 @@ import 'package:comproacacias/src/componetes/productos/data/productos.repositori
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/response.producto.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -116,12 +117,13 @@ class ProductosController extends GetxController {
   }
 
   void getImage(String tipo) async {
-    image = await imageCapture.getImage(tipo);
-    if (!image.isNullOrBlank) {
+    final imagecapture = await imageCapture.getImage(tipo);
+    if (!imagecapture.isNullOrBlank) {
+      image = await CompressImagePlugin.getImage(imagecapture);
       Get.back();
       update();
     }
-    if (image.isNullOrBlank) {
+    if (imagecapture.isNullOrBlank) {
       Get.back();
       Get.snackbar('No seleciono ninguna Imagen', '',
           snackPosition: SnackPosition.BOTTOM);
