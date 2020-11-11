@@ -130,5 +130,13 @@ class EmpresaRepositorio {
 
    }
 
-   
+   Future<ResponseModel> searchEmpresa(String texto) async {
+    try {
+      final response = await _dio.get('/empresas/buscar/$texto');
+      final empresas = response.data?.map<Empresa>((empresa)=>Empresa?.toJson(empresa))?.toList();
+      return ResponseEmpresa(empresas: empresas);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
 }

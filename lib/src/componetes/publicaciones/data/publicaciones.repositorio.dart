@@ -67,7 +67,7 @@ class PublicacionesRepositorio {
     imagenes.forEach((imagen) async {
       data.files.add(MapEntry(
         imagen.nombre,
-        MultipartFile.fromFileSync(imagen.path,
+        MultipartFile.fromFileSync(imagen.file.path,
             filename: imagen.nombre),
       ));
     });

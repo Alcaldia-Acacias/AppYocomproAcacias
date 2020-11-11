@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/models/update.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
@@ -11,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class HomeController extends GetxController {
+  
   final HomeRepocitorio repositorio;
   HomeController({this.repositorio});
   AnimationController controller;
@@ -19,12 +21,15 @@ class HomeController extends GetxController {
   Usuario usuario;
   File image;
   ImageCaptureAvatar imageCapture = ImageCaptureAvatar();
+  
+  List<Empresa> empresas = [];
+
 
   @override
   void onInit() async {
     super.onInit();
     if (GetPlatform.isAndroid)
-      urlImegenes = 'http://10.0.2.2:8000/imagenes';
+      urlImegenes = 'http://192.168.0.6:8000/imagenes';
     else
       urlImegenes = 'http://localhost:8000/imagenes';
     if (this.usuario.isNullOrBlank)
@@ -57,19 +62,20 @@ class HomeController extends GetxController {
   }
 
   void getImage(String tipo) async {
-    image = await imageCapture.getImage(tipo);
-    if (!image.isNullOrBlank) {
-      final imageComprimida = await CompressImagePlugin.getImage(
-          image, imageCapture.height, imageCapture.width);
+    final imageCap = await imageCapture.getImage(tipo);
+    if (!imageCap.isNullOrBlank) {
+          image = await CompressImagePlugin.getImage(
+          imageCap, imageCapture.height, imageCapture.width);
       final response =
-          await repositorio.updateImagen(imageComprimida.path, usuario.id);
-      if (response is UpdateImageResponse) {
+          await repositorio.updateImagen(image.path, usuario.id);
+      if (response is HomeResponse) {
         Get.back();
+        imageCap.delete();
         update();
       }
       if (response is ErrorResponse) this._errorResponse(response.getError);
     }
-    if (image.isNullOrBlank) {
+    if (imageCap.isNullOrBlank) {
       Get.back();
       Get.snackbar('No seleciono ninguna Imagen', '',
           snackPosition: SnackPosition.BOTTOM);
@@ -80,4 +86,10 @@ class HomeController extends GetxController {
     if (error == 'Connection refused')
       Get.snackbar('No estas Conectdo', 'Conectate a Internet');
   }
+
+  
+
+
+
+  
 }

@@ -13,7 +13,7 @@ class Empresa {
       nit,
       web;
   final String latitud, longitud;
-  final bool popular;
+  final int popular;
 
   Empresa(
      {this.id,

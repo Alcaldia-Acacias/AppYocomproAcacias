@@ -8,6 +8,7 @@ import 'package:comproacacias/src/componetes/publicaciones/models/imageFile.mode
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/reponse.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,8 +34,9 @@ class FormPublicacionesController extends GetxController {
   }
 
   void getImage(String tipo, [bool cambiar = false, int index]) async {
-    final image = await imageCapture.getImage(tipo);
-    if (!image.isNullOrBlank) {
+    final imagecapture = await imageCapture.getImage(tipo);
+    final image = await CompressImagePlugin.getImage(imagecapture);
+    if (!imagecapture.isNullOrBlank) {
       if (cambiar)
         this._updateImage(image, index);
       else
@@ -42,7 +44,7 @@ class FormPublicacionesController extends GetxController {
       Get.back();
       update();
     }
-    if (image.isNullOrBlank) {
+    if (imagecapture.isNullOrBlank) {
       Get.back();
       Get.snackbar('No seleciono ninguna Imagen', '',
           snackPosition: SnackPosition.BOTTOM);
@@ -68,7 +70,7 @@ class FormPublicacionesController extends GetxController {
   }
 
   void _addImage(File image) {
-    imagenes.add(ImageFile(path: image.path, nombre: '${uid.v4()}.jpg'));
+    imagenes.add(ImageFile(file: image, nombre: '${uid.v4()}.jpg'));
   }
 
   Publicacion _getPublicacion([int id]) {

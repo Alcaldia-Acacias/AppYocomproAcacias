@@ -134,7 +134,7 @@ Widget _imageProducto(ProductosController state)  {
                                               width  : 100,
                                               fit    : BoxFit.cover,
                                               placeholder: AssetImage('assets/imagenes/load_image.png'), 
-                                              image: AssetImage(state.image.path),
+                                              image: FileImage(state.image),
                                        )
                                  );
                                  break;

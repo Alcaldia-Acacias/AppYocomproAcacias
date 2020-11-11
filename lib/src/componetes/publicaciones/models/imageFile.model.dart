@@ -1,15 +1,17 @@
+import 'dart:io';
+
 class ImageFile {
 
-  final String path;
+  final File file;
   final String nombre;
 
-  ImageFile({this.path, this.nombre});
+  ImageFile({this.file, this.nombre});
  
   ImageFile copyWith({
    String path,
    String nombre
   }) => ImageFile(
-        path   : path   ?? this.path,
+        file   : path   ?? this.file,
         nombre : nombre ?? this.nombre
   );
 }

@@ -3,10 +3,12 @@ import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/actulizarDatos.view.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
 import 'package:comproacacias/src/componetes/empresas/views/empresas.view.dart';
+import 'package:comproacacias/src/componetes/usuario/views/help.view.dart';
 import 'package:comproacacias/src/componetes/usuario/widgets/menu.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class MenuUsuarioPage extends StatelessWidget {
    MenuUsuarioPage({Key key}) : super(key: key);
@@ -55,7 +57,8 @@ Widget _menu(Usuario usuario) {
              ),
              MenuItemUsuario(
              icon: Icons.help,
-             titulo: 'Ayuda',  
+             titulo: 'Ayuda', 
+             onTap : ()=>Get.to(HelpPage()), 
              ),
              MenuItemUsuario(
              icon: Icons.power_settings_new,
@@ -113,9 +116,9 @@ Widget  _header(HomeController state) {
                              )
                  ),
            );
-}
+}  
 
-  _imageUsuario(HomeController state) {
+  _imageUsuario(HomeController  state) {
    if(state.image?.path == null && state.usuario.imagen == '')
        return  CircleAvatar(
                       backgroundColor : Colors.grey[300],
@@ -136,7 +139,7 @@ Widget  _header(HomeController state) {
                  width  : 140,
                  fit    : BoxFit.cover,
                  placeholder: AssetImage('assets/imagenes/load_image.png'), 
-                 image: AssetImage(state.image.path)
+                 image: FileImage(state.image)
                  ),
    ); 
    return ClipRRect(

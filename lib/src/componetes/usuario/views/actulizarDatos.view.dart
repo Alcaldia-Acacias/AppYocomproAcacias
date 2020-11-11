@@ -15,11 +15,11 @@ class UpdateDataUsuario extends StatelessWidget {
     return Scaffold(
            appBar: AppBar(
                    title: Text('Actulizar Datos'),
+                   elevation: 0,
            ),
            body: GestureDetector(
                   onTap : ()=>FocusScope.of(context).unfocus(),
-                  child : SingleChildScrollView(
-                           
+                  child : SingleChildScrollView(  
                           child : GetBuilder<UpdateDataController>(
                                   init: UpdateDataController(usuario:usuario,repositorio: UsuarioRepocitorio()),
                                   builder: (state){

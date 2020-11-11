@@ -1,3 +1,4 @@
+import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/home/models/update.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
@@ -25,9 +26,10 @@ class HomeRepocitorio {
     });
     try {
       final response = await _dio.put('/usuarios/update/image', data: data);
-      return UpdateImageResponse(update: response.data['update']);
+      return HomeResponse(update: response.data['update']);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }
   }
+  
 }

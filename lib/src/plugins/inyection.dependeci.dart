@@ -10,7 +10,7 @@ class Dependecias {
     final box = GetStorage();
     final token = box.read('token');
     if(GetPlatform.isAndroid)
-       urlApi = '10.0.2.2';
+       urlApi = '192.168.0.6';
     else urlApi = 'localhost';
 
     Get.lazyPut(() => Dio(BaseOptions(

@@ -23,4 +23,6 @@ class UsuarioRepocitorio {
       return ErrorResponseUpdate.toJson(error.response.data);
     }
   }
+
+
 }

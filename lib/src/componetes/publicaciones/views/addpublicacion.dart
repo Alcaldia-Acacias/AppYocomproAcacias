@@ -121,7 +121,7 @@ Widget _imagenes(FormPublicacionesController state) {
                                                        width  : Get.width *0.29,
                                                        fit    : BoxFit.cover,
                                                        placeholder: AssetImage('assets/imagenes/load_image.png'), 
-                                                       image: AssetImage(imagen.value.path),
+                                                       image: FileImage(imagen.value.file),
                                                 ),
                                                 onTap: ()=>DialogImagePicker.openDialog(
                                                            titulo       : 'Cambia la Imagen',
