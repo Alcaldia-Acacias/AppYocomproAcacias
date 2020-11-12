@@ -17,7 +17,6 @@ class CategoriasController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-   
     this.getCategorias();
   }
 

@@ -114,6 +114,42 @@ class EmpresasController extends GetxController {
     }
   }
 
+  void gotoMail(String email) async {
+    final Uri _emailLaunchUri = Uri(scheme: 'mailto', path: '$email');
+    if (await canLaunch(_emailLaunchUri.toString())) {
+      await launch(_emailLaunchUri.toString());
+    } else {
+      print('Could not launch $_emailLaunchUri');
+      throw 'Could not launch $_emailLaunchUri';
+    }
+  }
+
+  void gotoWeb(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+      throw 'Could not launch $url';
+    }
+  }
+
+  void goToWhatsapp(
+    String telefono,
+  ) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/$telefono/?text=${Uri.parse('')}";
+      } else {
+        return "whatsapp://send?phone=$telefono&text=${Uri.parse('')}";
+      }
+    }
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+
   void getPublicaciones(int id) async {
     Get.find<PublicacionesController>().getPublicacionesByempresa(id);
   }
@@ -188,7 +224,7 @@ class EmpresasController extends GetxController {
     this._initCalificacion();
   }
 
- void deleteProducto(int idProducto, int index) async {
+  void deleteProducto(int idProducto, int index) async {
     final response = await repositorio.deleteProducto(idProducto);
     if (response is ErrorResponse) this._error(response.getError);
     if (response is ResponseEmpresa) {
@@ -200,7 +236,7 @@ class EmpresasController extends GetxController {
 
   void getImage(String tipo) async {
     image = await imageCapture.getImage(tipo);
-    if (!image.isNullOrBlank){
+    if (!image.isNullOrBlank) {
       Get.back();
       update();
     }
@@ -211,7 +247,7 @@ class EmpresasController extends GetxController {
     }
   }
 
- void _error(String error) {
+  void _error(String error) {
     if (error == 'CALIFICACION_EXITS') {
       Get.back();
       Get.snackbar('Error', 'Ya calificaste esta empresa',
@@ -232,15 +268,18 @@ class EmpresasController extends GetxController {
     productos.add(producto);
     update();
   }
+
   void updateProductoList(Producto producto) {
-   final index = this.productos.indexWhere((productoList) => producto.id == productoList.id);
-   this.productos[index] = producto;
-   update();
+    final index = this
+        .productos
+        .indexWhere((productoList) => producto.id == productoList.id);
+    this.productos[index] = producto;
+    update();
   }
+
   void _initCalificacion() {
     this.startValue = List.generate(5, (index) => false);
     this.extrellas = 0;
     this.calificarController.clear();
   }
-
 }

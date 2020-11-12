@@ -61,7 +61,6 @@ class LoginController extends GetxController {
       final usuario = {
         "imagen": '',
         "cedula": cedulaSinginController.text,
-        "codigo_recuperacion": '',
         "nombre": nombreSinginController.text,
         "password": passwordSinginController.text,
         "usuario": usuarioSinginController.text

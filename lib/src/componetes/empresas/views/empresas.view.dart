@@ -31,7 +31,7 @@ class ListEmpresasPage extends StatelessWidget {
              floatingActionButton: FloatingActionButton(
                                    child           : Icon(Icons.add,color: Colors.white),
                                    backgroundColor : Get.theme.primaryColor,
-                                   onPressed: ()=> Get.to(FormEmpresaPage(),transition: Transition.downToUp)
+                                   onPressed       : ()=> Get.to(FormEmpresaPage(),transition: Transition.downToUp)
                                    ),
            );
       }
@@ -73,7 +73,7 @@ Widget _listEmpresas(List<Empresa> empresas, EmpresasController state) {
                                           ),
                           ),                 
                           title: Text(empresas[i].nombre),
-                          onTap:  ()=> Get.to(PerfilEmpresaPage(empresa: empresas[i],propia: true))
+                          onTap: ()=> Get.to(PerfilEmpresaPage(empresa: empresas[i],propia: true))
                 ),
             );
          },

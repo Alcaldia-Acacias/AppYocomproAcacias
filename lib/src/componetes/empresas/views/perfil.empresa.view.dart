@@ -159,9 +159,6 @@ class PerfilEmpresaPage extends StatelessWidget {
                       titulo  : empresa.descripcion,
                       tipo    : "Descripción",
                       icon    : Icons.info_outline,
-                      onPressed: (titulo){
-                          print(titulo);
-                      },
                       ),
                       DatosCard(
                       titulo  : empresa.direccion,
@@ -189,7 +186,8 @@ class PerfilEmpresaPage extends StatelessWidget {
                       tipo    : "Whatsapp",
                       icon    : Icons.message,
                       onPressed: (titulo){
-                          print(titulo);
+                        Get.find<EmpresasController>()
+                            .goToWhatsapp(titulo);
                       },
                       ),
                       DatosCard(
@@ -198,7 +196,8 @@ class PerfilEmpresaPage extends StatelessWidget {
                       tipo    : "Correo",
                       icon    : Icons.mail,
                       onPressed: (titulo){
-                          print(titulo);
+                         Get.find<EmpresasController>()
+                            .gotoMail(titulo);
                       },
                       ),
                       DatosCard(
@@ -206,7 +205,8 @@ class PerfilEmpresaPage extends StatelessWidget {
                       tipo    : "Web",
                       icon    : Icons.web_asset,
                       onPressed: (titulo){
-                          print(titulo);
+                          Get.find<EmpresasController>()
+                            .gotoWeb(titulo);
                       },
                       ),
              ],

@@ -1,5 +1,4 @@
 import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
-import 'package:comproacacias/src/componetes/login/views/login.view.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
 import 'package:comproacacias/src/componetes/usuario/models/updateresponse.model.dart';
@@ -25,7 +24,7 @@ class ChangePasswordController extends GetxController {
 
   @override
   void onInit() {
-    if (recoveryData.token != null) {
+    if (recoveryData?.token != null) {
       this.idUsuario = recoveryData.idUsuario;
     } else
       this.idUsuario = usuario.id;
@@ -36,7 +35,7 @@ class ChangePasswordController extends GetxController {
     if (this.comparePassword()) {
       final update = {"password": newPasswordController.text};
       final response = await this.repositorio.updateUsuario(idUsuario, update,
-          currentPasswordController.text, recoveryData.token);
+          currentPasswordController.text, recoveryData?.token);
       if (response is ErrorResponse) this._errorUpdate(response.getError);
       if (response is UsuarioResponse) this._updateOK(response);
     }
@@ -61,7 +60,8 @@ class ChangePasswordController extends GetxController {
           'Contraseña Actualizada', 'La contresaña ha sido actualizada',
           snackbarStatus: (status) {
         if (status == SnackbarStatus.CLOSED) {
-          if (!recoveryData.token.isNullOrBlank){
+          // ignore: null_aware_in_logical_operator
+          if (!(recoveryData?.token == null)){
               Get.offAllNamed('/');
           }
         }

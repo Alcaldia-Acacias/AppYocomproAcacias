@@ -13,7 +13,6 @@ class CategoriaRepositorio {
         ?.toList();
   }
   Future<List<Categoria>> getCategorias() async {
-    
      final response = await _dio.get('/categorias');
      return response.data?.map<Categoria>((categoria)=>Categoria.toJson(categoria))?.toList();
  

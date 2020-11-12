@@ -16,6 +16,7 @@ class FormEmpresaPage extends StatelessWidget {
   final bool update;
   final Empresa empresa;
   FormEmpresaPage({Key key, this.update = false, this.empresa}) : super(key: key);
+  
   final List<Categoria> categorias = Get.find<CategoriasController>().categorias;
   final String urlImagenes = Get.find<HomeController>().urlImegenes;
   @override

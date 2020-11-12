@@ -11,12 +11,9 @@ Calificacion({this.id,this.usuario, this.extrellas,this.comentario});
 
 factory Calificacion.toJson(Map<String,dynamic> json)
       => Calificacion(
-         id     : json['id'],
-         usuario: Usuario.toJson(json['usuario']) ?? null,
-         extrellas: json['extrellas'] ?? null,
+         id         : json['id'],
+         usuario    : Usuario.toJson(json['usuario']) ?? null,
+         extrellas  : json['extrellas'] ?? null,
          comentario : json['comentario'] ?? ''
          );
-
-
-
 }

@@ -42,13 +42,13 @@ factory Empresa.toJson(Map<String,dynamic> json)
        urlPortada : json['portada']     ?? '',
        descripcion: json['descripcion'] ?? '',
        direccion  : json['direccion']   ?? '',
-       telefono   : json['telefono']   ?? '',
+       telefono   : json['telefono']    ?? '',
        whatsapp   : json['whatsapp']    ?? '',
        email      : json['email']       ?? '',
        web        : json['web']         ?? '',
        latitud    : json['latitud']     ?? '',
        longitud   : json['longitud']    ?? '',
-       popular    : json['popular'],
+       popular    : json['popular']     ?? 0,
        idCategoria: json['id_categoria']
     );
 Empresa copyWith({
@@ -100,7 +100,6 @@ Map<String,dynamic> toMap(int idUsuario)=>{
       'popular'      : popular, 
       'id_usuario'   : idUsuario,
       'id_categoria' : idCategoria,
-
 };
 
 }

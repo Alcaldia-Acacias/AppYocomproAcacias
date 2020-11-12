@@ -39,7 +39,7 @@ class CambiarPasswordPage extends StatelessWidget {
                                                              width  : 180,
                                                             ),
                                                             SizedBox(height: 20),
-                                                            if(dataRecovery.token == null)
+                                                            if(dataRecovery?.token == null)
                                                             InputForm(
                                                             placeholder       : "Contraseña Actual",
                                                             controller        : state.currentPasswordController,
