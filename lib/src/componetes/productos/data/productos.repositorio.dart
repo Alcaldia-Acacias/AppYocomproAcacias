@@ -1,4 +1,3 @@
-import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/response.producto.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';

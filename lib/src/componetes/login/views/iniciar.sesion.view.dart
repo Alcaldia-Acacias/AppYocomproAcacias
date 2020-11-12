@@ -1,4 +1,5 @@
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
+import 'package:comproacacias/src/componetes/login/views/sendEmail.view.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -68,8 +69,8 @@ class LoginFormPage extends StatelessWidget {
     return   MaterialButton(
              textColor : Colors.white,
              padding   : EdgeInsets.all(15),
-             child     : loading ? Center(child:CircularProgressIndicator()) : Text('Ingresar'),
-             color     : loading ?Colors.white : Get.theme.accentColor,
+             child     : Text('Ingresar'),
+             color     : Get.theme.accentColor,
              minWidth  : double.maxFinite,
              onPressed :() => _submit()
     );
@@ -85,8 +86,10 @@ class LoginFormPage extends StatelessWidget {
                   alignment : Alignment.topRight,
                   child     :Text('Olvido su contraseña ?',style:TextStyle(color: Colors.blue))
                   ),
-           onTap: ()=>print('olvide')
+           onTap: ()=>Get.to(SendEmailPage())
     );
   }
+
+  
 
 }

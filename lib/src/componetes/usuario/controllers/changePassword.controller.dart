@@ -1,5 +1,7 @@
+import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
+import 'package:comproacacias/src/componetes/login/views/login.view.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
-import 'package:comproacacias/src/componetes/usuario/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/updateresponse.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:flutter/material.dart';
@@ -15,19 +17,28 @@ class ChangePasswordController extends GetxController {
   FocusNode confirmPasswordFoco = FocusNode();
 
   GlobalKey<FormState> formKey = GlobalKey();
-
+  int idUsuario;
   final Usuario usuario;
   final UsuarioRepocitorio repositorio;
-  ChangePasswordController({this.usuario, this.repositorio});
+  final RecoveryData recoveryData;
+  ChangePasswordController({this.usuario, this.repositorio, this.recoveryData});
+
+  @override
+  void onInit() {
+    if (recoveryData.token != null) {
+      this.idUsuario = recoveryData.idUsuario;
+    } else
+      this.idUsuario = usuario.id;
+    super.onInit();
+  }
 
   void changePassword() async {
     if (this.comparePassword()) {
-      final update = {"pass": newPasswordController.text};
-      final response = await this
-          .repositorio
-          .updateUsuario(usuario.id, update, currentPasswordController.text);
-      if (response is ErrorResponseUpdate) this._errorUpdate(response);
-      if (response is UpdateResponse) this._updateOK(response);
+      final update = {"password": newPasswordController.text};
+      final response = await this.repositorio.updateUsuario(idUsuario, update,
+          currentPasswordController.text, recoveryData.token);
+      if (response is ErrorResponse) this._errorUpdate(response.getError);
+      if (response is UsuarioResponse) this._updateOK(response);
     }
     if (!this.comparePassword())
       Get.snackbar('Error', 'las contraseñas no coinciden');
@@ -39,16 +50,23 @@ class ChangePasswordController extends GetxController {
     return false;
   }
 
-  void _errorUpdate(ErrorResponseUpdate response) {
-    if (response.error == 'PASS_INVALID')
-      Get.snackbar('Contraseña Actual', 'La contresaña actual es invalidad');
+  void _errorUpdate(String error) {
+    if (error == 'PASS_INVALID')
+      Get.snackbar('Contraseña Actual', 'La contresaña actual es invalida');
   }
 
-  void _updateOK(UpdateResponse response) {
+  void _updateOK(UsuarioResponse response) {
     if (response.update) {
       Get.snackbar(
-          'Contraseña Actualizada', 'La contresaña ha sido actulizada');
-       this._resetForm();
+          'Contraseña Actualizada', 'La contresaña ha sido actualizada',
+          snackbarStatus: (status) {
+        if (status == SnackbarStatus.CLOSED) {
+          if (!recoveryData.token.isNullOrBlank){
+              Get.offAllNamed('/');
+          }
+        }
+      });
+      this._resetForm();
     } else
       Get.snackbar('Ocurrio un error', '');
   }
@@ -57,6 +75,7 @@ class ChangePasswordController extends GetxController {
     currentPasswordController?.clear();
     newPasswordController?.clear();
     confirmPasswordController?.clear();
+
     update();
   }
 }

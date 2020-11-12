@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/login/models/usuariologin.model.dart';
-import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
+import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
+import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,9 +37,14 @@ class LoginController extends GetxController {
   FocusNode passwordFocoSingin = FocusNode();
   FocusNode confirmPasswordFocoSingin = FocusNode();
 
-  Usuario usuario;
+  TextEditingController emailRecoveryController = TextEditingController();
+  TextEditingController codigoRecoveryController = TextEditingController();
+  final formKeyRecovery = GlobalKey<FormState>();
+  RecoveryData recovery;
   bool loading = false;
+  bool codigo  = false;
   Future dialog;
+  
   void submitFormLogin() async {
     if (formKeyLogin.currentState.validate()) {
       this._openDialog();
@@ -50,7 +56,7 @@ class LoginController extends GetxController {
   }
 
   void submitFormSingIn() async {
-    if (formKeySingin.currentState.validate() && this.comparePassword()) {
+    if (formKeySingin.currentState.validate() && this._comparePassword()) {
       this._openDialog();
       final usuario = {
         "imagen": '',
@@ -64,11 +70,33 @@ class LoginController extends GetxController {
       if (response is ErrorResponse) this._loginError(response.getError);
       if (response is UsuarioModelResponse) this._loginOk(response);
     }
-    if (!this.comparePassword())
+    if (!this._comparePassword())
       Get.snackbar("Error", "no coinciden las contraseñas");
   }
 
-  bool comparePassword() {
+  void sendEmail() async {
+    
+    if (this.formKeyRecovery.currentState.validate()) {
+      this._loading();
+      final response =
+          await repositorio.sendEmailRecovery(emailRecoveryController.text);
+      if (response is UsuarioModelResponse)this._recoveryPassword(response);
+      if (response is ErrorResponse) this._emailError(response.getError);
+    }
+  }
+  void verficarCodigo(){
+    if(recovery.codigoRecuperacion == codigoRecoveryController.text)
+       Get.offAll(CambiarPasswordPage(dataRecovery: recovery));
+    else Get.snackbar('Codigo incorrecto', '');
+  }
+  void resetSendEmail(){
+    this.emailRecoveryController.text = '';
+    this.loading = false;
+    this.codigo  = false;
+    update();
+  }
+
+  bool _comparePassword() {
     if (passwordSinginController.text == confirmPasswordSinginController.text)
       return true;
     return false;
@@ -89,7 +117,6 @@ class LoginController extends GetxController {
       Get.snackbar('Usuario ya Registrado', 'Inicia Session');
     if (error == 'Connection refused')
       Get.snackbar('No estas Conectdo', 'Conectate a Internet');
-    
   }
 
   void _loginOk(UsuarioModelResponse response) async {
@@ -99,7 +126,7 @@ class LoginController extends GetxController {
     Get.find<Dio>().options.headers = {
       HttpHeaders.authorizationHeader: 'Bearer ${box.read('token')}'
     };
-    Get.offNamed('/home');
+    Get.offAllNamed('/home');
   }
 
   void _openDialog() {
@@ -113,5 +140,31 @@ class LoginController extends GetxController {
           elevation: 0,
         ),
         barrierDismissible: false);
+  }
+
+  void _loading() {
+  this.loading = !this.loading;
+  update();
+  }
+
+  void _recoveryPassword(UsuarioModelResponse response) {
+    print(response.codigoRecuperacion);
+    Get.snackbar('Codigo enviado', 'el codigo fue enviado');
+    this.codigo = true;
+    this.recovery = RecoveryData(
+                    idUsuario: response.idUsuario,
+                    codigoRecuperacion: response.codigoRecuperacion,
+                    token: response.token 
+    );
+    this._loading();
+
+  }
+
+  void _emailError(String error) {
+    if (error == 'USER_NO_EXITS'){
+      Get.snackbar('Usuario no existe','');
+      this.resetSendEmail();
+    }
+      
   }
 }

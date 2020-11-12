@@ -1,3 +1,4 @@
+import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
 import 'package:comproacacias/src/componetes/usuario/controllers/changePassword.controller.dart';
 import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
@@ -7,7 +8,8 @@ import 'package:get/get.dart';
 
 class CambiarPasswordPage extends StatelessWidget {
   final Usuario usuario;
-  CambiarPasswordPage({Key key, this.usuario}) : super(key: key);
+  final RecoveryData dataRecovery;
+  CambiarPasswordPage({Key key, this.usuario,this.dataRecovery}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,11 @@ class CambiarPasswordPage extends StatelessWidget {
                   onTap : ()=>FocusScope.of(context).unfocus(),
                   child : SingleChildScrollView(
                           child : GetBuilder<ChangePasswordController>(
-                                  init: ChangePasswordController(usuario:usuario,repositorio:UsuarioRepocitorio()),
+                                  init: ChangePasswordController(
+                                        usuario      : usuario,
+                                        repositorio  : UsuarioRepocitorio(),
+                                        recoveryData : dataRecovery
+                                  ),
                                   builder: (state){
                                     return Padding(
                                            padding: EdgeInsets.all(40.0),
@@ -33,6 +39,7 @@ class CambiarPasswordPage extends StatelessWidget {
                                                              width  : 180,
                                                             ),
                                                             SizedBox(height: 20),
+                                                            if(dataRecovery.token == null)
                                                             InputForm(
                                                             placeholder       : "Contraseña Actual",
                                                             controller        : state.currentPasswordController,

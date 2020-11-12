@@ -27,7 +27,18 @@ Future<ResponseModel> addUsuario(Map<String, dynamic> usuario) async {
      final response = await this._dio.post('/usuarios/add',data:formData);
       return UsuarioModelResponse.toJson(response.data); 
     } on DioError catch (error) {
-      return ErrorResponse.toJson(error.response.data);
+      return ErrorResponse(error);
+    }
+  }
+Future<ResponseModel> sendEmailRecovery(String email) async {
+     FormData formData = new FormData.fromMap({
+       "email" : email
+     });
+     try {
+     final response = await this._dio.post('/usuarios/get/codigo_recuperacion',data:formData);
+      return UsuarioModelResponse.toJson(response.data); 
+    } on DioError catch (error) {
+      return ErrorResponse(error);
     }
   }
 }

@@ -59,6 +59,7 @@ class FormPublicacionPage extends StatelessWidget {
 Widget _escojerEmpresa(FormPublicacionesController state) {
   return ListTile(
          leading : Icon(Icons.business),
+         // ignore: can_be_null_after_null_aware
          title   : Text('${state.empresa?.nombre.isNull ? 'Selecione Una Empresa' : state.empresa.nombre}'),
          onTap   : ()=>_dialogEmpresas(state),
   );

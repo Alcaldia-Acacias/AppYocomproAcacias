@@ -8,7 +8,6 @@ import 'package:comproacacias/src/componetes/usuario/widgets/menu.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 
 class MenuUsuarioPage extends StatelessWidget {
    MenuUsuarioPage({Key key}) : super(key: key);

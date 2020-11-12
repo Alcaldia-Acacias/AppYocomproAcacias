@@ -1,6 +1,6 @@
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
-import 'package:comproacacias/src/componetes/usuario/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/updateresponse.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class UpdateDataController extends GetxController {
+  
   final Usuario usuario;
   final UsuarioRepocitorio repositorio;
   UpdateDataController({this.usuario, this.repositorio});
@@ -33,8 +34,8 @@ class UpdateDataController extends GetxController {
         "nombre": nombreController.text
       };
       final response = await this.repositorio.updateUsuario(usuario.id, update);
-      if (response is ErrorResponseUpdate) this._errorUpdate(response);
-      if (response is UpdateResponse) this._updateOK(response);
+      if (response is ErrorResponse) this._errorUpdate(response.getError);
+      if (response is UsuarioResponse) this._updateOK(response);
     }
   }
 
@@ -55,11 +56,11 @@ class UpdateDataController extends GetxController {
     update();
   }
 
-  void _errorUpdate(ErrorResponseUpdate response) {
-    print(response);
+  void _errorUpdate(String error) {
+    print(error);
   }
 
-  void _updateOK(UpdateResponse response) {
+  void _updateOK(UsuarioResponse response) {
     if (response.update) {
       final usuarioupdate = usuario.copyWith(
         email: usuarioController.text,

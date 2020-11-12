@@ -1,10 +1,10 @@
-import 'package:comproacacias/src/componetes/usuario/models/update.model.dart';
+import 'package:comproacacias/src/componetes/response/models/response.model.dart';
 
-class UpdateResponse extends UpdateModel {
+class UsuarioResponse extends ResponseModel {
  final bool update;
- UpdateResponse({this.update});
- factory UpdateResponse.toJson(Map<String, dynamic> json) 
-  =>UpdateResponse(
+ UsuarioResponse({this.update});
+ factory UsuarioResponse.toJson(Map<String, dynamic> json) 
+  =>UsuarioResponse(
     update :json['update']
   );
 }

@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:comproacacias/src/componetes/publicaciones/models/imageFile.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/reponse.model.dart';

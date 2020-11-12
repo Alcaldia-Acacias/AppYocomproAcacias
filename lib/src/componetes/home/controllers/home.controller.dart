@@ -59,6 +59,7 @@ class HomeController extends GetxController {
   void logOut() async {
     await GetStorage().erase();
     Get.offAllNamed('/');
+
   }
 
   void getImage(String tipo) async {

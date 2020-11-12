@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
                      brightness: Brightness.light,
                      color: Colors.white,
                      textTheme: TextTheme(
+                                // ignore: deprecated_member_use
                                 title: TextStyle(color:Colors.black,fontSize: 20)
                      ),
                      iconTheme:  IconThemeData(
@@ -76,9 +77,8 @@ class MyApp extends StatelessWidget {
         GetPage(
         name: '/', 
         page: ()=>LoginPage(),
-        bindings: [
-            BindingsBuilder.put( () => LoginController(repositorio:LoginRepositorio())),
-        ]
+        binding : BindingsBuilder.put(() => LoginController(repositorio:LoginRepositorio())),
+
         ),
       ],
     );

@@ -1,7 +1,6 @@
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
-import 'package:comproacacias/src/componetes/home/models/update.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
