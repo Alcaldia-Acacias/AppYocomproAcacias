@@ -133,7 +133,7 @@ Widget _imageProducto(ProductosController state)  {
                                               height : 100,
                                               width  : 100,
                                               fit    : BoxFit.cover,
-                                              placeholder: AssetImage('assets/imagenes/load_image.png'), 
+                                              placeholder: AssetImage('assets/imagenes/load_image.gif'), 
                                               image: FileImage(state.image),
                                        )
                                  );
@@ -144,7 +144,7 @@ Widget _imageProducto(ProductosController state)  {
                                           height : 100,
                                           width  : 100,
                                           fit    : BoxFit.cover,
-                                          placeholder: AssetImage('assets/imagenes/load_image.png'), 
+                                          placeholder: AssetImage('assets/imagenes/load_image.gif'), 
                                           image: NetworkImage('$urlImagenes/galeria/${producto.imagen}'),
                                   ),
                            );

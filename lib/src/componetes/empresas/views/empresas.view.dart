@@ -66,7 +66,7 @@ Widget _listEmpresas(List<Empresa> empresas, EmpresasController state) {
                                                         width      : 60,
                                                         height     : 60,
                                                         fit        : BoxFit.cover,
-                                                        placeholder: AssetImage('assets/imagenes/load_image.png'), 
+                                                        placeholder: AssetImage('assets/imagenes/load_image.gif'), 
                                                         image      : empresas[i].urlLogo == ''
                                                                      ? AssetImage('assets/imagenes/logo_no_img.png')
                                                                      : CachedNetworkImageProvider('$urlImagenes/logo/${empresas[i].urlLogo}')  

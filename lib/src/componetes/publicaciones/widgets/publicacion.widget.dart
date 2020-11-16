@@ -346,7 +346,7 @@ Widget _imagenes(List<String> imagenes) {
                                      ),
                                      child: CachedNetworkImage(
                                             imageUrl    : '$urlImagenLogo/galeria/$imagen',
-                                            placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.png'),
+                                            placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
                                             errorWidget : (context, url, error) => Icon(Icons.error),
                               ),
                             ),

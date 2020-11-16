@@ -137,7 +137,7 @@ Widget  _header(HomeController state) {
                  height : 140,
                  width  : 140,
                  fit    : BoxFit.cover,
-                 placeholder: AssetImage('assets/imagenes/load_image.png'), 
+                 placeholder: AssetImage('assets/imagenes/load_image.gif'), 
                  image: FileImage(state.image)
                  ),
    ); 
@@ -147,7 +147,7 @@ Widget  _header(HomeController state) {
             height : 140,
             width  : 140,
             fit    : BoxFit.cover,
-            placeholder: AssetImage('assets/imagenes/load_image.png'), 
+            placeholder: AssetImage('assets/imagenes/load_image.gif'), 
             image: NetworkImage('${state.urlImegenes}/usuarios/${state.usuario.imagen}')
             ),
 );
