@@ -29,7 +29,7 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     if (GetPlatform.isAndroid)
-      urlImegenes = 'http://192.168.0.6:8000/imagenes';
+      urlImegenes = 'http://165.22.239.235/imagenes';
     else
       urlImegenes = 'http://localhost:8000/imagenes';
     if (this.usuario.isNullOrBlank)

@@ -10,11 +10,11 @@ class Dependecias {
     final box = GetStorage();
     final token = box.read('token');
     if(GetPlatform.isAndroid)
-       urlApi = '192.168.0.6';
+       urlApi = '165.22.239.235';
     else urlApi = 'localhost';
 
     Get.lazyPut(() => Dio(BaseOptions(
-        baseUrl: 'http://$urlApi:8000',
+        baseUrl: 'http://$urlApi',
         contentType: Headers.jsonContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'})));
     Get.put(ImageCapture());
