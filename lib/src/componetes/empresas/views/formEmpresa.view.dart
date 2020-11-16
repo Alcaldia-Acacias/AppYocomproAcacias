@@ -286,7 +286,7 @@ if(state.image?.path != null)
                  width  : 200,
                  fit    : BoxFit.cover,
                  placeholder: AssetImage('assets/imagenes/load_image.gif'), 
-                 image: AssetImage(state.image.path)
+                 image: FileImage(state.image)
                  ),
 );
 if(state.actualizar)
