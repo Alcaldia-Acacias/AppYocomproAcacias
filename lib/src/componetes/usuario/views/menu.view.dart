@@ -57,7 +57,7 @@ Widget _menu(Usuario usuario) {
              MenuItemUsuario(
              icon: Icons.help,
              titulo: 'Ayuda', 
-             onTap : ()=>Get.to(HelpPage()), 
+             onTap : ()=>Get.to(HelpPage(idUsuario: usuario.id)), 
              ),
              MenuItemUsuario(
              icon: Icons.power_settings_new,

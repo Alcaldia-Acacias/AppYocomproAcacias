@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HelpPage extends StatelessWidget {
-  const HelpPage({Key key}) : super(key: key);
+  final int idUsuario;
+  HelpPage({Key key,this.idUsuario}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class HelpPage extends StatelessWidget {
                   body: SingleChildScrollView(
                         padding: EdgeInsets.all(30),
                         child: GetBuilder<HelpController>(
-                               init: HelpController(repocitorio: UsuarioRepocitorio()),
+                               init: HelpController(repocitorio: UsuarioRepocitorio(),idUsuario: idUsuario),
                                builder: (state){
                                  return Form(
                                         key: state.formKey,
@@ -51,7 +52,7 @@ class HelpPage extends StatelessWidget {
                                         label           : Text('Enviar',style:TextStyle(color: Colors.white)),
                                         backgroundColor : Get.theme.primaryColor,
                                         icon            : Icon(Icons.send,color: Colors.white),
-                                        onPressed: (){}, 
+                                        onPressed: ()=>Get.find<HelpController>().sendReporte(), 
                                         ),
            ),
            onTap: ()=>FocusScope.of(context).unfocus(),

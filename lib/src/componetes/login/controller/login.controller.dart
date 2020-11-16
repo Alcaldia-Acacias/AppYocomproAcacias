@@ -115,7 +115,7 @@ class LoginController extends GetxController {
     if (error == 'USER_EXITS')
       Get.snackbar('Usuario ya Registrado', 'Inicia Session');
     if (error == 'Connection refused')
-      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
+      Get.snackbar('No estas Conectado', 'Conectate a Internet');
   }
 
   void _loginOk(UsuarioModelResponse response) async {
