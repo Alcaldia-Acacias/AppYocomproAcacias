@@ -8,6 +8,7 @@ import 'package:comproacacias/src/componetes/home/controllers/home.controller.da
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:uuid/uuid.dart';
 class ListEmpresasPage extends StatelessWidget {
 
   final List<Empresa> empresas;
@@ -69,7 +70,7 @@ Widget _listEmpresas(List<Empresa> empresas, EmpresasController state) {
                                                         placeholder: AssetImage('assets/imagenes/load_image.gif'), 
                                                         image      : empresas[i].urlLogo == ''
                                                                      ? AssetImage('assets/imagenes/logo_no_img.png')
-                                                                     : NetworkImage('$urlImagenes/logo/${empresas[i].urlLogo}')  
+                                                                     : NetworkImage('$urlImagenes/logo/${empresas[i].urlLogo}?${Uuid().v1()}')  
                                           ),
                           ),                 
                           title: Text(empresas[i].nombre),
