@@ -69,7 +69,7 @@ Widget _listEmpresas(List<Empresa> empresas, EmpresasController state) {
                                                         placeholder: AssetImage('assets/imagenes/load_image.gif'), 
                                                         image      : empresas[i].urlLogo == ''
                                                                      ? AssetImage('assets/imagenes/logo_no_img.png')
-                                                                     : CachedNetworkImageProvider('$urlImagenes/logo/${empresas[i].urlLogo}')  
+                                                                     : NetworkImage('$urlImagenes/logo/${empresas[i].urlLogo}')  
                                           ),
                           ),                 
                           title: Text(empresas[i].nombre),

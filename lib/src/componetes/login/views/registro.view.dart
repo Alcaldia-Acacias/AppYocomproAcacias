@@ -28,7 +28,7 @@ class RegistroFormPage extends StatelessWidget {
                                                   children: <Widget>[
                                                      Image.asset(
                                                     'assets/imagenes/logo.png',
-                                                     height : 270,
+                                                     height : Get.width * 0.5,
                                                      width  : 270,
                                                      ),
                                                      InputForm(
