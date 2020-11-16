@@ -138,9 +138,9 @@ class EmpresasController extends GetxController {
   ) async {
     String url() {
       if (Platform.isIOS) {
-        return "whatsapp://wa.me/$telefono/?text=${Uri.parse('')}";
+        return "whatsapp://wa.me/+57$telefono/?text=${Uri.parse('')}";
       } else {
-        return "whatsapp://send?phone=$telefono&text=${Uri.parse('')}";
+        return "whatsapp://send?phone=+57$telefono&text=${Uri.parse('')}";
       }
     }
     if (await canLaunch(url())) {
