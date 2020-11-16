@@ -48,9 +48,6 @@ class HomeController extends GetxController {
         controller?.reset();
         controller?.forward();
         break;
-      case 2:
-        print('object');
-        break;
       default:
     }
     update(['bottomBar']);

@@ -87,9 +87,8 @@ class FormPublicacionesController extends GetxController {
   }
 
   void _updateImage(File image, int index) {
-    this.imagenes[index] = this.imagenes[index].copyWith(path: image.path);
+    this.imagenes[index] = this.imagenes[index].copyWith(file: image);
   }
-
   void _addPublicacionList(int id) {
     Get.find<PublicacionesController>().addPublicacion(this._getPublicacion(id));
     Get.back();

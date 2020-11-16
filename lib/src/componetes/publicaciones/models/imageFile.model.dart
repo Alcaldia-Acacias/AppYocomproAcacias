@@ -8,10 +8,10 @@ class ImageFile {
   ImageFile({this.file, this.nombre});
  
   ImageFile copyWith({
-   String path,
+   File file,
    String nombre
   }) => ImageFile(
-        file   : path   ?? this.file,
+        file   : file   ?? this.file,
         nombre : nombre ?? this.nombre
   );
 }
