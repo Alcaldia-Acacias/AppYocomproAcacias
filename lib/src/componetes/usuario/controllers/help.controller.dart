@@ -40,10 +40,10 @@ class HelpController extends GetxController {
       final reporte = Reporte(
           idUsuario: idUsuario, motivo: valueRadio, detalle: mensaje.text);
       final response = await repocitorio.sendReporte(reporte);
-      if (response is UsuarioResponse) print(response.reporte);
-      if (response is ErrorResponse) print(response.getError);
-    }
-    else Get.snackbar('Faltan Datos', '');
+      if (response is UsuarioResponse) this._reporteSend(response.reporte);
+      if (response is ErrorResponse) this._error(response.getError);
+    } else
+      Get.snackbar('Faltan Datos', '');
   }
 
   void gotoCall(String telefono) async {
@@ -63,6 +63,21 @@ class HelpController extends GetxController {
     } else {
       print('Could not launch $_emailLaunchUri');
       throw 'Could not launch $_emailLaunchUri';
+    }
+  }
+
+  void _reporteSend(bool reporte) {
+    if (reporte) {
+      Get.snackbar('Reporte Enviado', 'pronto contestaremos sus inquietudes',
+          snackbarStatus: (snack) {
+        if (snack == SnackbarStatus.CLOSED) Get.back();
+      });
+    }
+  }
+
+  void _error(String error) {
+    if (error == 'Connection refused' || error == 'Network is unreachable') {
+      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
     }
   }
 }
