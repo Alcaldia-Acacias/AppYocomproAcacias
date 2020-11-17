@@ -81,6 +81,7 @@ class FormPublicacionesController extends GetxController {
         fecha: DateTime.now().toString(),
         numeroComentarios: 0,
         likes: 0,
+        usuariosLike: [],
         imagenes: imagenes.map<String>((imagen) => imagen.nombre).toList(),
         megusta : false 
         );
