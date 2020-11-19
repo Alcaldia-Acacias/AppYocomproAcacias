@@ -52,9 +52,16 @@ class FormPublicacionesController extends GetxController {
   }
 
   void selectEmpresa(Empresa empresa) {
+    if(empresa.estado){
     this.empresa = empresa;
     Get.back();
     update();
+    }
+    else {
+      Get.back();
+      Get.snackbar('La Empresa no esta autorizada', 
+      'por favor espera mientras la administracion activa esta funcion');
+    }
   }
 
   void addPublicacion() async {

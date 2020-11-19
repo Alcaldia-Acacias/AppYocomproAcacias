@@ -14,7 +14,7 @@ class Empresa {
       web;
   final String latitud, longitud;
   final int popular;
-
+  final bool estado;
   Empresa(
      {this.id,
       this.idCategoria,
@@ -30,6 +30,7 @@ class Empresa {
       this.latitud,
       this.longitud,
       this.popular,
+      this.estado,
       this.web
      });
 
@@ -49,6 +50,7 @@ factory Empresa.toJson(Map<String,dynamic> json)
        latitud    : json['latitud']     ?? '',
        longitud   : json['longitud']    ?? '',
        popular    : json['popular']     ?? 0,
+       estado     : json['estado']      ?? false,
        idCategoria: json['id_categoria']
     );
 Empresa copyWith({
@@ -65,7 +67,8 @@ Empresa copyWith({
    String web,
    String latitud, 
    String longitud,
-   bool popular
+   int popular,
+   bool estado
 }) => Empresa(
       id         : id          ?? this.id,
       idCategoria: idCategoria ?? this.idCategoria,
@@ -81,6 +84,7 @@ Empresa copyWith({
       latitud    : latitud     ?? this.latitud,
       longitud   : longitud    ?? this.longitud,
       popular    : popular     ?? this.popular,
+      estado     : estado      ?? this.estado
 );
 
 Map<String,dynamic> toMap(int idUsuario)=>{
@@ -98,6 +102,7 @@ Map<String,dynamic> toMap(int idUsuario)=>{
       'latitud'      : latitud,    
       'longitud'     : longitud,   
       'popular'      : popular, 
+      'estado'       : estado, 
       'id_usuario'   : idUsuario,
       'id_categoria' : idCategoria,
 };
