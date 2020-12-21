@@ -18,7 +18,7 @@ class FormPublicacionPage extends StatelessWidget {
                   builder: (state) 
                             => Scaffold(
                                appBar: AppBar(
-                                       title     : Text('Agrega tu Publicacion'),
+                                       title     : Text('Agrega tu Publicación'),
                                        elevation : 0,
                                ),
                                body  : SingleChildScrollView(
@@ -29,14 +29,14 @@ class FormPublicacionPage extends StatelessWidget {
                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                          children: [
                                                               InputForm(
-                                                              placeholder : 'Escribe Tu publicacion',
+                                                              placeholder : 'Escribe Tu publicación',
                                                               controller  : state.publicacionController,
                                                               textarea    : true,
                                                               requerido   : true,  
                                                               ),
                                                               _escojerEmpresa(state),
                                                               SizedBox(height: 10),
-                                                              Text('Imagenes (maximo 5)'),
+                                                              Text('Imagenes (máximo 5)'),
                                                               SizedBox(height: 10),
                                                               _imagenes(state)
                                                          ]
@@ -60,7 +60,7 @@ Widget _escojerEmpresa(FormPublicacionesController state) {
   return ListTile(
          leading : Icon(Icons.business),
          // ignore: can_be_null_after_null_aware
-         title   : Text('${state.empresa?.nombre.isNull ? 'Selecione Una Empresa' : state.empresa.nombre}'),
+         title   : Text('${state.empresa?.nombre.isNull ? 'Selecione una empresa' : state.empresa.nombre}'),
          onTap   : ()=>_dialogEmpresas(state),
   );
 }

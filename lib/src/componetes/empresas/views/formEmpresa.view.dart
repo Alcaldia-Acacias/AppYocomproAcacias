@@ -161,7 +161,7 @@ class FormEmpresaPage extends StatelessWidget {
                  onEditingComplete : (){}
                  ),
                  OutlineButton(
-                 child: Text('Obtener Localizacion'),
+                 child: Text('Obtener Localización'),
                  shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40)
                  ),
@@ -228,12 +228,12 @@ class FormEmpresaPage extends StatelessWidget {
                       SizedBox(height: 20),
                       RaisedButton.icon(
                       icon      : Icon(Icons.photo_camera,color: Colors.white), 
-                      label     : Text('${state.actualizar ? 'Actulizar' : 'Selecionar'} Logo'),
+                      label     : Text('${state.actualizar ? 'Actualizar' : 'Seleccionar'} Logo'),
                       color     : Get.theme.primaryColor,
                       textColor : Colors.white,
                       shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       onPressed : ()=>DialogImagePicker.openDialog(
-                                      titulo: 'Escoje tu Logo',
+                                      titulo: 'Escoge tu Logo',
                                       onTapArchivo: ()=> state.getImage('archivo'),
                                       onTapCamera : ()=> state.getImage('camara')
                       ) 

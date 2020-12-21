@@ -55,7 +55,7 @@ final String urlImagenes = Get.find<HomeController>().urlImegenes;
                                            onEditingComplete : ()=>FocusScope.of(context).requestFocus(state.descripcionProductoFoco)
                                            ),
                                            InputForm(
-                                           placeholder       : 'Descripcion',
+                                           placeholder       : 'Descripción',
                                            controller        : state.descripcionProductoController,
                                            foco              : state.descripcionProductoFoco,
                                            leftIcon          : Icons.description,
@@ -96,9 +96,9 @@ final String urlImagenes = Get.find<HomeController>().urlImegenes;
               shape: RoundedRectangleBorder(
                      borderRadius: BorderRadius.circular(20)
               ),
-              child: Text('Selecionar imagen'),
+              child: Text('Seleccionar imagen'),
               onPressed: ()=>DialogImagePicker.openDialog(
-                             titulo       : 'Escoje la imagen',
+                             titulo       : 'Escoge la imagen',
                              onTapArchivo : ()=>state.getImage('archivo'),
                              onTapCamera  : ()=>state.getImage('camara')
               )

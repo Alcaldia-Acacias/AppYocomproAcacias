@@ -14,7 +14,7 @@ class UpdateDataUsuario extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
            appBar: AppBar(
-                   title: Text('Actulizar Datos'),
+                   title: Text('Actualizar Datos'),
                    elevation: 0,
            ),
            body: GestureDetector(
@@ -68,7 +68,7 @@ class UpdateDataUsuario extends StatelessWidget {
     return   MaterialButton(
              textColor : Colors.white,
              padding   : EdgeInsets.all(15),
-             child     : Text('Actulizar Datos'),
+             child     : Text('Actualizar Datos'),
              color     : Get.theme.primaryColor,
              minWidth  : double.maxFinite,
              onPressed :()=>state.updateData()

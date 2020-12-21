@@ -15,7 +15,7 @@ class DialogImagePicker {
           child: ListView(children: [
             ListTile(
                 leading: Icon(Icons.folder),
-                title: Text('Seleciona desde Archivo'),
+                title: Text('Selecciona desde galeria'),
                 onTap: onTapArchivo
             ),
             ListTile(

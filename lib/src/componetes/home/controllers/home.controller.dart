@@ -29,11 +29,15 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     if (GetPlatform.isAndroid)
-      urlImegenes = 'http://165.22.239.235/imagenes';
+      urlImegenes = 'https://api.yocomproacacias.com/imagenes';
     else
       urlImegenes = 'http://localhost:8000/imagenes';
-    if (this.usuario.isNullOrBlank)
-      this.usuario = await repositorio.getUsuario();
+    if (this.usuario.isNullOrBlank){
+        this.usuario = await repositorio.getUsuario();
+        this.registroActividad();
+    }
+   
+    
   }
 
   void updateUsuario(Usuario usuario) {
@@ -85,7 +89,11 @@ class HomeController extends GetxController {
       Get.snackbar('No estas Conectdo', 'Conectate a Internet');
   }
 
-  
+  void registroActividad() async {
+     final response = await repositorio.registroActividad(this.usuario.id);
+     if(response is ErrorResponse) print(response.error);
+     if(response is HomeResponse)  print(response);
+  }
 
 
 

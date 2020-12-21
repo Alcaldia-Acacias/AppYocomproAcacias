@@ -30,5 +30,13 @@ class HomeRepocitorio {
       return ErrorResponse(error);
     }
   }
+  Future<ResponseModel> registroActividad(int idUsuario) async {
+    try {
+      await _dio.post('/ingresos/add',data: {"id_usuario": idUsuario});
+      return HomeResponse(addIngreso: true);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
   
 }

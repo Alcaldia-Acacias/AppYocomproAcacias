@@ -47,7 +47,7 @@ Widget _menu(Usuario usuario) {
              ),
              MenuItemUsuario(
              icon: Icons.refresh,
-             titulo: 'Actulizar Datos', 
+             titulo: 'Actualizar Datos', 
              onTap : ()=>Get.to(UpdateDataUsuario(usuario:usuario)), 
              ),
              MenuItemUsuario(
@@ -61,7 +61,7 @@ Widget _menu(Usuario usuario) {
              ),
              MenuItemUsuario(
              icon: Icons.power_settings_new,
-             titulo: 'Cerrar Sesion',
+             titulo: 'Cerrar Sesión',
              onTap: ()=>Get.find<HomeController>().logOut(),
              ),
             
@@ -96,7 +96,7 @@ Widget  _header(HomeController state) {
                                               label  : Text('Editar'),
                                               avatar : Icon(Icons.photo_camera),
                                               onPressed: ()=>DialogImagePicker.openDialog(
-                                                             titulo: 'Escoje tu Imagen',
+                                                             titulo: 'Escoge tu Imagen',
                                                              onTapArchivo : () => state.getImage('archivo'),
                                                              onTapCamera  : () => state.getImage('camara')
                                               )                           

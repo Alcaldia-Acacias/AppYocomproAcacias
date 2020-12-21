@@ -3,6 +3,7 @@ import 'package:comproacacias/src/componetes/response/models/response.model.dart
 
 class HomeResponse extends ResponseModel {
   final bool update;
+  final bool addIngreso;
   final List<Empresa> empresas;
-  HomeResponse({this.update,this.empresas});
+  HomeResponse({this.update,this.empresas,this.addIngreso});
 }

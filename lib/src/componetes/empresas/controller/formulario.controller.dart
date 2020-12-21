@@ -84,19 +84,19 @@ class FormEmpresaController extends GetxController {
     if (page > 4) page = 4;
     switch (page) {
       case 0:
-        this.titulo = 'Escoje tu Logo';
+        this.titulo = 'Escoge tu Logo';
         break;
       case 1:
-        this.titulo = 'Datos Basicos';
+        this.titulo = 'Datos Básicos';
         break;
       case 2:
-        this.titulo = 'Datos de Contactos';
+        this.titulo = 'Datos de Contacto';
         break;
       case 3:
         this.titulo = 'Categoria';
         break;
       case 4:
-        this.titulo = 'Ubicacion';
+        this.titulo = 'Ubicación';
         break;
     }
     this.currentPage = page;

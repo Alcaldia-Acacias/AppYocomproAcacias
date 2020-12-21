@@ -13,7 +13,7 @@ class LoginRepositorio {
       await new Future.delayed(new Duration(milliseconds: 500));
       final response = await this
           ._dio
-          .post('/usuarios/login', data: {"correo": correo, "pass": password});
+          .post('/usuarios/login', data: {"usuario": correo, "password": password});
       return UsuarioModelResponse.toJson(response.data);
     } on DioError catch (error) {
       return ErrorResponse(error);
@@ -23,7 +23,6 @@ class LoginRepositorio {
 Future<ResponseModel> addUsuario(Map<String, dynamic> usuario) async {
      FormData formData = new FormData.fromMap(usuario);
      try {
-      await new Future.delayed(new Duration(milliseconds: 1000));
      final response = await this._dio.post('/usuarios/add',data:formData);
       return UsuarioModelResponse.toJson(response.data); 
     } on DioError catch (error) {

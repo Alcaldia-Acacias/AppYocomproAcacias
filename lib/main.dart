@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:comproacacias/src/componetes/categorias/controllers/categorias.controllers.dart';
 import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/views/home.vista.dart';
+import 'package:comproacacias/src/componetes/login/views/offline.page.dart';
 import 'package:comproacacias/src/plugins/inyection.dependeci.dart';
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
@@ -25,16 +28,19 @@ import 'package:intl/intl.dart';
   //await GetStorage().erase();
   Dependecias.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(MyApp());
+  final  internetCheck = await verificationInternet();
+  runApp(MyApp(internetCheck:internetCheck));
 }
 
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-
+  final internetCheck;
+  final box  = GetStorage();
   PublicacionesRepositorio repoPublicaciones = PublicacionesRepositorio();
+  MyApp({Key key, this.internetCheck}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    final box  = GetStorage();
+  Widget build(BuildContext context)  {
+  
     return GetMaterialApp(
       localizationsDelegates: [
        GlobalMaterialLocalizations.delegate,
@@ -63,7 +69,7 @@ class MyApp extends StatelessWidget {
         )
       ),
      
-      initialRoute: box.hasData('token') ? '/home' : '/',
+      initialRoute: _inititialRoute(),
       getPages: [
         GetPage(
         name: '/home', 
@@ -78,9 +84,36 @@ class MyApp extends StatelessWidget {
         name: '/', 
         page: ()=>LoginPage(),
         binding : BindingsBuilder.put(() => LoginController(repositorio:LoginRepositorio())),
-
+        ),
+        GetPage(
+        name: '/offline', 
+        page: ()=>OfflinePage(),
+        binding : BindingsBuilder.put(() => LoginController(repositorio:LoginRepositorio())),
         ),
       ],
     );
   }
+  String _inititialRoute()  {
+    if(box.hasData('token') && internetCheck)
+       return '/home';
+    if(box.hasData('token') && !internetCheck)
+       return '/offline';
+    if(!box.hasData('token') && !internetCheck)
+       return '/offline';   
+    if(!box.hasData('token') && internetCheck)
+       return '/';
+    return '/';
+  }
 }
+
+ Future<bool> verificationInternet() async {
+     try {
+    final result = await InternetAddress.lookup('google.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    }
+  } on SocketException catch (_) {
+    return false;
+  }
+  return false;
+  }

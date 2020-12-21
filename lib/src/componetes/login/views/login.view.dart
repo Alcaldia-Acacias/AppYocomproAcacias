@@ -20,8 +20,8 @@ class LoginPage extends StatelessWidget {
                              children: <Widget>[
                                    _cortina(),
                                    _logo(),
-                                   _button('Iniciar Sesion'),
-                                   _button('Registrase'),
+                                   _button('Iniciar Sesión'),
+                                   _button('Registrate'),
                                  
                              ],
                              ),
@@ -53,7 +53,7 @@ Widget _logo() {
 
  Widget _button(String titulo) {
    return Align(
-          alignment : titulo == 'Iniciar Sesion'
+          alignment : titulo == 'Iniciar Sesión'
                       ?
                       Alignment(0.0,0.45)
                       :
@@ -63,7 +63,7 @@ Widget _logo() {
                       child: RaisedButton(
                         textColor : Colors.white,
                         padding   : EdgeInsets.all(18),
-                        color     : titulo == 'Iniciar Sesion'
+                        color     : titulo == 'Iniciar Sesión'
                                     ?
                                     Get.theme.accentColor
                                     :
@@ -71,7 +71,7 @@ Widget _logo() {
                         child     : Text(titulo,style: TextStyle(fontSize: 20)),
                         shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                         onPressed :(){
-                          titulo == 'Iniciar Sesion' 
+                          titulo == 'Iniciar Sesión' 
                           ? Get.to(LoginFormPage())
                           : Get.to(RegistroFormPage());
                         },

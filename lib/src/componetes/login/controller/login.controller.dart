@@ -42,9 +42,9 @@ class LoginController extends GetxController {
   final formKeyRecovery = GlobalKey<FormState>();
   RecoveryData recovery;
   bool loading = false;
-  bool codigo  = false;
+  bool codigo = false;
   Future dialog;
-  
+
   void submitFormLogin() async {
     if (formKeyLogin.currentState.validate()) {
       this._openDialog();
@@ -63,7 +63,8 @@ class LoginController extends GetxController {
         "cedula": cedulaSinginController.text,
         "nombre": nombreSinginController.text,
         "password": passwordSinginController.text,
-        "usuario": usuarioSinginController.text
+        "usuario": usuarioSinginController.text,
+        "administrador": false
       };
       final response = await repositorio.addUsuario(usuario);
       if (response is ErrorResponse) this._loginError(response.getError);
@@ -74,24 +75,26 @@ class LoginController extends GetxController {
   }
 
   void sendEmail() async {
-    
     if (this.formKeyRecovery.currentState.validate()) {
       this._loading();
       final response =
           await repositorio.sendEmailRecovery(emailRecoveryController.text);
-      if (response is UsuarioModelResponse)this._recoveryPassword(response);
+      if (response is UsuarioModelResponse) this._recoveryPassword(response);
       if (response is ErrorResponse) this._emailError(response.getError);
     }
   }
-  void verficarCodigo(){
-    if(recovery.codigoRecuperacion == codigoRecoveryController.text)
-       Get.offAll(CambiarPasswordPage(dataRecovery: recovery));
-    else Get.snackbar('Codigo incorrecto', '');
+
+  void verficarCodigo() {
+    if (recovery.codigoRecuperacion == codigoRecoveryController.text)
+      Get.offAll(CambiarPasswordPage(dataRecovery: recovery));
+    else
+      Get.snackbar('Codigo incorrecto', '');
   }
-  void resetSendEmail(){
+
+  void resetSendEmail() {
     this.emailRecoveryController.text = '';
     this.loading = false;
-    this.codigo  = false;
+    this.codigo = false;
     update();
   }
 
@@ -142,8 +145,8 @@ class LoginController extends GetxController {
   }
 
   void _loading() {
-  this.loading = !this.loading;
-  update();
+    this.loading = !this.loading;
+    update();
   }
 
   void _recoveryPassword(UsuarioModelResponse response) {
@@ -151,19 +154,35 @@ class LoginController extends GetxController {
     Get.snackbar('Codigo enviado', 'el codigo fue enviado');
     this.codigo = true;
     this.recovery = RecoveryData(
-                    idUsuario: response.idUsuario,
-                    codigoRecuperacion: response.codigoRecuperacion,
-                    token: response.token 
-    );
+        idUsuario: response.idUsuario,
+        codigoRecuperacion: response.codigoRecuperacion,
+        token: response.token);
     this._loading();
+  }
 
+  internetCheck() async {
+    final box = GetStorage();
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty &&
+          result[0].rawAddress.isNotEmpty &&
+          box.hasData('token')) {
+        Get.offNamed('/home');
+      }
+      if (result.isNotEmpty &&
+          result[0].rawAddress.isNotEmpty &&
+          !box.hasData('token')) {
+        Get.offNamed('/');
+      }
+    } on SocketException catch (_) {
+      print(_);
+    }
   }
 
   void _emailError(String error) {
-    if (error == 'USER_NO_EXITS'){
-      Get.snackbar('Usuario no existe','');
+    if (error == 'USER_NO_EXITS') {
+      Get.snackbar('Usuario no existe', '');
       this.resetSendEmail();
     }
-      
   }
 }

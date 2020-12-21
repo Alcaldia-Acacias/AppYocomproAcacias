@@ -10,7 +10,7 @@ class SendEmailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
            appBar: AppBar(
-                   title: Text('Restableser contraseña'),
+                   title: Text('Restablecer contraseña'),
                    elevation: 0,
            ),
            body: SingleChildScrollView(

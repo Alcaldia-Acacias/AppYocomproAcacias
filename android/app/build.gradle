@@ -38,11 +38,11 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.comproacacias"
+        applicationId "dosve.alcaldia.yocomproacacias"
         minSdkVersion 16
-        targetSdkVersion 28
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        targetSdkVersion 29
+        versionCode 10042
+        versionName '5.0.1'
     }
 
     buildTypes {

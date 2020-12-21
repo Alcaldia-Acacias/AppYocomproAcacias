@@ -12,7 +12,7 @@ class LoginFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
            appBar: AppBar( 
-                   title   : Text('Iniciar Sesion'),
+                   title   : Text('Iniciar Sesión'),
                    elevation: 0,
 
            ),
