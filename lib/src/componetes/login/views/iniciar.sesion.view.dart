@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/views/sendEmail.view.dart';
+import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,8 +55,9 @@ class LoginFormPage extends StatelessWidget {
                                                             onEditingComplete : ()=> _submit(),
                                                             ),
                                                             _olvidoPassword(),
-                                                            _buttonSubmit(state.loading)
-
+                                                            _buttonSubmit(state.loading),
+                                                            SizedBox(height: 20),
+                                                            _googleSingInButton()
                                                          ],
                                              ) 
                                              ),
@@ -90,6 +94,13 @@ class LoginFormPage extends StatelessWidget {
     );
   }
 
+ Widget _googleSingInButton() {
+    return ButtonGoggle(
+           texto   : 'Inicia Sesion con Google',
+           onPress : ()=>Get.find<LoginController>().submitFormSingIn(googleSing: true),
+    );
+ }
+   
   
 
 }

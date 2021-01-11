@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
+import 'package:comproacacias/src/componetes/login/models/login_user.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/login/models/usuariologin.model.dart';
 import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
+import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
+import 'package:comproacacias/src/plugins/google_sing_in.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -44,7 +48,7 @@ class LoginController extends GetxController {
   bool loading = false;
   bool codigo = false;
   Future dialog;
-
+  LoginUsuario _usuario;
   void submitFormLogin() async {
     if (formKeyLogin.currentState.validate()) {
       this._openDialog();
@@ -55,23 +59,22 @@ class LoginController extends GetxController {
     }
   }
 
-  void submitFormSingIn() async {
+  void submitFormSingIn({bool googleSing = false}) async {
+    if (googleSing) {
+      _usuario = await _googleAsingUsuario();
+    }
     if (formKeySingin.currentState.validate() && this._comparePassword()) {
       this._openDialog();
-      final usuario = {
-        "imagen": '',
-        "cedula": cedulaSinginController.text,
-        "nombre": nombreSinginController.text,
-        "password": passwordSinginController.text,
-        "usuario": usuarioSinginController.text,
-        "administrador": false
-      };
-      final response = await repositorio.addUsuario(usuario);
+      _usuario = _formularioAsingUsuario();
+    }
+    if (!this._comparePassword() && !googleSing)
+      Get.snackbar("Error", "no coinciden las contraseñas");
+    if (!_usuario.isNullOrBlank) {
+      final response = await repositorio.addUsuario(_usuario.toMap());
       if (response is ErrorResponse) this._loginError(response.getError);
       if (response is UsuarioModelResponse) this._loginOk(response);
+      _usuario = LoginUsuario();
     }
-    if (!this._comparePassword())
-      Get.snackbar("Error", "no coinciden las contraseñas");
   }
 
   void sendEmail() async {
@@ -184,5 +187,29 @@ class LoginController extends GetxController {
       Get.snackbar('Usuario no existe', '');
       this.resetSendEmail();
     }
+  }
+
+  Future<User> _googleSingIn() async {
+    final UserCredential credential = await signInWithGoogle();
+    return credential.user;
+  }
+
+  Future<LoginUsuario> _googleAsingUsuario() async {
+    final userGoogle = await _googleSingIn();
+    return LoginUsuario(
+        imagen: '',
+        nombre: userGoogle.displayName,
+        usuario: userGoogle.email,
+        administrador: false);
+  }
+
+  LoginUsuario _formularioAsingUsuario() {
+    return LoginUsuario(
+        imagen: '',
+        cedula: cedulaSinginController.text,
+        nombre: nombreSinginController.text,
+        password: passwordSinginController.text,
+        usuario: usuarioSinginController.text,
+        administrador: false);
   }
 }

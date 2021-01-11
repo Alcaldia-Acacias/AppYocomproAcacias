@@ -51,5 +51,16 @@
     <string>Habilite los permisos para aceder ala camara.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Habilite los permisos de microfono.</string>
+	<key>CFBundleURLTypes</key>
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>com.googleusercontent.apps.1010834568889-ale04t7139arjvlf041av2jj4abmns5h</string>
+		</array>
+	</dict>
+</array>
 </dict>
 </plist>

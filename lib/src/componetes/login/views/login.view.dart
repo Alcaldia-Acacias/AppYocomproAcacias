@@ -1,7 +1,9 @@
+
 import 'package:animate_do/animate_do.dart';
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/views/iniciar.sesion.view.dart';
 import 'package:comproacacias/src/componetes/login/views/registro.view.dart';
+import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
@@ -73,11 +75,42 @@ Widget _logo() {
                         onPressed :(){
                           titulo == 'Iniciar Sesión' 
                           ? Get.to(LoginFormPage())
-                          : Get.to(RegistroFormPage());
+                          : dialogOptionRegistro();
+                          //: Get.to(RegistroFormPage());
                         },
         
      ),
           ),
+   );
+ }
+ void dialogOptionRegistro(){
+   Get.defaultDialog(
+   backgroundColor: Colors.grey[200],
+   radius: 10,
+   title: 'Regístrate',
+   content: Padding(
+     padding: const EdgeInsets.all(8.0),
+     child: Column(   
+            children: [
+                SizedBox(
+                width: Get.width * 0.7,
+                child: RaisedButton(
+                       textColor : Colors.white,
+                       padding   : EdgeInsets.all(18),
+                       color     : Get.theme.primaryColor,
+                       child     : Text('Ingresa tus Datos',style: TextStyle(fontSize: 20)),
+                       shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                       onPressed :()=>Get.to(RegistroFormPage()),
+                )
+                ),
+                SizedBox(height: 20),
+                ButtonGoggle(
+                texto   : 'Regístrate con Google',
+                onPress : ()=>Get.find<LoginController>().submitFormSingIn(googleSing: true),
+                )
+              ],
+     ),
+   )
    );
  }
 }

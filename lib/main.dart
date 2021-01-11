@@ -12,6 +12,7 @@ import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/views/login.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,8 @@ import 'package:intl/intl.dart';
 //import 'package:intl/locale.dart';
 
  main() async {
+ WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   Intl.defaultLocale = 'es_ES';
   await GetStorage.init();
   //await GetStorage().erase();
@@ -93,13 +96,14 @@ class MyApp extends StatelessWidget {
       ],
     );
   }
+
   String _inititialRoute()  {
     if(box.hasData('token') && internetCheck)
        return '/home';
     if(box.hasData('token') && !internetCheck)
-       return '/offline';
+       return '/home';
     if(!box.hasData('token') && !internetCheck)
-       return '/offline';   
+       return '/home';   
     if(!box.hasData('token') && internetCheck)
        return '/';
     return '/';
