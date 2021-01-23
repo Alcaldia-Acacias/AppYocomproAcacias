@@ -10,6 +10,7 @@ import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:comproacacias/src/plugins/google_sing_in.dart';
 
 class HomeController extends GetxController {
   
@@ -59,8 +60,8 @@ class HomeController extends GetxController {
 
   void logOut() async {
     await GetStorage().erase();
+    await googleLogOut();
     Get.offAllNamed('/');
-
   }
 
   void getImage(String tipo) async {

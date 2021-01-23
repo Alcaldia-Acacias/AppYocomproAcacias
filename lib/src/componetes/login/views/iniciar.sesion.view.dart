@@ -97,7 +97,7 @@ class LoginFormPage extends StatelessWidget {
  Widget _googleSingInButton() {
     return ButtonGoggle(
            texto   : 'Inicia Sesion con Google',
-           onPress : ()=>Get.find<LoginController>().submitFormSingIn(googleSing: true),
+           onPress : ()=>Get.find<LoginController>().loginGoogle(),
     );
  }
    

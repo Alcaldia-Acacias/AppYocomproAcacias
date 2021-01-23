@@ -8,11 +8,11 @@ import 'package:get/get.dart';
 class LoginRepositorio {
   final _dio = Get.find<Dio>();
 
-  Future<ResponseModel> login(String correo, String password) async {
+  Future<ResponseModel> login(String correo, String password,[String googleId]) async {
     try {
       final response = await this
           ._dio
-          .post('/usuarios/login', data: {"usuario": correo, "password": password});
+          .post('/usuarios/login', data: {"usuario": correo, "password": password,"google_id": googleId});
       return UsuarioModelResponse.toJson(response.data);
     } on DioError catch (error) {
       return ErrorResponse(error);

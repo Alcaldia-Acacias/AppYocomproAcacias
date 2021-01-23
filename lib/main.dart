@@ -25,6 +25,7 @@ import 'package:intl/intl.dart';
 
  main() async {
  WidgetsFlutterBinding.ensureInitialized();
+  
   await Firebase.initializeApp();
   Intl.defaultLocale = 'es_ES';
   await GetStorage.init();
@@ -101,9 +102,9 @@ class MyApp extends StatelessWidget {
     if(box.hasData('token') && internetCheck)
        return '/home';
     if(box.hasData('token') && !internetCheck)
-       return '/home';
+       return '/offline';
     if(!box.hasData('token') && !internetCheck)
-       return '/home';   
+       return '/';   
     if(!box.hasData('token') && internetCheck)
        return '/';
     return '/';

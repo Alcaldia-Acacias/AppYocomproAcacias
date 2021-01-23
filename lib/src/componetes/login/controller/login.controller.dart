@@ -4,7 +4,7 @@ import 'package:comproacacias/src/componetes/login/models/login_user.model.dart'
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/login/models/usuariologin.model.dart';
 import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
-import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
+import 'package:comproacacias/src/componetes/response/models/response.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
 import 'package:comproacacias/src/plugins/google_sing_in.dart';
 import 'package:dio/dio.dart';
@@ -43,37 +43,51 @@ class LoginController extends GetxController {
 
   TextEditingController emailRecoveryController = TextEditingController();
   TextEditingController codigoRecoveryController = TextEditingController();
+
   final formKeyRecovery = GlobalKey<FormState>();
   RecoveryData recovery;
   bool loading = false;
   bool codigo = false;
-  Future dialog;
   LoginUsuario _usuario;
+
   void submitFormLogin() async {
     if (formKeyLogin.currentState.validate()) {
       this._openDialog();
       final response = await repositorio.login(
           usuarioLoginController.text, passwordLoginController.text);
-      if (response is ErrorResponse) this._loginError(response.getError);
-      if (response is UsuarioModelResponse) this._loginOk(response);
+      this._verificarResponse(response);
     }
   }
 
-  void submitFormSingIn({bool googleSing = false}) async {
-    if (googleSing) {
-      _usuario = await _googleAsingUsuario();
-    }
+  void submitFormSingIn() async {
+    if (!this._comparePassword())
+      Get.snackbar("Error", "no coinciden las contraseñas");
     if (formKeySingin.currentState.validate() && this._comparePassword()) {
       this._openDialog();
       _usuario = _formularioAsingUsuario();
     }
-    if (!this._comparePassword() && !googleSing)
-      Get.snackbar("Error", "no coinciden las contraseñas");
     if (!_usuario.isNullOrBlank) {
       final response = await repositorio.addUsuario(_usuario.toMap());
-      if (response is ErrorResponse) this._loginError(response.getError);
-      if (response is UsuarioModelResponse) this._loginOk(response);
-      _usuario = LoginUsuario();
+      this._verificarResponse(response);
+    }
+  }
+
+  void singInGoogleUsuario() async {
+    Get.back();
+    _usuario = await _googleAsingUsuario();
+    if (!_usuario.isNullOrBlank) {
+      final response = await repositorio.addUsuario(_usuario.toMap());
+      this._verificarResponse(response);
+    }
+  }
+
+  void loginGoogle() async {
+    this._openDialog();
+    _usuario = await _googleAsingUsuario();
+    if (!_usuario.isNullOrBlank) {
+      final response =
+          await repositorio.login(_usuario.email, '', _usuario.googleId);
+      this._verificarResponse(response);
     }
   }
 
@@ -82,8 +96,7 @@ class LoginController extends GetxController {
       this._loading();
       final response =
           await repositorio.sendEmailRecovery(emailRecoveryController.text);
-      if (response is UsuarioModelResponse) this._recoveryPassword(response);
-      if (response is ErrorResponse) this._emailError(response.getError);
+      this._verificarResponse(response, true);
     }
   }
 
@@ -101,27 +114,45 @@ class LoginController extends GetxController {
     update();
   }
 
-  bool _comparePassword() {
-    if (passwordSinginController.text == confirmPasswordSinginController.text)
-      return true;
-    return false;
-  }
-
   String formatFecha(DateTime fecha) {
     if (!fecha.isNull) return DateFormat("dd MMMM 'del' yyyy").format(fecha);
     return '';
   }
 
-  void _loginError(String error) {
+  internetCheck() async {
+    final box = GetStorage();
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty &&
+          result[0].rawAddress.isNotEmpty &&
+          box.hasData('token')) {
+        Get.offNamed('/home');
+      }
+      if (result.isNotEmpty &&
+          result[0].rawAddress.isNotEmpty &&
+          !box.hasData('token')) {
+        Get.offNamed('/');
+      }
+    } on SocketException catch (_) {
+      print(_);
+    }
+  }
+
+  // metodos privados
+
+  void _loginError(String error) async {
     Get.back();
     if (error == 'DATA_INCORRECT')
       Get.snackbar('Datos Incorrectos', 'Contraseña no valida');
-    if (error == 'USER_NO_EXITS')
-      Get.snackbar('Usuario no existe', 'Registrese');
+    if (error == 'USER_NO_EXITS') {
+      Get.snackbar('Usuario no existe', '');
+      this.resetSendEmail();
+    }
     if (error == 'USER_EXITS')
-      Get.snackbar('Usuario ya Registrado', 'Inicia Session');
+      Get.snackbar('Usuario ya Registrado', 'Inicia Sesion');
     if (error == 'Connection refused')
       Get.snackbar('No estas Conectado', 'Conectate a Internet');
+    await googleLogOut();
   }
 
   void _loginOk(UsuarioModelResponse response) async {
@@ -153,7 +184,6 @@ class LoginController extends GetxController {
   }
 
   void _recoveryPassword(UsuarioModelResponse response) {
-    print(response.codigoRecuperacion);
     Get.snackbar('Codigo enviado', 'el codigo fue enviado');
     this.codigo = true;
     this.recovery = RecoveryData(
@@ -163,44 +193,30 @@ class LoginController extends GetxController {
     this._loading();
   }
 
-  internetCheck() async {
-    final box = GetStorage();
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty &&
-          result[0].rawAddress.isNotEmpty &&
-          box.hasData('token')) {
-        Get.offNamed('/home');
-      }
-      if (result.isNotEmpty &&
-          result[0].rawAddress.isNotEmpty &&
-          !box.hasData('token')) {
-        Get.offNamed('/');
-      }
-    } on SocketException catch (_) {
-      print(_);
-    }
-  }
-
-  void _emailError(String error) {
-    if (error == 'USER_NO_EXITS') {
-      Get.snackbar('Usuario no existe', '');
-      this.resetSendEmail();
-    }
-  }
-
-  Future<User> _googleSingIn() async {
-    final UserCredential credential = await signInWithGoogle();
-    return credential.user;
+  void _verificarResponse(ResponseModel response,
+      [bool passwordRecovery = false]) {
+    if (response is UsuarioModelResponse && passwordRecovery)
+      this._recoveryPassword(response);
+    if (response is UsuarioModelResponse && !passwordRecovery)
+      this._loginOk(response);
+    if (response is ErrorResponse) this._loginError(response.getError);
   }
 
   Future<LoginUsuario> _googleAsingUsuario() async {
-    final userGoogle = await _googleSingIn();
-    return LoginUsuario(
-        imagen: '',
-        nombre: userGoogle.displayName,
-        usuario: userGoogle.email,
-        administrador: false);
+    try {
+      final UserCredential credential = await signInWithGoogle();
+      final userGoogle = credential.user;
+      return LoginUsuario(
+          imagen: '',
+          nombre: userGoogle.displayName,
+          usuario: userGoogle.email,
+          administrador: false,
+          googleId: userGoogle.uid);
+    } catch (error) {
+      Get.back();
+      Get.snackbar('Error', 'Ocurrio un error');
+      return null;
+    }
   }
 
   LoginUsuario _formularioAsingUsuario() {
@@ -211,5 +227,11 @@ class LoginController extends GetxController {
         password: passwordSinginController.text,
         usuario: usuarioSinginController.text,
         administrador: false);
+  }
+
+  bool _comparePassword() {
+    if (passwordSinginController.text == confirmPasswordSinginController.text)
+      return true;
+    return false;
   }
 }

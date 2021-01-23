@@ -106,7 +106,7 @@ Widget _logo() {
                 SizedBox(height: 20),
                 ButtonGoggle(
                 texto   : 'Regístrate con Google',
-                onPress : ()=>Get.find<LoginController>().submitFormSingIn(googleSing: true),
+                onPress : ()=>Get.find<LoginController>().singInGoogleUsuario(),
                 )
               ],
      ),
