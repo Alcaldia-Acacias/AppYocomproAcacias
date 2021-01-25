@@ -61,7 +61,7 @@ class PublicacionesRepositorio {
   Future<ResponseModel> addPublicacion(
       Publicacion publicacion, List<ImageFile> imagenes) async {
     FormData data = FormData.fromMap({...publicacion.toMap()});
-
+    await Future.delayed(Duration(seconds: 6));
     imagenes.forEach((imagen) async {
       data.files.add(MapEntry(
         imagen.nombre,

@@ -10,6 +10,7 @@ class LoginRepositorio {
 
   Future<ResponseModel> login(String correo, String password,[String googleId]) async {
     try {
+      await Future.delayed(Duration(seconds: 3));
       final response = await this
           ._dio
           .post('/usuarios/login', data: {"usuario": correo, "password": password,"google_id": googleId});

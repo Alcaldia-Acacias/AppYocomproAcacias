@@ -76,6 +76,8 @@ Widget _escojerEmpresa(FormPublicacionesController state) {
   }
 
 Widget _empresas(FormPublicacionesController state) {
+  if(state.empresas.length == 0)
+     return Center(child: Text('No hay empresas registradas'));
   return ListView.builder(
          itemCount  : state.empresas.length,
          itemBuilder: (_,i){

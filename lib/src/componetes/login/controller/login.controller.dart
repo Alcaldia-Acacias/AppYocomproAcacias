@@ -6,6 +6,7 @@ import 'package:comproacacias/src/componetes/login/models/usuariologin.model.dar
 import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
+import 'package:comproacacias/src/componetes/widgets/dialogAlert.widget.dart';
 import 'package:comproacacias/src/plugins/google_sing_in.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -167,15 +168,9 @@ class LoginController extends GetxController {
 
   void _openDialog() {
     Get.dialog(
-        AlertDialog(
-          backgroundColor: Colors.transparent,
-          content: SizedBox(
-              height: 40, child: Center(child: CircularProgressIndicator())),
-          title: Text('Iniciando', textAlign: TextAlign.center),
-          titleTextStyle: TextStyle(color: Colors.white, fontSize: 25),
-          elevation: 0,
-        ),
-        barrierDismissible: false);
+        AlertDialogLoading(titulo: 'Iniciando'),
+        barrierDismissible: false
+    );
   }
 
   void _loading() {
