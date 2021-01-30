@@ -4,14 +4,18 @@ class LoginUsuario extends Usuario {
   final String password;
   final bool administrador;
   final String googleId;
-  LoginUsuario(
+  final String facebookId;
+
+  LoginUsuario( 
       {nombre,
       usuario,
       cedula,
       imagen,
       this.password,
       this.administrador,
-      this.googleId})
+      this.googleId,
+      this.facebookId
+     })
       : super(nombre: nombre, email: usuario, cedula: cedula, imagen: imagen);
 
   toMap() => {
@@ -21,6 +25,7 @@ class LoginUsuario extends Usuario {
         "password": password ?? null,
         "usuario": email,
         "administrador": administrador,
-        "google_id": googleId
-      };
+        "google_id": googleId ?? null,
+        "facebook_id": facebookId ?? null
+        };
 }

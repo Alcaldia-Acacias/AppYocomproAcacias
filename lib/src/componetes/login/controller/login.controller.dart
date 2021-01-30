@@ -7,10 +7,12 @@ import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogAlert.widget.dart';
+import 'package:comproacacias/src/plugins/facebook_sing.dart';
 import 'package:comproacacias/src/plugins/google_sing_in.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 
 import 'package:get_storage/get_storage.dart';
@@ -82,12 +84,31 @@ class LoginController extends GetxController {
     }
   }
 
+  void singInFacebookUsuario() async {
+    Get.back();
+    _usuario = await _facebookAsingUsuario();
+    if (!_usuario.isNullOrBlank) {
+      final response = await repositorio.addUsuario(_usuario.toMap());
+      this._verificarResponse(response);
+    }
+  }
+
   void loginGoogle() async {
     this._openDialog();
     _usuario = await _googleAsingUsuario();
     if (!_usuario.isNullOrBlank) {
       final response =
           await repositorio.login(_usuario.email, '', _usuario.googleId);
+      this._verificarResponse(response);
+    }
+  }
+
+  void loginFacebook() async {
+    this._openDialog();
+    _usuario = await _facebookAsingUsuario();
+     if (!_usuario.isNullOrBlank) {
+      final response =
+          await repositorio.login(_usuario.email, '', _usuario.facebookId);
       this._verificarResponse(response);
     }
   }
@@ -167,10 +188,8 @@ class LoginController extends GetxController {
   }
 
   void _openDialog() {
-    Get.dialog(
-        AlertDialogLoading(titulo: 'Iniciando'),
-        barrierDismissible: false
-    );
+    Get.dialog(AlertDialogLoading(titulo: 'Iniciando'),
+        barrierDismissible: false);
   }
 
   void _loading() {
@@ -207,6 +226,24 @@ class LoginController extends GetxController {
           usuario: userGoogle.email,
           administrador: false,
           googleId: userGoogle.uid);
+    } catch (error) {
+      Get.back();
+      Get.snackbar('Error', 'Ocurrio un error');
+      return null;
+    }
+  }
+
+  Future<LoginUsuario> _facebookAsingUsuario() async {
+    try {
+      final UserCredential credential = await signInWithFacebook();
+      final userFacebook = credential.user;
+      return LoginUsuario(
+        imagen: '',
+        nombre: userFacebook.displayName,
+        usuario: userFacebook.email,
+        administrador: false,
+        facebookId: userFacebook.uid
+      );
     } catch (error) {
       Get.back();
       Get.snackbar('Error', 'Ocurrio un error');

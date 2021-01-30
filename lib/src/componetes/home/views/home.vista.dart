@@ -32,6 +32,7 @@ class HomePage extends StatelessWidget {
                              ),
                              PublicacionesPage(),
                              CategoriasPage(),
+                             //MenuUsarioExt()
                              MenuUsuarioPage(),
                              
                             ],

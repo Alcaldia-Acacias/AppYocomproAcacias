@@ -104,9 +104,16 @@ Widget _logo() {
                 )
                 ),
                 SizedBox(height: 20),
-                ButtonGoggle(
+                ButtonSocialSing(
+                logo    : 'assets/imagenes/google_icon.jpg',
                 texto   : 'Regístrate con Google',
                 onPress : ()=>Get.find<LoginController>().singInGoogleUsuario(),
+                ),
+                SizedBox(height: 20),
+                ButtonSocialSing(
+                logo    : 'assets/imagenes/facebook_icon.png',
+                texto   : 'Regístrate con Facebook',
+                onPress : ()=>Get.find<LoginController>().singInFacebookUsuario()
                 )
               ],
      ),

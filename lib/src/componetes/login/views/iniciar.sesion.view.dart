@@ -57,7 +57,14 @@ class LoginFormPage extends StatelessWidget {
                                                             _olvidoPassword(),
                                                             _buttonSubmit(state.loading),
                                                             SizedBox(height: 20),
-                                                            _googleSingInButton()
+                                                            Text('O ingresa con'),
+                                                               SizedBox(height: 5),
+                                                            Row(
+                                                            children: [
+                                                              Expanded(child: _googleSingInButton() ),
+                                                              Expanded(child: _facebookSingInButton() ),
+                                                            ],
+                                                            )
                                                          ],
                                              ) 
                                              ),
@@ -95,12 +102,23 @@ class LoginFormPage extends StatelessWidget {
   }
 
  Widget _googleSingInButton() {
-    return ButtonGoggle(
-           texto   : 'Inicia Sesion con Google',
+    return ButtonSocialSing(
+           logo    : 'assets/imagenes/google_icon.jpg',
+           texto   : 'Google',
+           fontSize: 11.5,
            onPress : ()=>Get.find<LoginController>().loginGoogle(),
     );
  }
+
+ Widget _facebookSingInButton() {
+    return ButtonSocialSing(
+           logo    : 'assets/imagenes/facebook_icon.png',
+           texto   : 'Facebook',
+           fontSize: 10.1,
+           onPress : ()=>Get.find<LoginController>().loginFacebook(),
+    );
+  }
    
-  
+   
 
 }

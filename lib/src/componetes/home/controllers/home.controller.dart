@@ -8,6 +8,7 @@ import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:comproacacias/src/plugins/google_sing_in.dart';
@@ -30,12 +31,13 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     if (GetPlatform.isAndroid)
-      urlImegenes = 'https://api.yocomproacacias.com/imagenes';
+      urlImegenes = 'http://192.168.43.90/imagenes';
     else
       urlImegenes = 'http://localhost:8000/imagenes';
     if (this.usuario.isNullOrBlank){
         this.usuario = await repositorio.getUsuario();
         this.registroActividad();
+        this.updateUsuario(usuario);
     }
    
     
@@ -61,6 +63,7 @@ class HomeController extends GetxController {
   void logOut() async {
     await GetStorage().erase();
     await googleLogOut();
+    await FacebookAuth.instance.logOut();
     Get.offAllNamed('/');
   }
 
