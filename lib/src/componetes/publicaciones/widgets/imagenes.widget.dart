@@ -8,7 +8,7 @@ class ImagenesWidgetPage extends StatelessWidget {
   final List<String> imagenes;
   final int id;
   ImagenesWidgetPage({Key key,this.imagenes,this.id}) : super(key: key);
-  final String url = Get.find<HomeController>().urlImegenes;
+  final String url = Get.find<HomeController>().urlImagenes;
   
   @override
   Widget build(BuildContext context) {

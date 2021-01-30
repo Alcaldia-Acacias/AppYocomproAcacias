@@ -9,7 +9,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 
 class FormPublicacionPage extends StatelessWidget {
   FormPublicacionPage({Key key}) : super(key: key);
-  final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
+  final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

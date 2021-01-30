@@ -15,7 +15,7 @@ class PublicacionCard extends StatelessWidget {
   final bool onlyEmpresa;
   PublicacionCard({Key key,this.publicacion,this.index,this.onlyEmpresa = false}) : super(key: key);
   
-  final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
+  final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   
   @override
   Widget build(BuildContext context) {

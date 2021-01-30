@@ -18,7 +18,7 @@ class FormEmpresaPage extends StatelessWidget {
   FormEmpresaPage({Key key, this.update = false, this.empresa}) : super(key: key);
   
   final List<Categoria> categorias = Get.find<CategoriasController>().categorias;
-  final String urlImagenes = Get.find<HomeController>().urlImegenes;
+  final String urlImagenes = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
   return GetBuilder<FormEmpresaController>(

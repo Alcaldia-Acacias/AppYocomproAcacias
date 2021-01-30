@@ -25,7 +25,7 @@ class PerfilEmpresaPage extends StatelessWidget {
   final Empresa empresa;
   final bool propia;
   PerfilEmpresaPage({Key key,this.empresa,this.propia = false}) : super(key: key);
-  final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
+  final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<EmpresasController>(

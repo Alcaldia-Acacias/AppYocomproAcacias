@@ -16,10 +16,10 @@ import 'package:comproacacias/src/plugins/google_sing_in.dart';
 class HomeController extends GetxController {
   
   final HomeRepocitorio repositorio;
-  HomeController({this.repositorio});
+  final String urlImagenes;
+  HomeController({this.repositorio,this.urlImagenes});
   AnimationController controller;
   int page = 0;
-  String urlImegenes;
   Usuario usuario;
   File image;
   ImageCaptureAvatar imageCapture = ImageCaptureAvatar();
@@ -30,10 +30,6 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    if (GetPlatform.isAndroid)
-      urlImegenes = 'http://192.168.43.90/imagenes';
-    else
-      urlImegenes = 'http://localhost:8000/imagenes';
     if (this.usuario.isNullOrBlank){
         this.usuario = await repositorio.getUsuario();
         this.registroActividad();

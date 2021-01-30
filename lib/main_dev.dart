@@ -32,7 +32,7 @@ import 'package:intl/intl.dart';
   await GetStorage.init();
   await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
-  Dependecias.init('https://api.yocomproacacias.com');
+  Dependecias.init('http://localhost:8000');
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final  internetCheck = await verificationInternet();
   runApp(MyApp(internetCheck:internetCheck));
@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
         name: '/home', 
         page: ()=>HomePage(),
         bindings: [
-          BindingsBuilder.put( () => HomeController(repositorio:HomeRepocitorio(),urlImagenes: 'https://api.yocomproacacias.com/imagenes')),
+          BindingsBuilder.put( () => HomeController(repositorio:HomeRepocitorio(),urlImagenes: 'http://localhost:8000/imagenes')),
           BindingsBuilder.put( () => PublicacionesController(repositorio:PublicacionesRepositorio())),
           BindingsBuilder.put( () => CategoriasController(repositorio:CategoriaRepositorio()))
         ]

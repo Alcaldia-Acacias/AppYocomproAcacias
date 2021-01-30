@@ -21,7 +21,7 @@ class FormProducto extends StatelessWidget {
  ) : super(key: key);
 
 
-final String urlImagenes = Get.find<HomeController>().urlImegenes;
+final String urlImagenes = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

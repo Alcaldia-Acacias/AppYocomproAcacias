@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class SearchPage extends StatelessWidget {
    SearchPage({Key key}) : super(key: key);
-   final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
+   final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SearchEmpresasController>(

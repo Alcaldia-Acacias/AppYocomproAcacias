@@ -37,7 +37,7 @@ class MenuUsarioExt extends StatelessWidget {
       );
     return CircleAvatar(
       backgroundImage: CachedNetworkImageProvider(
-          '${state.urlImegenes}/usuarios/${state.usuario.imagen}'),
+          '${state.urlImagenes}/usuarios/${state.usuario.imagen}'),
     );
   }
 

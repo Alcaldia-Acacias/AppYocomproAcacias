@@ -148,7 +148,7 @@ Widget  _header(HomeController state) {
             width  : 140,
             fit    : BoxFit.cover,
             placeholder: AssetImage('assets/imagenes/load_image.gif'), 
-            image: NetworkImage('${state.urlImegenes}/usuarios/${state.usuario.imagen}')
+            image: NetworkImage('${state.urlImagenes}/usuarios/${state.usuario.imagen}')
             ),
 );
 }

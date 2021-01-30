@@ -13,7 +13,7 @@ class ListEmpresasByCategoria extends StatelessWidget {
   final String imageAppbar;
 
    ListEmpresasByCategoria({Key key,this.imageAppbar}) : super(key: key);
-  final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
+  final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
      return GetBuilder<CategoriasController>(
