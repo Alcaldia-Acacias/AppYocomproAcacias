@@ -34,7 +34,6 @@ class EmpresaRepositorio {
       ...empresa.toMap(idUsuario),
       "file": await MultipartFile.fromFile(path, filename: "imagen.jpg")
     });
-
     try {
       final response = await this._dio.post('/empresas/add/',
           data: data, options: Options(contentType: 'multipart/form-data'));

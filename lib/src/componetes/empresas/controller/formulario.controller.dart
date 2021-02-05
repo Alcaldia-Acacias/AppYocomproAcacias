@@ -6,6 +6,7 @@ import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.d
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/componetes/widgets/dialogAlert.widget.dart';
 import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +107,7 @@ class FormEmpresaController extends GetxController {
   void addEmpresaSubmit() async {
     if (this._formValid() && image?.path != null && !this.idCategoria.isNull) {
       final idUsuario = box.read('id');
+      this._openDialogo('Agregando Empresa');
       final response = await repositorio.addEmpresa(
           this._getEmpresa(), idUsuario, image?.path);
       if (response is ErrorResponse) this._errorMessaje(response.getError);
@@ -119,6 +121,7 @@ class FormEmpresaController extends GetxController {
 
     if (this._formValid() && !this.idCategoria.isNull) {
       final idUsuario = box.read('id');
+       this._openDialogo('Actulizando Empresa');
       final response = await repositorio.updateEmpresa(
           this._getEmpresa(id: empresa.id), idUsuario,
           path: image?.path);
@@ -187,7 +190,7 @@ class FormEmpresaController extends GetxController {
       Get.snackbar('No estas Conectdo', 'Conectate a Internet');
     if (error == 'EMPRESA_EXIST')
       Get.snackbar('La Empresa ya existe', 'verifique el nit de la empresa');
-    print(error);
+     Get.back();
   }
 
   void _addEmpresa(ResponseEmpresa response) {
@@ -202,5 +205,11 @@ class FormEmpresaController extends GetxController {
           .updateEmpresa(this._getEmpresa(id: empresa.id));
       Get.back();
     }
+  }
+
+  void _openDialogo(String texto){
+    Get.dialog(
+     AlertDialogLoading(titulo: texto)
+    ).whenComplete(() => Get.back());
   }
 }

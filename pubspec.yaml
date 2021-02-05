@@ -50,7 +50,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_launcher_icons: "^0.8.0"
+flutter_icons:
+  ios: true
+  image_path: "assets/imagenes/icon_ios.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

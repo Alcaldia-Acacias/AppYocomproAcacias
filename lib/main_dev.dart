@@ -26,7 +26,7 @@ import 'package:intl/intl.dart';
 
  main() async {
  WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Firebase.initializeApp();
   Intl.defaultLocale = 'es_ES';
   await GetStorage.init();
