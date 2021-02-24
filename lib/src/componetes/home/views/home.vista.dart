@@ -2,8 +2,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:comproacacias/src/componetes/categorias/views/categorias.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/empresas/views/search.view.dart';
+import 'package:comproacacias/src/componetes/home/views/Inicio.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/views/publicaciones.page.dart';
-import 'package:comproacacias/src/componetes/usuario/views/menu.view.dart';
+import 'package:comproacacias/src/componetes/usuario/views/menu2.view.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorBuscar = Theme.of(context).primaryColor;
+    // ----- old Home ------
     return Scaffold(
            body  : GetBuilder<HomeController>(
                    id: 'bottomBar',
@@ -22,6 +24,7 @@ class HomePage extends StatelessWidget {
                      return IndexedStack(
                             index: state.page,
                             children: <Widget>[
+                             //InicioPage(),
                              Stack(
                              children: <Widget>[
                                    _cortina(),
@@ -32,8 +35,8 @@ class HomePage extends StatelessWidget {
                              ),
                              PublicacionesPage(),
                              CategoriasPage(),
-                             //MenuUsarioExt()
-                             MenuUsuarioPage(),
+                             MenuUsarioExt()
+                             //MenuUsuarioPage(),
                              
                             ],
                      );
@@ -62,7 +65,7 @@ class HomePage extends StatelessWidget {
 Widget  _cortina() {
   return  SlideInDown(
           //manualTrigger: true,
-          controller   : (controller)=> Get.find<HomeController>().controller = controller,
+          //controller   : (controller)=> Get.find<HomeController>().controller = controller,
           delay        : Duration(milliseconds: 100),
           duration     : Duration(milliseconds: 300),
           child        : Image.asset('assets/imagenes/cortina.png')

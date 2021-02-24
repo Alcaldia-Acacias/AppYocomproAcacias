@@ -28,9 +28,11 @@ class ListEmpresasPage extends StatelessWidget {
              ),
              body: _listEmpresas(state.empresas,state),
              
-             floatingActionButton: FloatingActionButton(
-                                   child           : Icon(Icons.add,color: Colors.white),
+             floatingActionButton: FloatingActionButton.extended(
+                                   icon            : Icon(Icons.add,color: Colors.white),
                                    backgroundColor : Get.theme.primaryColor,
+                                   label           : Text('Crear',style: TextStyle(color: Colors.white)),
+                                   tooltip         : 'Crea una Empresa',
                                    onPressed       : ()=> Get.to(FormEmpresaPage(),transition: Transition.downToUp)
                                    ),
            );

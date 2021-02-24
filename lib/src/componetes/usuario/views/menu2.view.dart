@@ -1,5 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:comproacacias/src/componetes/empresas/views/empresas.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/usuario/views/actulizarDatos.view.dart';
+import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
+import 'package:comproacacias/src/componetes/usuario/views/help.view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -53,17 +57,17 @@ class MenuUsarioExt extends StatelessWidget {
              ListTile(
              leading: Icon(Icons.lock_outline),
              title: Text('Cambiar contraseña'), 
-             onTap: (){}, 
+             onTap: () => Get.to(CambiarPasswordPage(usuario:state.usuario)),  
              ),
              ListTile(
              leading: Icon(Icons.refresh),
              title: Text('Actualizar Datos'), 
-             onTap: (){}, 
+             onTap: ()=>Get.to(UpdateDataUsuario(usuario:state.usuario)), 
              ),
              ListTile(
              leading: Icon(Icons.business_outlined),
              title: Text('Administrar Empresas'), 
-             onTap: (){}, 
+             onTap: ()=>Get.to(ListEmpresasPage(empresas:state.usuario.empresas)), 
              ),
              ListTile(
              leading: Icon(Icons.login),
@@ -78,7 +82,12 @@ class MenuUsarioExt extends StatelessWidget {
              ListTile(
              leading: Icon(Icons.help_outline),
              title: Text('Ayuda'), 
-             onTap: (){}, 
+             onTap: ()=>Get.to(HelpPage(idUsuario: state.usuario.id)), 
+             ),
+             ListTile(
+             leading: Icon(Icons.logout),
+             title: Text('Salir'), 
+             onTap: ()=>Get.find<HomeController>().logOut() 
              ),
            ]
            );

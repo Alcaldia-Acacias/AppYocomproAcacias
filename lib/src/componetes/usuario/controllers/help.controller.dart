@@ -2,6 +2,7 @@ import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/data/usuario.repository.dart';
 import 'package:comproacacias/src/componetes/usuario/models/reporte.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/updateresponse.model.dart';
+import 'package:comproacacias/src/componetes/widgets/dialogAlert.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,6 +40,7 @@ class HelpController extends GetxController {
     if (formKey.currentState.validate() && valueRadio != -1) {
       final reporte = Reporte(
           idUsuario: idUsuario, motivo: valueRadio, detalle: mensaje.text);
+      this._openDialogo();
       final response = await repocitorio.sendReporte(reporte);
       if (response is UsuarioResponse) this._reporteSend(response.reporte);
       if (response is ErrorResponse) this._error(response.getError);
@@ -67,11 +69,13 @@ class HelpController extends GetxController {
   }
 
   void _reporteSend(bool reporte) {
+    Get.back();
     if (reporte) {
       Get.snackbar('Reporte Enviado', 'pronto contestaremos sus inquietudes',
           snackbarStatus: (snack) {
         if (snack == SnackbarStatus.CLOSED) Get.back();
       });
+    
     }
   }
 
@@ -79,5 +83,14 @@ class HelpController extends GetxController {
     if (error == 'Connection refused' || error == 'Network is unreachable') {
       Get.snackbar('No estas Conectdo', 'Conectate a Internet');
     }
+  }
+
+  void _openDialogo(){
+    Get.dialog(
+      AlertDialogLoading(
+      titulo: 'Enviando',
+      ),
+      barrierDismissible: false
+    );
   }
 }
