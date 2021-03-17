@@ -8,12 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SearchPage extends StatelessWidget {
-   SearchPage({Key key}) : super(key: key);
+   final String initSearch;
+   SearchPage({Key key, this.initSearch}) : super(key: key);
    final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SearchEmpresasController>(
-           init: SearchEmpresasController(EmpresaRepositorio()),
+           init: SearchEmpresasController(EmpresaRepositorio(),initSearch),
            id: 'search',
            builder: (state){
            return Scaffold(

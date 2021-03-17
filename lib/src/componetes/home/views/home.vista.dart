@@ -24,15 +24,15 @@ class HomePage extends StatelessWidget {
                      return IndexedStack(
                             index: state.page,
                             children: <Widget>[
-                             //InicioPage(),
-                             Stack(
+                             InicioPage(),
+                             /* Stack(
                              children: <Widget>[
                                    _cortina(),
                                    _logo(),
                                    _search(colorBuscar),
                                  
                              ],
-                             ),
+                             ), */
                              PublicacionesPage(),
                              CategoriasPage(),
                              MenuUsarioExt()

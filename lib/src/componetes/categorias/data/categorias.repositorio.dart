@@ -7,7 +7,7 @@ class CategoriaRepositorio {
   Dio _dio = Get.find<Dio>();
 
   Future<List<Empresa>> getEmpresasByCategoria(String categoria,int page) async {
-    final response = await _dio.get('/empresas/$categoria',queryParameters: {'page': page});
+    final response = await _dio.get('/empresas/categoria/$categoria',queryParameters: {'page': page});
     return response.data
         ?.map<Empresa>((empresa) => Empresa.toJson(empresa))
         ?.toList();
