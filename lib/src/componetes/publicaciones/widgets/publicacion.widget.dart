@@ -64,9 +64,12 @@ Widget _header(Publicacion publicacion) {
                                    style:TextStyle(fontWeight:FontWeight.bold)
                                   ),
                   subtitle       : Text(publicacion.formatFecha()),
-                  trailing       : IconButton(
+                  trailing       : publicacion.editar
+                                   ? null
+                                   :
+                                   IconButton(
                                    icon: Icon(Icons.more_horiz), 
-                                   onPressed: (){}
+                                   onPressed: ()=>print('opciones')
                                    )
            ),
            onTap: ()=> Get.to(
@@ -93,7 +96,7 @@ Widget _footer(Publicacion publicacion, int index) {
                     GestureDetector(
                     child: Padding(
                            padding : EdgeInsets.all(8.0),
-                           child   : Icon(Icons.thumb_up,color:Colors.blue[200]),
+                           child   : Icon(Icons.thumb_up,color:Colors.pink[200]),
                     ),
                     onTap: (){
                      Get.bottomSheet(_bottomSheetLikes(publicacion.id,index));
@@ -102,11 +105,11 @@ Widget _footer(Publicacion publicacion, int index) {
                     Text('${publicacion.likes}'),
                     Padding(
                     padding : EdgeInsets.all(8.0),
-                    child   : Icon(Icons.textsms,color:Colors.blue[200]),
+                    child   : Icon(Icons.textsms,color:Colors.pink[200]),
                     ),
                     Text('${publicacion.numeroComentarios}'),
                     RawChip(
-                    label: Text('Me gusta'),
+                    label: Text('${publicacion.megusta ? 'Me gusta': 'Dale me gusta'}'),
                     labelStyle: TextStyle(color:publicacion.megusta ? Colors.pink[300] : Colors.grey[400]),
                     onPressed:()=>   publicacion.megusta 
                                      ? Get.find<PublicacionesController>().noMegustaAction(publicacion.id,index)
@@ -122,7 +125,7 @@ Widget _footer(Publicacion publicacion, int index) {
                     onPressed:(){
                     Get.bottomSheet(_bottomSheetComentarios(publicacion.id,index));
                     },
-                    avatar:Icon(Icons.textsms,color:Colors.grey[400]),
+                    avatar:Icon(Icons.textsms,color:Colors.pink[400]),
                     backgroundColor: Colors.transparent
                     ),
                    ],

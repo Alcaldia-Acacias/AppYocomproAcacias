@@ -9,6 +9,7 @@ import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
+import 'package:comproacacias/src/plugins/notificationPush.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
@@ -28,25 +29,30 @@ class HomeController extends GetxController {
   TextEditingController searchControllerHome = TextEditingController();
   List<Empresa> empresas = [];
   List<Empresa> topEmpresas = [];
-  
+  PushNotification pushNotification = Get.find<PushNotification>();
 
   @override
   void onInit() async {
     super.onInit();
-    getvideos();
-    getTopEmpresas();
-  
+    this._inicialPushNotificacitions();
+    this.getvideos();
+    this.getTopEmpresas();
+    this._verificarTokenPush();
+
     if (this.usuario.isNullOrBlank) {
       this.usuario = await repositorio.getUsuario();
       this.registroActividad();
       this.updateUsuario(usuario);
     }
   }
+
   @override
   void onClose() {
     this.searchControllerHome.dispose();
+    this.pushNotification.onMesaje().cancel();
     super.onClose();
   }
+
   void updateUsuario(Usuario usuario) {
     this.usuario = usuario;
     update();
@@ -115,9 +121,27 @@ class HomeController extends GetxController {
 
   void getTopEmpresas() async {
     final response = await repositorio.getTop10Empresas();
-    if(response is ResponseEmpresa){
-       topEmpresas = response.empresas;
-       update(['top']);
+    if (response is ResponseEmpresa) {
+      topEmpresas = response.empresas;
+      update(['top']);
     }
+  }
+
+  void _verificarTokenPush() async {
+    final token = await this.pushNotification.getToken();
+    print(token);
+  }
+
+  void _inicialPushNotificacitions() async {
+    pushNotification.init();
+    this.pushNotification.onMesaje().onData((data) {
+      print('onmessage');
+    });
+    this.pushNotification.onOpenApp().onData((data) {
+      print('onClickmessage');
+    });
+    this.pushNotification.onBackground().then((data) {
+      if(data != null)Get.snackbar('Hola', 'message');
+    });
   }
 }

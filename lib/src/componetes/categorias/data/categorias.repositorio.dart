@@ -17,7 +17,11 @@ class CategoriaRepositorio {
      return response.data?.map<Categoria>((categoria)=>Categoria.toJson(categoria))?.toList();
  
   }
+  Future<List<Empresa>> buscarEmpresasPorCategoria(String categoria,String texto) async {
+     final response = await _dio.get('/categorias/search/$categoria/$texto');
+     return response.data.map<Empresa>((empresa)=>Empresa.toJson(empresa)).toList();
+  }
 
-
+ 
 
 }
