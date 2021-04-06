@@ -128,4 +128,6 @@ class PublicacionesController extends GetxController {
     this.publicaciones.insert(0, publicacion);
     update(['publicaciones']);
   }
+
+
 }

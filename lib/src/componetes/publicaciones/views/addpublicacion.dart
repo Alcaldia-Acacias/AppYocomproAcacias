@@ -1,6 +1,7 @@
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/formPublicacion.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
+import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class FormPublicacionPage extends StatelessWidget {
-  FormPublicacionPage({Key key}) : super(key: key);
+  final bool update;
+  final Publicacion publicacion;
+  FormPublicacionPage({Key key,this.update,this.publicacion}) : super(key: key);
   final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
