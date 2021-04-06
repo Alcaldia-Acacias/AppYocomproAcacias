@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1010834568889-ale04t7139arjvlf041av2jj4abmns5h.apps.googleusercontent.com</string>
+	<string>1010834568889-kgc6q4arok5pgioin12chbva01sm2qsu.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1010834568889-ale04t7139arjvlf041av2jj4abmns5h</string>
+	<string>com.googleusercontent.apps.1010834568889-kgc6q4arok5pgioin12chbva01sm2qsu</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1010834568889-0gr255g6rul6jasd4f69isa3k4o82itm.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDWLYkNcoXK6OvyD3sGHGBjaQQMCy35Wgg</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,22 +15,22 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>dosve.alcaldia.yocomproacacias</string>
+	<string>app.alcaldia.yocomproacacias</string>
 	<key>PROJECT_ID</key>
 	<string>yocomprocacias</string>
 	<key>STORAGE_BUCKET</key>
 	<string>yocomprocacias.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1010834568889:ios:61dffdbc6465032e538d68</string>
+	<string>1:1010834568889:ios:befcfcc68b51b2fa538d68</string>
 </dict>
 </plist>

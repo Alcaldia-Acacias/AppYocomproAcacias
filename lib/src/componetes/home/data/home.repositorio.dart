@@ -1,3 +1,6 @@
+import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
+import 'package:comproacacias/src/componetes/home/models/youtubeVideo.model.dart';
 import 'package:comproacacias/src/componetes/home/models/update.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
@@ -5,6 +8,7 @@ import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:youtube_api/youtube_api.dart';
 
 class HomeRepocitorio {
   final _dio = Get.find<Dio>();
@@ -30,13 +34,43 @@ class HomeRepocitorio {
       return ErrorResponse(error);
     }
   }
+
   Future<ResponseModel> registroActividad(int idUsuario) async {
     try {
-      await _dio.post('/ingresos/add',data: {"id_usuario": idUsuario});
+      await _dio.post('/ingresos/add', data: {"id_usuario": idUsuario});
       return HomeResponse(addIngreso: true);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }
   }
-  
+
+  Future<ResponseModel> getVideosYoutbe() async {
+    List<YT_API> result = [];
+    final String tokenYoutube = 'AIzaSyAmvIdl1EiTbeVgC5ulmnIij47jES4kL7E';
+    YoutubeAPI ytApi = YoutubeAPI(tokenYoutube);
+    try {
+      result =  await ytApi.channel('UCAPP8tro1pewJCHQ2zCkcuA');
+       final videos =  result.map((video) => YouTubeVideo(
+                                    url       : video.url,
+                                    urlImagen : video.thumbnail['high']['url'],
+                                    fecha     : video.publishedAt
+                                  )
+      ).toList();
+      return HomeResponse(videos: videos);
+    } catch (error) {
+      return ErrorResponse(error);
+    }
+  }
+
+  Future<ResponseModel> getTop10Empresas() async {
+    try {
+      final response = await _dio.get('/empresas/top');
+      final empresas = response.data
+          .map<Empresa>((empresa) => Empresa.toJson(empresa))
+          .toList();
+      return ResponseEmpresa(empresas: empresas);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
 }

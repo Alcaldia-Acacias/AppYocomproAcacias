@@ -13,6 +13,7 @@ import 'package:comproacacias/src/componetes/login/views/login.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,12 +23,17 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
-//import 'package:intl/locale.dart';
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
 
  main() async {
- WidgetsFlutterBinding.ensureInitialized();
+
+  WidgetsFlutterBinding.ensureInitialized();
   
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Intl.defaultLocale = 'es_ES';
   await GetStorage.init();
   await FacebookAuth.instance.logOut();

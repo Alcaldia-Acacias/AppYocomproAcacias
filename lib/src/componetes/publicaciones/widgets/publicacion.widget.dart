@@ -64,9 +64,13 @@ Widget _header(Publicacion publicacion) {
                                    style:TextStyle(fontWeight:FontWeight.bold)
                                   ),
                   subtitle       : Text(publicacion.formatFecha()),
-                  trailing       : IconButton(
+                  trailing       : !
+                  publicacion.editar
+                                   ? null
+                                   :
+                                   IconButton(
                                    icon: Icon(Icons.more_horiz), 
-                                   onPressed: (){}
+                                   onPressed: ()=> _dialogoEditPublicacion(publicacion)
                                    )
            ),
            onTap: ()=> Get.to(
@@ -93,7 +97,7 @@ Widget _footer(Publicacion publicacion, int index) {
                     GestureDetector(
                     child: Padding(
                            padding : EdgeInsets.all(8.0),
-                           child   : Icon(Icons.thumb_up,color:Colors.blue[200]),
+                           child   : Icon(Icons.thumb_up,color:Colors.pink[200]),
                     ),
                     onTap: (){
                      Get.bottomSheet(_bottomSheetLikes(publicacion.id,index));
@@ -102,11 +106,11 @@ Widget _footer(Publicacion publicacion, int index) {
                     Text('${publicacion.likes}'),
                     Padding(
                     padding : EdgeInsets.all(8.0),
-                    child   : Icon(Icons.textsms,color:Colors.blue[200]),
+                    child   : Icon(Icons.textsms,color:Colors.pink[200]),
                     ),
                     Text('${publicacion.numeroComentarios}'),
                     RawChip(
-                    label: Text('Me gusta'),
+                    label: Text('${publicacion.megusta ? 'Me gusto': 'Me gusta'}'),
                     labelStyle: TextStyle(color:publicacion.megusta ? Colors.pink[300] : Colors.grey[400]),
                     onPressed:()=>   publicacion.megusta 
                                      ? Get.find<PublicacionesController>().noMegustaAction(publicacion.id,index)
@@ -122,7 +126,7 @@ Widget _footer(Publicacion publicacion, int index) {
                     onPressed:(){
                     Get.bottomSheet(_bottomSheetComentarios(publicacion.id,index));
                     },
-                    avatar:Icon(Icons.textsms,color:Colors.grey[400]),
+                    avatar:Icon(Icons.textsms,color:Colors.pink[400]),
                     backgroundColor: Colors.transparent
                     ),
                    ],
@@ -360,5 +364,50 @@ Widget _imagenes(List<String> imagenes) {
   );
 }
 
+  _dialogoEditPublicacion(Publicacion publicacion) {
+    return Get.bottomSheet(
+           Container(
+           padding : EdgeInsets.all(8),
+           color   : Colors.white,
+           height  : Get.height * 0.2,  
+           child   : ListView(
+                     children: [
+                      ListTile(
+                      leading : Icon(Icons.edit,color: Get.theme.accentColor),
+                      title   : Text('Editar Publicacion'),
+                      onTap   : (){},
+                      ),
+                      ListTile(
+                      leading : Icon(Icons.delete,color: Get.theme.primaryColor),
+                      title   : Text('Eliminar Publicacion'),
+                      onTap   : ()=>_deleteAlertPublicacion(),
+                      )
+                     ],
+           ),
+           )
+    );
+  }
+ _deleteAlertPublicacion(){
+   Get.back();
+   return Get.defaultDialog(
+          title   : 'Eliminar Publicacion',
+          content : Text('¿Desea Eliminar la Publicacion?'),
+          actions : <Widget>[
+                    RaisedButton.icon(
+                    color     : Get.theme.primaryColor,
+                    icon      : Icon(Icons.delete), 
+                    label     : Text('Eliminar'),
+                    textColor : Colors.white,
+                    onPressed : (){}
+                    ),
+                    RaisedButton(
+                    child     : Text('cancelar'),
+                    color     : Colors.white,
+                    onPressed : ()=>Get.back(),
+                    )
+          ]
+
+   );
+ }
 
 }

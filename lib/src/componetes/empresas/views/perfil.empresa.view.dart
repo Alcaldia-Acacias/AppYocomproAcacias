@@ -30,9 +30,9 @@ class PerfilEmpresaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<EmpresasController>(
            id: 'empresa',
-           init: EmpresasController(repositorio: EmpresaRepositorio()),
+           init: EmpresasController(repositorio: EmpresaRepositorio(),empresa: empresa),
            builder: (state){
-             state.empresa = empresa;
+             
              return AnnotatedRegion<SystemUiOverlayStyle>(
                            value: SystemUiOverlayStyle(
                                   statusBarIconBrightness: Brightness.light,

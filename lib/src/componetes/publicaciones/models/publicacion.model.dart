@@ -11,7 +11,7 @@ class Publicacion {
   final List<Comentario> comentarios;
   final List<String> imagenes;
   final List<LikePublicacion> usuariosLike;
-  final bool megusta;
+  final bool megusta, editar;
 
   Publicacion( 
       {this.id,
@@ -23,7 +23,8 @@ class Publicacion {
       this.imagenes,
       this.comentarios, 
       this.usuariosLike,
-      this.megusta});
+      this.megusta,
+      this.editar});
 
 factory Publicacion.toJson(Map<String,dynamic> json,)
    =>Publicacion(
@@ -34,6 +35,7 @@ factory Publicacion.toJson(Map<String,dynamic> json,)
      imagenes          : json['imagenes'].map<String>((imagen)=>'${imagen['nombre']}').toList() ?? '',
      fecha             : json['fecha'] ?? '',
      megusta           : json['megusta'] ?? false,
+     editar            : json['edit'] ?? false,
      empresa           : Empresa?.toJson(json['empresa']) ?? '',
      comentarios       : json['data_comentarios']?.map<Comentario>((comentario)=> Comentario.toJson(comentario))?.toList(),
      usuariosLike      : json["likes_usuarios"]?.map<LikePublicacion>((like)=> LikePublicacion.toJson(like))?.toList() 
@@ -52,7 +54,8 @@ factory Publicacion.toJson(Map<String,dynamic> json,)
       List<Comentario> comentarios,
       List<String> imagenes,
       List<LikePublicacion> usuariosLike,
-      bool megusta
+      bool megusta,
+      bool editar
      }
    ) => Publicacion(
         id                : id                ?? this.id,
@@ -64,7 +67,8 @@ factory Publicacion.toJson(Map<String,dynamic> json,)
         comentarios       : comentarios       ?? this.comentarios,
         imagenes          : imagenes          ?? this.imagenes,
         usuariosLike      : usuariosLike      ?? this.usuariosLike,
-        megusta           : megusta           ?? this.megusta
+        megusta           : megusta           ?? this.megusta,
+        editar            : editar            ?? this.editar
     );
 
  Map<String,dynamic> toMap() => {
