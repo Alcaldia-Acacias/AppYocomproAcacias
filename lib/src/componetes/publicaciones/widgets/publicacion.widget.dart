@@ -70,7 +70,7 @@ Widget _header(Publicacion publicacion) {
                                    :
                                    IconButton(
                                    icon: Icon(Icons.more_horiz), 
-                                   onPressed: ()=> _dialogoEditPublicacion(publicacion)
+                                   onPressed:  (){}//()=> _dialogoEditPublicacion(publicacion)
                                    )
            ),
            onTap: ()=> Get.to(

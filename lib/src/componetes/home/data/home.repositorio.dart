@@ -1,5 +1,6 @@
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
+import 'package:comproacacias/src/componetes/home/models/response.model.dart';
 import 'package:comproacacias/src/componetes/home/models/youtubeVideo.model.dart';
 import 'package:comproacacias/src/componetes/home/models/update.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
@@ -11,6 +12,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:youtube_api/youtube_api.dart';
 
 class HomeRepocitorio {
+
   final _dio = Get.find<Dio>();
   final _box = GetStorage();
 
@@ -69,6 +71,18 @@ class HomeRepocitorio {
           .map<Empresa>((empresa) => Empresa.toJson(empresa))
           .toList();
       return ResponseEmpresa(empresas: empresas);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
+  Future<ResponseModel> registrarTokenPush(token,idUsuario) async {
+    FormData data = FormData.fromMap({
+      "id_usuario": idUsuario,
+      "token": token
+    });
+    try {
+      final response = await _dio.put('/usuarios/add/token',data: data);
+      return ResponseHome(registrarToken: response.data);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }

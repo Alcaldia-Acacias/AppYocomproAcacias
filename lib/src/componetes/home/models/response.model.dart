@@ -4,8 +4,8 @@ import 'package:comproacacias/src/componetes/response/models/response.model.dart
 class ResponseHome extends ResponseModel {
   
   final List<YouTubeVideo> videos;
-
-  ResponseHome({this.videos});
-
+  final bool registrarToken;
+  ResponseHome({this.videos,this.registrarToken});
+  
 
 }

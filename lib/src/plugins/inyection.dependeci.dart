@@ -14,7 +14,7 @@ class Dependecias {
         baseUrl: '$url',
         contentType: Headers.jsonContentType,
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'})));
-    Get.lazyPut(() => PushNotification());
+    Get.put(PushNotification());
     Get.put(ImageCapture());
   }
 }

@@ -42,7 +42,7 @@ class InicioPage extends StatelessWidget {
                      ), */
                      elevation: 0,
                      actions: [
-                       _butonIconNotification(),
+                       //_butonIconNotification(),
                        SizedBox(width: 15),
                      ],
              ),

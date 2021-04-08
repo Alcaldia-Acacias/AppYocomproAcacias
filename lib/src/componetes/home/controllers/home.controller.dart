@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
+import 'package:comproacacias/src/componetes/home/models/response.model.dart';
 import 'package:comproacacias/src/componetes/home/models/update.model.dart';
 import 'package:comproacacias/src/componetes/home/models/youtubeVideo.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
@@ -37,12 +38,13 @@ class HomeController extends GetxController {
     this._inicialPushNotificacitions();
     this.getvideos();
     this.getTopEmpresas();
-    this._verificarTokenPush();
+    
 
     if (this.usuario.isNullOrBlank) {
       this.usuario = await repositorio.getUsuario();
       this.registroActividad();
       this.updateUsuario(usuario);
+      this._verificarTokenPush();
     }
   }
 
@@ -129,7 +131,15 @@ class HomeController extends GetxController {
 
   void _verificarTokenPush() async {
     final token = await this.pushNotification.getToken();
-    print(token);
+    final response =
+        await this.repositorio.registrarTokenPush(token, usuario.id);
+    if (response is ResponseHome) {
+      response.registrarToken
+          ? print('El token ya esta registrado')
+          : print('se registro el token');
+    }
+    if(response is ErrorResponse)
+     this._errorResponse(response.getError);
   }
 
   void _inicialPushNotificacitions() async {
@@ -141,7 +151,7 @@ class HomeController extends GetxController {
       print('onClickmessage');
     });
     this.pushNotification.onBackground().then((data) {
-      if(data != null)Get.snackbar('Hola', 'message');
+      if (data != null) Get.snackbar('Hola', 'message');
     });
   }
 }
