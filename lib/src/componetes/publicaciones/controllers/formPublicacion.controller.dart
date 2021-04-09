@@ -16,8 +16,11 @@ import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 class FormPublicacionesController extends GetxController {
+
   final PublicacionesRepositorio repositorio;
-  FormPublicacionesController({this.repositorio});
+  final bool updatePublicacion;
+  final Publicacion publicacion;
+  FormPublicacionesController({this.repositorio,this.updatePublicacion,this.publicacion});
 
   TextEditingController publicacionController = TextEditingController();
   List<ImageFile> imagenes = [];
@@ -92,7 +95,8 @@ class FormPublicacionesController extends GetxController {
         likes: 0,
         usuariosLike: [],
         imagenes: imagenes.map<String>((imagen) => imagen.nombre).toList(),
-        megusta : false 
+        megusta : false,
+        editar  : true
         );
   }
 

@@ -103,7 +103,7 @@ class MyApp extends StatelessWidget {
     if(box.hasData('token') && internetCheck)
        return '/home';
     if(box.hasData('token') && !internetCheck)
-       return '/offline';
+       return '/home';
     if(!box.hasData('token') && !internetCheck)
        return '/';   
     if(!box.hasData('token') && internetCheck)
