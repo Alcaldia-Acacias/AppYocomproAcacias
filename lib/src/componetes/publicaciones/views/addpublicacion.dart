@@ -17,9 +17,10 @@ class FormPublicacionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
            child: GetBuilder<FormPublicacionesController>(
+                  id: 'formulario_publicaciones',
                   init: FormPublicacionesController(repositorio: PublicacionesRepositorio()),
-                  builder: (state) 
-                            => Scaffold(
+                  builder: (state) {
+                    return Scaffold(
                                appBar: AppBar(
                                        title     : Text('Agrega tu Publicación'),
                                        elevation : 0,
@@ -53,7 +54,8 @@ class FormPublicacionPage extends StatelessWidget {
                                                      label           : Text('Publicar',style:TextStyle(color: Colors.white)),
                                                      onPressed       : ()=>state.addPublicacion()
                                                      ),
-                            )
+                            );
+                  }
                   ),
            onTap: ()=>FocusScope.of(context).unfocus(),
     );
@@ -75,7 +77,10 @@ Widget _escojerEmpresa(FormPublicacionesController state) {
     color  : Colors.white,
     child  : _empresas(state),  
     )
-    );
+    ).whenComplete((){
+      if(state.status == PublicacionState.notAuthEmpresa)
+      Get.snackbar('Error', 'Empresa No autorizada para publicar');
+    });
   }
 
 Widget _empresas(FormPublicacionesController state) {
@@ -116,7 +121,11 @@ Widget _imagenes(FormPublicacionesController state) {
                onTap: ()=>DialogImagePicker.openDialog(
                           titulo       : 'Selecione una Imagen',
                           onTapArchivo : ()=>state.getImage('archivo'),
-                          onTapCamera  : ()=>state.getImage('camara')
+                          onTapCamera  : ()=>state.getImage('camara'),
+                          complete     : (){
+                                          if(state.status == PublicacionState.notImage)
+                                          Get.snackbar('Error', 'No seleciono una imagen');  
+                          }
                ),
                ),
               ...state.imagenes.asMap()
@@ -132,7 +141,11 @@ Widget _imagenes(FormPublicacionesController state) {
                                                 onTap: ()=>DialogImagePicker.openDialog(
                                                            titulo       : 'Cambia la Imagen',
                                                            onTapArchivo : ()=>state.getImage('archivo',true,imagen.key),
-                                                           onTapCamera  : ()=>state.getImage('camara',true,imagen.key)
+                                                           onTapCamera  : ()=>state.getImage('camara',true,imagen.key),
+                                                           complete     : (){
+                                                                          if(state.status == PublicacionState.notImage)
+                                                                          Get.snackbar('Error', 'No seleciono una imagen');  
+                                                           }
                                                 ),
                                ) 
               )

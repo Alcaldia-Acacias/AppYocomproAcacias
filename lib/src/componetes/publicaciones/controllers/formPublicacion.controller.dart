@@ -27,6 +27,7 @@ class FormPublicacionesController extends GetxController {
   ImageCapture imageCapture = ImageCapture();
   List<Empresa> empresas;
   Empresa empresa;
+  PublicacionState status = PublicacionState.noAction;
 
   final formKey = GlobalKey<FormState>();
   final uid = Uuid();
@@ -39,32 +40,31 @@ class FormPublicacionesController extends GetxController {
 
   void getImage(String tipo, [bool cambiar = false, int index]) async {
     final imagecapture = await imageCapture.getImage(tipo);
-    final image = await CompressImagePlugin.getImage(imagecapture);
     if (!imagecapture.isNullOrBlank) {
+      final image = await CompressImagePlugin.getImage(imagecapture);
       if (cambiar)
         this._updateImage(image, index);
       else
-        this._addImage(image);
+      this._addImage(image);
       Get.back();
-      update();
+      update(['formulario_publicaciones']);
     }
     if (imagecapture.isNullOrBlank) {
+      status = PublicacionState.notImage;
       Get.back();
-      Get.snackbar('No seleciono ninguna Imagen', '',
-          snackPosition: SnackPosition.BOTTOM);
+      update(['formulario_publicaciones']);
     }
   }
 
   void selectEmpresa(Empresa empresa) {
+    Get.back();
     if(empresa.estado){
     this.empresa = empresa;
-    Get.back();
-    update();
+    update(['formulario_publicaciones']);
     }
     else {
-      Get.back();
-      Get.snackbar('La Empresa no esta autorizada', 
-      'por favor espera mientras la administracion activa esta funcion');
+      status = PublicacionState.notAuthEmpresa;
+      update(['formulario_publicaciones']);
     }
   }
 
@@ -77,8 +77,12 @@ class FormPublicacionesController extends GetxController {
           await repositorio.addPublicacion(this._getPublicacion(), imagenes);
       if (response is ResponsePublicacion) this._addPublicacionList(response.id);
       if (response is ErrorResponse) print(response.getError);
-    } else
-      Get.snackbar('Faltan Datos', '');
+    } else{
+       status = PublicacionState.errorForm;
+       update(['formulario_publicaciones']);
+    }
+     
+
   }
 
   void _addImage(File image) {
@@ -114,4 +118,11 @@ class FormPublicacionesController extends GetxController {
       barrierDismissible: false
     ).whenComplete(() => Get.back());
   }
+}
+
+enum PublicacionState {
+  notImage,
+  notAuthEmpresa,
+  errorForm,
+  noAction
 }

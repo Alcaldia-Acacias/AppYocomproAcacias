@@ -5,7 +5,8 @@ class DialogImagePicker {
   static openDialog(
       {String titulo,
       Function onTapArchivo,
-      Function onTapCamera}) {
+      Function onTapCamera,
+      Function complete}) {
     Get.defaultDialog(
         title: titulo,
         content: Container(
@@ -16,13 +17,12 @@ class DialogImagePicker {
             ListTile(
                 leading: Icon(Icons.folder),
                 title: Text('Selecciona desde galeria'),
-                onTap: onTapArchivo
-            ),
+                onTap: onTapArchivo),
             ListTile(
                 leading: Icon(Icons.photo_camera),
                 title: Text('Toma la foto'),
-                onTap: onTapCamera
-          )]),
-        ));
+                onTap: onTapCamera)
+          ]),
+        )).whenComplete(complete);
   }
 }
