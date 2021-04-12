@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CalificacionWidget extends StatelessWidget {
-  const CalificacionWidget({Key key}) : super(key: key);
+   final int extrellas;
+   final bool centrado;
+   final double size;
+   CalificacionWidget({Key key,this.extrellas=0,this.centrado = true,@required this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +15,35 @@ class CalificacionWidget extends StatelessWidget {
                   height: 40,
                   width: 200,
                   child: Row(
-                         mainAxisAlignment: MainAxisAlignment.center,
+                         mainAxisAlignment: centrado
+                                            ? MainAxisAlignment.center
+                                            : MainAxisAlignment.start,
                          children: <Widget>[
-                           Icon(Icons.star,color: Colors.yellow,size: 30),
-                           Icon(Icons.star_border,color: Colors.white,size: 30),
-                           Icon(Icons.star_border,color: Colors.white,size: 30),
-                           Icon(Icons.star_border,color: Colors.white,size: 30),
-                           Icon(Icons.star_border,color: Colors.white,size: 30),
-                         
+                           Icon(Icons.star,
+                                color: extrellas >= 1
+                                       ?  Colors.yellow
+                                       :  Colors.white,
+                                       size: size),
+                           Icon(Icons.star,
+                                color: extrellas >= 2
+                                       ?  Colors.yellow
+                                       :  Colors.white,
+                                       size: size),
+                           Icon(Icons.star,
+                                color: extrellas >= 3
+                                       ?  Colors.yellow
+                                       :  Colors.white,
+                                       size: size),
+                           Icon(Icons.star,
+                                color: extrellas >= 4
+                                       ?  Colors.yellow
+                                       :  Colors.white,
+                                       size: size),
+                           Icon(Icons.star,
+                                color: extrellas >= 5
+                                       ?  Colors.yellow
+                                       :  Colors.white,
+                                       size: size),
                           
                          ],
                   ),

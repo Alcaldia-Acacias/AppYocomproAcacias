@@ -15,7 +15,7 @@ class PublicacionCard extends StatelessWidget {
   final bool onlyEmpresa;
   PublicacionCard({Key key,this.publicacion,this.index,this.onlyEmpresa = false}) : super(key: key);
   
-  final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
+  final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   
   @override
   Widget build(BuildContext context) {
@@ -37,6 +37,8 @@ class PublicacionCard extends StatelessWidget {
                            );
                        },
                        ),
+                       if(publicacion.imagenes.length > 1)
+                       _imagenes(publicacion.imagenes),
                        _contenido(publicacion.texto),
                        _footer(publicacion,index),
                      ],
@@ -62,9 +64,13 @@ Widget _header(Publicacion publicacion) {
                                    style:TextStyle(fontWeight:FontWeight.bold)
                                   ),
                   subtitle       : Text(publicacion.formatFecha()),
-                  trailing       : IconButton(
+                  trailing       : !
+                  publicacion.editar
+                                   ? null
+                                   :
+                                   IconButton(
                                    icon: Icon(Icons.more_horiz), 
-                                   onPressed: (){}
+                                   onPressed:  (){}//()=> _dialogoEditPublicacion(publicacion)
                                    )
            ),
            onTap: ()=> Get.to(
@@ -91,32 +97,36 @@ Widget _footer(Publicacion publicacion, int index) {
                     GestureDetector(
                     child: Padding(
                            padding : EdgeInsets.all(8.0),
-                           child   : Icon(Icons.thumb_up,color:Colors.blue[200]),
+                           child   : Icon(Icons.thumb_up,color:Colors.pink[200]),
                     ),
                     onTap: (){
-                     Get.find<PublicacionesController>().getLikesByPublicacion(publicacion.id,onlyEmpresa);
                      Get.bottomSheet(_bottomSheetLikes(publicacion.id,index));
                     },
                     ),
                     Text('${publicacion.likes}'),
                     Padding(
                     padding : EdgeInsets.all(8.0),
-                    child   : Icon(Icons.textsms,color:Colors.blue[200]),
+                    child   : Icon(Icons.textsms,color:Colors.pink[200]),
                     ),
                     Text('${publicacion.numeroComentarios}'),
-                     RawChip(
-                    label: Text('Me gusta'),
-                    onPressed:(){},
-                    avatar:Icon(Icons.thumb_up,color:Colors.grey[400]),
+                    RawChip(
+                    label: Text('${publicacion.megusta ? 'Me gusto': 'Me gusta'}'),
+                    labelStyle: TextStyle(color:publicacion.megusta ? Colors.pink[300] : Colors.grey[400]),
+                    onPressed:()=>   publicacion.megusta 
+                                     ? Get.find<PublicacionesController>().noMegustaAction(publicacion.id,index)
+                                     : Get.find<PublicacionesController>().megustaAction(publicacion.id,index),
+                    avatar:Icon(
+                           Icons.thumb_up,
+                           color: publicacion.megusta ? Colors.pink[300] : Colors.grey[400]
+                    ),
                     backgroundColor: Colors.transparent
                     ),
                     RawChip(
                     label: Text('Comentar'),
                     onPressed:(){
-                    Get.find<PublicacionesController>().getComentarios(publicacion.id,onlyEmpresa);
                     Get.bottomSheet(_bottomSheetComentarios(publicacion.id,index));
                     },
-                    avatar:Icon(Icons.textsms,color:Colors.grey[400]),
+                    avatar:Icon(Icons.textsms,color:Colors.pink[400]),
                     backgroundColor: Colors.transparent
                     ),
                    ],
@@ -141,13 +151,14 @@ Widget _footer(Publicacion publicacion, int index) {
            ),
            color  : Colors.white, 
     );
-  }
-
+ }
 Widget _listaComentario(int id, int index) {
    return GetBuilder<PublicacionesController>(
           id: 'comentarios',
           builder: (state){
-           final comentarios = state.publicaciones[index].comentarios;
+           final comentarios = onlyEmpresa
+                               ? state.publicacionesByempresa[index].comentarios
+                               : state.publicaciones[index].comentarios;
            if(state.loading)
              return Expanded(child: Center(child: CircularProgressIndicator()));
            if(comentarios.length == 0)
@@ -159,7 +170,7 @@ Widget _listaComentario(int id, int index) {
                        return Column(
                               children: <Widget>[
                                    ListTile(
-                                   leading  : comentarios[i].imagenUsuario == ''
+                                   leading  : comentarios[i].usuario.imagen == ''
                                               ?
                                               CircleAvatar(
                                               backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
@@ -167,16 +178,16 @@ Widget _listaComentario(int id, int index) {
                                               :
                                               CircleAvatar(
                                               backgroundImage: CachedNetworkImageProvider(
-                                                '$urlImagenLogo/usuarios/${comentarios[i].imagenUsuario}'
+                                                '$urlImagenLogo/usuarios/${comentarios[i].usuario.imagen}'
                                               ),
                                               ),
-                                   title    : Text(comentarios[i].nombreUsuario),
+                                   title    : Text(comentarios[i].usuario.nombre),
                                    subtitle : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                 Text(comentarios[0].comentario),
+                                                 Text(comentarios[i].comentario),
                                                  SizedBox(height: 4),
-                                                 Text(comentarios[0].formatFecha(),style: TextStyle(fontWeight: FontWeight.bold),)
+                                                 Text(comentarios[i].formatFecha(),style: TextStyle(fontWeight: FontWeight.bold),)
                                               ],
                                    )
                                    ),
@@ -194,6 +205,7 @@ Widget _listaComentario(int id, int index) {
 
 Widget _textField() {
   return GetBuilder<PublicacionesController>(
+         id: 'comentarios',
          builder: (state) 
            => SafeArea(
               child:  Padding(
@@ -209,7 +221,7 @@ Widget _textField() {
                                     suffixIcon     : IconButton(
                                                      icon: Icon(Icons.send), 
                                                      onPressed: (){
-                                                       print("object");
+                                                       state.comentarPublicacion(publicacion.id, index);
                                                      }
                                                      ),
                                     contentPadding : EdgeInsets.all(10),
@@ -233,14 +245,14 @@ Widget _textField() {
 
 Widget _imagenprincipal(String imagen) {
     return SizedBox(
-           height: 300,
-           width: Get.height,
-           child: CachedNetworkImage(
-           imageUrl: '$urlImagenLogo/galeria/$imagen',
-           placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-           errorWidget: (context, url, error) => Icon(Icons.error),
-           fit: BoxFit.cover,
-    ),
+           height : 300,
+           width  : Get.height,
+           child  : CachedNetworkImage(
+                    imageUrl    : '$urlImagenLogo/galeria/$imagen',
+                    placeholder : (context, url) => Center(child: CircularProgressIndicator()),
+                    errorWidget : (context, url, error) => Icon(Icons.error),
+                    fit         : BoxFit.cover,
+           ),
     );
 }
 
@@ -248,7 +260,9 @@ Widget _listaDelikes(int id, int index) {
    return GetBuilder<PublicacionesController>(
           id: 'likes',
           builder: (state){
-           final usuarios = state.publicaciones[index].usuariosLike;
+           final usuarios = onlyEmpresa
+                            ?state.publicacionesByempresa[index].usuariosLike
+                            :state.publicaciones[index].usuariosLike;
            if(state.loading)
              return Expanded(child: Center(child: CircularProgressIndicator()));
            if(usuarios.length == 0)
@@ -261,7 +275,7 @@ Widget _listaDelikes(int id, int index) {
                             
                               children: <Widget>[
                                    ListTile(
-                                   leading  : usuarios[i].urlImagen == ''
+                                   leading  : usuarios[i].usuario.imagen== ''
                                               ? 
                                               CircleAvatar(
                                                 backgroundImage: AssetImage('assets/imagenes/logo_no_img.png')
@@ -269,10 +283,10 @@ Widget _listaDelikes(int id, int index) {
                                               :
                                               CircleAvatar(
                                               backgroundImage: CachedNetworkImageProvider(
-                                                '$urlImagenLogo/usuarios/${usuarios[i].urlImagen}'
+                                                '$urlImagenLogo/usuarios/${usuarios[i].usuario.imagen}'
                                               ),
                                               ),
-                                   title    : Text(usuarios[i].nombre),
+                                   title    : Text(usuarios[i].usuario.nombre),
                                    subtitle : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
@@ -314,5 +328,86 @@ Widget _listaDelikes(int id, int index) {
     );
   }
 
+Widget _imagenes(List<String> imagenes) {
+  return SizedBox(
+    child: Row(
+           mainAxisSize: MainAxisSize.max,
+           mainAxisAlignment: MainAxisAlignment.start,
+           children: [
+            ...imagenes.skip(1).map((imagen) => 
+                 Expanded(
+                   child: AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: FittedBox(
+                                 fit: imagenes.length == 2 ? BoxFit.contain : BoxFit.fill,
+                                 alignment: Alignment.topLeft,
+                                 child  : Container(
+                                     decoration: BoxDecoration(
+                                                 border: Border.all(
+                                                    width: 10,
+                                                    color: Colors.white
+                                                 )
+                                     ),
+                                     child: CachedNetworkImage(
+                                            imageUrl    : '$urlImagenLogo/galeria/$imagen',
+                                            placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
+                                            errorWidget : (context, url, error) => Icon(Icons.error),
+                              ),
+                            ),
+                     ),
+                   ),
+                 )
+            
+            )
+           ],
+    ),
+  );
+}
+
+  _dialogoEditPublicacion(Publicacion publicacion) {
+    return Get.bottomSheet(
+           Container(
+           padding : EdgeInsets.all(8),
+           color   : Colors.white,
+           height  : Get.height * 0.2,  
+           child   : ListView(
+                     children: [
+                      ListTile(
+                      leading : Icon(Icons.edit,color: Get.theme.accentColor),
+                      title   : Text('Editar Publicacion'),
+                      onTap   : (){},
+                      ),
+                      ListTile(
+                      leading : Icon(Icons.delete,color: Get.theme.primaryColor),
+                      title   : Text('Eliminar Publicacion'),
+                      onTap   : ()=>_deleteAlertPublicacion(),
+                      )
+                     ],
+           ),
+           )
+    );
+  }
+ _deleteAlertPublicacion(){
+   Get.back();
+   return Get.defaultDialog(
+          title   : 'Eliminar Publicacion',
+          content : Text('¿Desea Eliminar la Publicacion?'),
+          actions : <Widget>[
+                    RaisedButton.icon(
+                    color     : Get.theme.primaryColor,
+                    icon      : Icon(Icons.delete), 
+                    label     : Text('Eliminar'),
+                    textColor : Colors.white,
+                    onPressed : (){}
+                    ),
+                    RaisedButton(
+                    child     : Text('cancelar'),
+                    color     : Colors.white,
+                    onPressed : ()=>Get.back(),
+                    )
+          ]
+
+   );
+ }
 
 }

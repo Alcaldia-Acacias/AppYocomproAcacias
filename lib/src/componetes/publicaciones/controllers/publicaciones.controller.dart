@@ -1,8 +1,13 @@
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
+import 'package:comproacacias/src/componetes/publicaciones/models/cometario.model.dart';
+import 'package:comproacacias/src/componetes/publicaciones/models/like.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
+import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
+import 'package:get_storage/get_storage.dart';
 
 class PublicacionesController extends GetxController {
   final PublicacionesRepositorio repositorio;
@@ -14,11 +19,13 @@ class PublicacionesController extends GetxController {
   ScrollController controller;
   int _pagina = 0;
   TextEditingController comentarioController = TextEditingController();
-  bool loading = true;
-
+  bool loading = false;
+  final box = GetStorage();
+  int idUsuario;
   @override
   void onInit() async {
     super.onInit();
+    idUsuario = box.read('id');
     controller = controller = ScrollController(initialScrollOffset: 0);
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent)
@@ -27,52 +34,23 @@ class PublicacionesController extends GetxController {
     this.getPublicaciones();
   }
 
-  void getLikesByPublicacion(int idPublicacion, [bool onlyEmpresa]) async {
-    this.loading = true;
-    if (onlyEmpresa) {
-      final index = getIndexPublicacionByEmpresa(idPublicacion);
-      this.publicacionesByempresa[index].usuariosLike =
-          await this.repositorio.getUsuarioLike(idPublicacion);
-    } else {
-      final index = getIndexPublicacion(idPublicacion);
-      this.publicaciones[index].usuariosLike =
-          await this.repositorio.getUsuarioLike(idPublicacion);
-    }
-    this.loading = false;
-    update(['likes']);
-  }
-
-  void getComentarios(int idPublicacion, [bool onlyEmpresa]) async {
-    this.loading = true;
-    if (onlyEmpresa) {
-      final index = this.getIndexPublicacionByEmpresa(idPublicacion);
-      this.publicacionesByempresa[index].comentarios =
-          await this.repositorio.getComentariosByPublicacion(idPublicacion);
-    } else {
-      final index = this.getIndexPublicacion(idPublicacion);
-      this.publicaciones[index].comentarios =
-          await this.repositorio.getComentariosByPublicacion(idPublicacion);
-    }
-    this.loading = false;
-    update(['comentarios']);
-  }
-
   void getPublicaciones() async {
-    _pagina++;
-    publicaciones.addAll(await repositorio.getPublicaciones(_pagina));
+    publicaciones
+        .addAll(await repositorio.getPublicaciones(_pagina, idUsuario));
     if (_pagina > 1) this._animationFinalController();
+    _pagina++;
     update(['publicaciones']);
   }
 
   void getNewPublicaciones() async {
-    publicaciones = await repositorio.getPublicaciones(1);
+    publicaciones = await repositorio.getPublicaciones(0, idUsuario);
     update(['publicaciones']);
   }
 
   @override
-  Future<void> onClose() {
+  void onClose() {
     controller?.dispose();
-    return super.onClose();
+    super.onClose();
   }
 
   void _animationFinalController() {
@@ -80,18 +58,76 @@ class PublicacionesController extends GetxController {
         duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
   }
 
-  int getIndexPublicacion(int id) =>
-      this.publicaciones.indexWhere((publicacion) => publicacion.id == id);
-
-  int getIndexPublicacionByEmpresa(int id) => this
-      .publicacionesByempresa
-      .indexWhere((publicacion) => publicacion.id == id);
-
   void getPublicacionesByempresa(int id) async {
     this.loading = true;
     this.publicacionesByempresa =
-        await repositorio.getPublicacionesByEmpresa(id);
+        await repositorio.getPublicacionesByEmpresa(id, idUsuario);
     this.loading = false;
     update(['empresa']);
   }
+
+  void megustaAction(int idPublicacion, int index) async {
+    final usuario = Get.find<HomeController>().usuario;
+    await repositorio.meGustaPublicacion(idPublicacion, idUsuario);
+    this._addusuarioLike(usuario, index);
+    update(['publicaciones']);
+  }
+
+  void noMegustaAction(int idPublicacion, int index) async {
+   await repositorio.noMeGustaPublicacion(idPublicacion, idUsuario);
+    this._removeUsuarioLike(index);
+    update(['publicaciones']);
+  }
+
+  void comentarPublicacion(int idPublicacion, int index) async {
+    final usuario = Get.find<HomeController>().usuario;
+    if (comentarioController.text.isNotEmpty) {
+       await repositorio.comentarPublicacion(
+          comentarioController.text, idPublicacion, idUsuario);
+      this._addComentario(usuario, index);
+      comentarioController?.clear();
+      update(['comentarios','publicaciones']);
+    }
+  }
+
+  void _addComentario(Usuario usuario, int index) {
+    final comentarios = publicaciones[index].numeroComentarios;
+    final comentario = Comentario(
+                       comentario : comentarioController.text,
+                       fecha      : DateTime.now().toString(),
+                       usuario    : Usuario(
+                                    nombre : usuario.nombre,
+                                    imagen : usuario.imagen,
+                                    id     : usuario.id
+                       )
+    );
+    publicaciones[index].comentarios.insert(0,comentario);
+    publicaciones[index] = publicaciones[index].copyWith(numeroComentarios: (comentarios+1));
+  }
+
+  void _addusuarioLike(Usuario usuario, int index) {
+    final likes = publicaciones[index].likes;
+    publicaciones[index] =
+        publicaciones[index].copyWith(megusta: true, likes: (likes + 1));
+    publicaciones[index].usuariosLike.add(LikePublicacion(
+        fecha: DateTime.now().toString(),
+        usuario: Usuario(
+            id: usuario.id, imagen: usuario.imagen, nombre: usuario.nombre)));
+  }
+
+  void _removeUsuarioLike(int index) {
+    final likes = publicaciones[index].likes;
+    publicaciones[index] =
+        publicaciones[index].copyWith(megusta: false, likes: (likes - 1));
+    publicaciones[index].usuariosLike.removeAt(publicaciones[index]
+        .usuariosLike
+        .indexWhere((like) => like.usuario.id == idUsuario));
+  }
+
+  void addPublicacion(Publicacion publicacion){
+    this.publicaciones.insert(0, publicacion);
+    update(['publicaciones']);
+  }
+
+
 }

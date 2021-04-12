@@ -1,27 +1,157 @@
+import 'dart:io';
+
+import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
+import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
+import 'package:comproacacias/src/componetes/home/models/response.model.dart';
+import 'package:comproacacias/src/componetes/home/models/update.model.dart';
+import 'package:comproacacias/src/componetes/home/models/youtubeVideo.model.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
+import 'package:comproacacias/src/plugins/compress.image.dart';
+import 'package:comproacacias/src/plugins/image_piker.dart';
+import 'package:comproacacias/src/plugins/notificationPush.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:comproacacias/src/plugins/google_sing_in.dart';
 
 class HomeController extends GetxController {
-  
+  final HomeRepocitorio repositorio;
+  final String urlImagenes;
+  HomeController({this.repositorio, this.urlImagenes});
   AnimationController controller;
   int page = 0;
-  String urlImegenes = 'http://localhost:8000/imagenes';
+  Usuario usuario;
+  File image;
+  List<YouTubeVideo> videos = [];
+  ImageCaptureAvatar imageCapture = ImageCaptureAvatar();
+  TextEditingController searchControllerHome = TextEditingController();
+  List<Empresa> empresas = [];
+  List<Empresa> topEmpresas = [];
+  PushNotification pushNotification = Get.find<PushNotification>();
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    this._inicialPushNotificacitions();
+    this.getvideos();
+    this.getTopEmpresas();
+    
+
+    if (this.usuario.isNullOrBlank) {
+      this.usuario = await repositorio.getUsuario();
+      this.registroActividad();
+      this.updateUsuario(usuario);
+      this._verificarTokenPush();
+    }
   }
 
- void selectPage(int page) {
+  @override
+  void onClose() {
+    this.searchControllerHome.dispose();
+    this.pushNotification.onMesaje().cancel();
+    super.onClose();
+  }
+
+  void updateUsuario(Usuario usuario) {
+    this.usuario = usuario;
+    update();
+  }
+
+  void selectPage(int page) {
     this.page = page;
     switch (page) {
-      case  0  : controller?.reset();
-                 controller?.forward();
-                 break;
-      case  2  : print('object');
-                 break;
+      case 0:
+        controller?.reset();
+        controller?.forward();
+        break;
       default:
     }
     update(['bottomBar']);
+  }
+
+  void logOut() async {
+    await GetStorage().erase();
+    await googleLogOut();
+    await FacebookAuth.instance.logOut();
+    Get.offAllNamed('/');
+  }
+
+  void getImage(String tipo) async {
+    final imageCap = await imageCapture.getImage(tipo);
+    if (!imageCap.isNullOrBlank) {
+      image = await CompressImagePlugin.getImage(
+          imageCap, imageCapture.height, imageCapture.width);
+      final response = await repositorio.updateImagen(image.path, usuario.id);
+      if (response is HomeResponse) {
+        Get.back();
+        imageCap.delete();
+        update();
+      }
+      if (response is ErrorResponse) this._errorResponse(response.getError);
+    }
+    if (imageCap.isNullOrBlank) {
+      Get.back();
+      Get.snackbar('No seleciono ninguna Imagen', '',
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  void _errorResponse(String error) {
+    if (error == 'Connection refused')
+      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
+  }
+
+  void registroActividad() async {
+    final response = await repositorio.registroActividad(this.usuario.id);
+    if (response is ErrorResponse) print(response.error);
+    if (response is HomeResponse) print(response);
+  }
+
+  void getvideos() async {
+    final response = await repositorio.getVideosYoutbe();
+    if (response is ErrorResponse) print(response.error);
+    if (response is HomeResponse) {
+      this.videos = response.videos;
+      update(['videos']);
+    }
+  }
+
+  void resetInput() => this.searchControllerHome.text = '';
+
+  void getTopEmpresas() async {
+    final response = await repositorio.getTop10Empresas();
+    if (response is ResponseEmpresa) {
+      topEmpresas = response.empresas;
+      update(['top']);
+    }
+  }
+
+  void _verificarTokenPush() async {
+    final token = await this.pushNotification.getToken();
+    final response =
+        await this.repositorio.registrarTokenPush(token, usuario.id);
+    if (response is ResponseHome) {
+      response.registrarToken
+          ? print('El token ya esta registrado')
+          : print('se registro el token');
+    }
+    if(response is ErrorResponse)
+     this._errorResponse(response.getError);
+  }
+
+  void _inicialPushNotificacitions() async {
+    pushNotification.init();
+    this.pushNotification.onMesaje().onData((data) {
+      print('onmessage');
+    });
+    this.pushNotification.onOpenApp().onData((data) {
+      print('onClickmessage');
+    });
+    this.pushNotification.onBackground().then((data) {
+      if (data != null) Get.snackbar('Hola', 'message');
+    });
   }
 }

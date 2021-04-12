@@ -1,6 +1,9 @@
+
 import 'package:animate_do/animate_do.dart';
+import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/views/iniciar.sesion.view.dart';
 import 'package:comproacacias/src/componetes/login/views/registro.view.dart';
+import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
@@ -12,15 +15,15 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return GetBuilder(
+    return GetBuilder<LoginController>(
            builder: (state){
               return Scaffold(
                      body:  Stack(
                              children: <Widget>[
                                    _cortina(),
                                    _logo(),
-                                   _button('Iniciar Sesion'),
-                                   _button('Registrase'),
+                                   _button('Iniciar Sesión'),
+                                   _button('Registrate'),
                                  
                              ],
                              ),
@@ -52,9 +55,9 @@ Widget _logo() {
 
  Widget _button(String titulo) {
    return Align(
-          alignment : titulo == 'Iniciar Sesion'
+          alignment : titulo == 'Iniciar Sesión'
                       ?
-                      Alignment(0.0,0.5)
+                      Alignment(0.0,0.45)
                       :
                       Alignment(0.0,0.7),
           child     : SizedBox(
@@ -62,7 +65,7 @@ Widget _logo() {
                       child: RaisedButton(
                         textColor : Colors.white,
                         padding   : EdgeInsets.all(18),
-                        color     : titulo == 'Iniciar Sesion'
+                        color     : titulo == 'Iniciar Sesión'
                                     ?
                                     Get.theme.accentColor
                                     :
@@ -70,13 +73,51 @@ Widget _logo() {
                         child     : Text(titulo,style: TextStyle(fontSize: 20)),
                         shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                         onPressed :(){
-                          titulo == 'Iniciar Sesion' 
+                          titulo == 'Iniciar Sesión' 
                           ? Get.to(LoginFormPage())
-                          : Get.to(RegistroFormPage());
+                          : dialogOptionRegistro();
+                          //: Get.to(RegistroFormPage());
                         },
         
      ),
           ),
+   );
+ }
+ void dialogOptionRegistro(){
+   Get.defaultDialog(
+   backgroundColor: Colors.grey[200],
+   radius: 10,
+   title: 'Regístrate',
+   content: Padding(
+     padding: const EdgeInsets.all(8.0),
+     child: Column(   
+            children: [
+                SizedBox(
+                width: Get.width * 0.7,
+                child: RaisedButton(
+                       textColor : Colors.white,
+                       padding   : EdgeInsets.all(18),
+                       color     : Get.theme.primaryColor,
+                       child     : Text('Ingresa tus Datos',style: TextStyle(fontSize: 20)),
+                       shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                       onPressed :()=>Get.to(RegistroFormPage()),
+                )
+                ),
+                SizedBox(height: 20),
+                ButtonSocialSing(
+                logo    : 'assets/imagenes/google_icon.jpg',
+                texto   : 'Regístrate con Google',
+                onPress : ()=>Get.find<LoginController>().singInGoogleUsuario(),
+                ),
+                SizedBox(height: 20),
+                ButtonSocialSing(
+                logo    : 'assets/imagenes/facebook_icon.png',
+                texto   : 'Regístrate con Facebook',
+                onPress : ()=>Get.find<LoginController>().singInFacebookUsuario()
+                )
+              ],
+     ),
+   )
    );
  }
 }

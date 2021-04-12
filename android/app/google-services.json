@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1010834568889",
+    "project_id": "yocomprocacias",
+    "storage_bucket": "yocomprocacias.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010834568889:android:cad8cda7ace77bb2538d68",
+        "android_client_info": {
+          "package_name": "dosve.alcaldia.yocomproacacias"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010834568889-bsfog6ni7kmja35qav8mu6rkak4iu4ru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr5PdPiUKxluaNNYpQG63DdrFFc4gAxSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010834568889-bsfog6ni7kmja35qav8mu6rkak4iu4ru.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1010834568889-ale04t7139arjvlf041av2jj4abmns5h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dosve.alcaldia.yocomproacacias"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

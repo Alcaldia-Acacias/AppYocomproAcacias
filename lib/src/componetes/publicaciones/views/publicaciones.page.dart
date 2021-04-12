@@ -1,9 +1,10 @@
 
 
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
+import 'package:comproacacias/src/componetes/publicaciones/views/addpublicacion.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 
 class PublicacionesPage extends StatelessWidget {
   const PublicacionesPage({Key key}) : super(key: key);
@@ -16,6 +17,7 @@ class PublicacionesPage extends StatelessWidget {
            builder: (state)
                     => Scaffold(
                        body: SafeArea(
+                             top: false,
                              child: RefreshIndicator(
                                     onRefresh: ()  async  => state.getNewPublicaciones(),
                                     child    : CustomScrollView(
@@ -28,6 +30,15 @@ class PublicacionesPage extends StatelessWidget {
                          ),
                        ),
                        backgroundColor: Colors.grey[300],
+                       floatingActionButton: FloatingActionButton.extended(
+                                             heroTag: 'publicar',
+                                             label : Text('Publicar',
+                                                     style: TextStyle(color: Colors.white),
+                                             ),
+                                             icon  : Icon(Icons.edit,color:Colors.white),
+                                             backgroundColor: Get.theme.primaryColor,
+                                             onPressed: ()=>Get.to(FormPublicacionPage()), 
+                                             )
                     )
  );
     

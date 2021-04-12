@@ -17,19 +17,22 @@ class CategoriaCard extends StatelessWidget {
                   ),
                   margin    : EdgeInsets.all(8),
                   child     : Padding(
-                              padding : EdgeInsets.all(20.0),
+                              padding : EdgeInsets.all(15.0),
                               child   : Column(
                                         children: <Widget>[
                                                   Text(titulo,
                                                   style:TextStyle(
                                                         fontWeight : FontWeight.bold,
-                                                        fontSize   : 16
+                                                        fontSize   : 13
                                                   )
                                                   ),
                                                   SizedBox(height: 10),
-                                                  Image.asset(imagen,
-                                                  height : 100,
-                                                  width  : 100,
+                                                  FittedBox(
+                                                    fit: BoxFit.contain,
+                                                    child: Image.asset(imagen,
+                                                    height : 60,
+                                                    width  : 60,
+                                                    ),
                                                   )
                                         ],
                               ),

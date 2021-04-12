@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
+import 'package:comproacacias/src/componetes/login/views/sendEmail.view.dart';
+import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,7 +15,7 @@ class LoginFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
            appBar: AppBar( 
-                   title   : Text('Iniciar Sesion'),
+                   title   : Text('Iniciar Sesión'),
                    elevation: 0,
 
            ),
@@ -28,7 +32,7 @@ class LoginFormPage extends StatelessWidget {
                                                          children: <Widget>[
                                                             Image.asset(
                                                            'assets/imagenes/logo.png',
-                                                            height : 270,
+                                                            height : Get.width * 0.5,
                                                             width  : 270,
                                                             ),
                                                             InputForm(
@@ -48,10 +52,19 @@ class LoginFormPage extends StatelessWidget {
                                                             obscure           : true,
                                                             lastInput         : true,
                                                             requerido         : true,
-                                                            onEditingComplete : ()=> _submit(state.formKeyLogin),
+                                                            onEditingComplete : ()=> _submit(),
                                                             ),
-                                                            _buttonSubmit(state.formKeyLogin)
-
+                                                            _olvidoPassword(),
+                                                            _buttonSubmit(state.loading),
+                                                            SizedBox(height: 20),
+                                                            Text('O ingresa con'),
+                                                               SizedBox(height: 5),
+                                                            Row(
+                                                            children: [
+                                                              Expanded(child: _googleSingInButton() ),
+                                                              Expanded(child: _facebookSingInButton() ),
+                                                            ],
+                                                            )
                                                          ],
                                              ) 
                                              ),
@@ -63,19 +76,49 @@ class LoginFormPage extends StatelessWidget {
            ),
     );
   }
-  _buttonSubmit(GlobalKey<FormState> formKey) {
+  _buttonSubmit(bool loading) {
     return   MaterialButton(
              textColor : Colors.white,
              padding   : EdgeInsets.all(15),
              child     : Text('Ingresar'),
              color     : Get.theme.accentColor,
              minWidth  : double.maxFinite,
-             onPressed :() => _submit(formKey)
+             onPressed :() => _submit()
     );
   }
-   _submit(GlobalKey<FormState> formKey) {
-    if(formKey.currentState.validate())
+   _submit() {
        Get.find<LoginController>().submitFormLogin();
   }
+
+  _olvidoPassword() {
+    return GestureDetector(
+           child: Container(
+                  height    : 30,
+                  alignment : Alignment.topRight,
+                  child     :Text('Olvido su contraseña ?',style:TextStyle(color: Colors.blue))
+                  ),
+           onTap: ()=>Get.to(SendEmailPage())
+    );
+  }
+
+ Widget _googleSingInButton() {
+    return ButtonSocialSing(
+           logo    : 'assets/imagenes/google_icon.jpg',
+           texto   : 'Google',
+           fontSize: 11.5,
+           onPress : ()=>Get.find<LoginController>().loginGoogle(),
+    );
+ }
+
+ Widget _facebookSingInButton() {
+    return ButtonSocialSing(
+           logo    : 'assets/imagenes/facebook_icon.png',
+           texto   : 'Facebook',
+           fontSize: 10.1,
+           onPress : ()=>Get.find<LoginController>().loginFacebook(),
+    );
+  }
+   
+   
 
 }

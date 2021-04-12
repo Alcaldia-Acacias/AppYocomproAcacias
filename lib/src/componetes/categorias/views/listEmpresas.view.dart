@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/categorias/controllers/categorias.controllers.dart';
-import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/views/perfil.empresa.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 
@@ -14,7 +14,7 @@ class ListEmpresasByCategoria extends StatelessWidget {
   final String imageAppbar;
 
    ListEmpresasByCategoria({Key key,this.imageAppbar}) : super(key: key);
-  final String urlImagenLogo = Get.find<HomeController>().urlImegenes;
+  final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
      return GetBuilder<CategoriasController>(
@@ -22,6 +22,7 @@ class ListEmpresasByCategoria extends StatelessWidget {
             builder: (state){
                 return Scaffold(
                        body: SafeArea(
+                             top: false,
                              child: RefreshIndicator(
                                     onRefresh: () async {},
                                     child    : CustomScrollView(
@@ -29,9 +30,9 @@ class ListEmpresasByCategoria extends StatelessWidget {
                                                  slivers: <Widget>[
                                                            imageAppbar != null
                                                            ?
-                                                           appBarSliver(state.categoria,imageAppbar)
+                                                           appBarSliver(state,imageAppbar)
                                                            :
-                                                           appBarSliver(state.categoria),
+                                                           appBarSliver(state),
                                                            listEmpresas(state)
                                                  ],
                                     ),
@@ -63,9 +64,9 @@ class ListEmpresasByCategoria extends StatelessWidget {
            ),
    );
   }
-  Widget  appBarSliver(String categoria,[String image]) {
+  Widget  appBarSliver(CategoriasController state,[String image]) {
   return  SliverAppBar(
-          title           : Text(categoria,style:TextStyle(color: Colors.black)),
+          title           : _buscar(state),
           floating        : true,
           brightness      : Brightness.light,
           backgroundColor : Colors.white,
@@ -77,8 +78,8 @@ class ListEmpresasByCategoria extends StatelessWidget {
                               child   : Image.asset(image,fit: BoxFit.contain),
                             )
                            ]
-                           : null
-          //pinned: true,
+                           : null,
+          pinned: true,
           );
 }
 
@@ -116,6 +117,37 @@ class ListEmpresasByCategoria extends StatelessWidget {
           Get.to(PerfilEmpresaPage(empresa: empresa));
         },
    );
+  }
+
+  _buscar(CategoriasController state) {
+    return TextField(
+           controller : state.buscarController,
+           style      : TextStyle(fontSize: 18),
+           textInputAction: TextInputAction.done,
+           onEditingComplete: () => state.buscarEmpresasPorCategoria(),
+           decoration : InputDecoration(
+                        contentPadding : EdgeInsets.symmetric(vertical: 5,horizontal: 30),
+                        hintText       : "Buscar",
+                        filled         :  true,
+                        fillColor      : Colors.white,
+                        hintStyle      : TextStyle(fontSize: 15),
+                        focusedBorder  : OutlineInputBorder(
+                                         borderSide   : BorderSide(color: Colors.grey[500]),
+                                         borderRadius : BorderRadius.circular(20)
+                        ),    
+                        enabledBorder  : OutlineInputBorder(
+                                         borderSide   : BorderSide(color: Colors.grey[500]),
+                                         borderRadius : BorderRadius.circular(20)
+                        ), 
+                        suffixIcon     : IconButton(
+                                         icon      : Icon(Icons.search),
+                                         color     : Get.theme.primaryColor,
+                                         iconSize  : 30,
+                                         onPressed : () => state.buscarEmpresasPorCategoria()
+                        )
+           ),
+                               
+    );
   }
 }
 
