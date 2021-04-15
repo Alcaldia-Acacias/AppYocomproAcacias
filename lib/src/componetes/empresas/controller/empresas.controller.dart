@@ -3,6 +3,7 @@ import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.d
 import 'package:comproacacias/src/componetes/empresas/models/calificacion.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
@@ -16,10 +17,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 class EmpresasController extends GetxController {
+  
   List<Empresa> empresas;
   final EmpresaRepositorio repositorio;
-  final Empresa empresa;
-  EmpresasController({this.repositorio, this.empresas, this.empresa});
+  Empresa empresa;
+  EmpresasController({this.repositorio, this.empresas});
 
   PageController pageViewController;
   String titulo = "Información";
@@ -42,16 +44,21 @@ class EmpresasController extends GetxController {
   FocusNode nombreProductoFoco = FocusNode();
   FocusNode descripcionProductoFoco = FocusNode();
   FocusNode precioProductoFoco = FocusNode();
-
+  HomeController homeController = Get.find<HomeController>();
   final box = GetStorage();
   final formKey = GlobalKey<FormState>();
   final uid = Uuid();
 
   @override
   void onInit() async {
-    final idUsuario = Get.find<HomeController>().usuario.id;
-    if(empresa != null)
-    this.registrarVisita(empresa.id, idUsuario);
+    var idUsuario;
+    if (homeController.anonimo == EnumLogin.anonimo ||
+        homeController.anonimo == EnumLogin.notLogin)
+      idUsuario = 0;
+    else
+      idUsuario = homeController.usuario.id;
+    if (empresa != null && idUsuario != 0)
+      this.registrarVisita(empresa.id, idUsuario);
     pageViewController = PageController(initialPage: 0);
     super.onInit();
   }
@@ -97,6 +104,10 @@ class EmpresasController extends GetxController {
           duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 
+  void selectEmpresa(Empresa empresa){
+    this.empresa = empresa;
+    update(['empresa']);
+  }
   void gotoMap(String latitud, String longitud) async {
     final url =
         "https://www.google.com/maps/search/?api=1&query=${empresa.latitud},${empresa.longitud}";

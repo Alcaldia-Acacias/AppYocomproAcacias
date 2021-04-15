@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/empresas/views/perfil.empresa.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
+import 'package:comproacacias/src/componetes/publicaciones/views/addpublicacion.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/imagenes.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +18,7 @@ class PublicacionCard extends StatelessWidget {
   PublicacionCard({Key key,this.publicacion,this.index,this.onlyEmpresa = false}) : super(key: key);
   
   final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
+  final EnumLogin anonimo = Get.find<HomeController>().anonimo;
   
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,7 @@ class PublicacionCard extends StatelessWidget {
                        if(publicacion.imagenes.length > 1)
                        _imagenes(publicacion.imagenes),
                        _contenido(publicacion.texto),
+                       if(anonimo == EnumLogin.usuario)
                        _footer(publicacion,index),
                      ],
            ),
@@ -64,14 +68,13 @@ Widget _header(Publicacion publicacion) {
                                    style:TextStyle(fontWeight:FontWeight.bold)
                                   ),
                   subtitle       : Text(publicacion.formatFecha()),
-                  trailing       : !
-                  publicacion.editar
-                                   ? null
-                                   :
+                  trailing       : publicacion.editar || anonimo == EnumLogin.usuario
+                                   ? 
                                    IconButton(
                                    icon: Icon(Icons.more_horiz), 
-                                   onPressed:  (){}//()=> _dialogoEditPublicacion(publicacion)
+                                   onPressed:  ()=> _dialogoEditPublicacion(publicacion)
                                    )
+                                   : null
            ),
            onTap: ()=> Get.to(
              PerfilEmpresaPage(
@@ -375,7 +378,7 @@ Widget _imagenes(List<String> imagenes) {
                       ListTile(
                       leading : Icon(Icons.edit,color: Get.theme.accentColor),
                       title   : Text('Editar Publicacion'),
-                      onTap   : (){},
+                      onTap   : ()=>Get.to(FormPublicacionPage(update: true,publicacion: publicacion)),
                       ),
                       ListTile(
                       leading : Icon(Icons.delete,color: Get.theme.primaryColor),

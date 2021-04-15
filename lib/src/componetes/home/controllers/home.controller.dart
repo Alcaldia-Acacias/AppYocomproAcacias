@@ -1,16 +1,22 @@
 import 'dart:io';
 
+import 'package:comproacacias/src/componetes/categorias/controllers/categorias.controllers.dart';
+import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/home/models/response.model.dart';
 import 'package:comproacacias/src/componetes/home/models/update.model.dart';
 import 'package:comproacacias/src/componetes/home/models/youtubeVideo.model.dart';
+import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
+import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:comproacacias/src/plugins/notificationPush.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
@@ -18,9 +24,12 @@ import 'package:get_storage/get_storage.dart';
 import 'package:comproacacias/src/plugins/google_sing_in.dart';
 
 class HomeController extends GetxController {
+
   final HomeRepocitorio repositorio;
   final String urlImagenes;
-  HomeController({this.repositorio, this.urlImagenes});
+  EnumLogin anonimo;
+
+  HomeController({this.repositorio, this.urlImagenes, this.anonimo});
   AnimationController controller;
   int page = 0;
   Usuario usuario;
@@ -35,16 +44,25 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    this._inicialPushNotificacitions();
-    this.getvideos();
-    this.getTopEmpresas();
-    
 
-    if (this.usuario.isNullOrBlank) {
-      this.usuario = await repositorio.getUsuario();
-      this.registroActividad();
-      this.updateUsuario(usuario);
-      this._verificarTokenPush();
+    if (anonimo == EnumLogin.notLogin) {
+      await this.getTokenAnonimo();
+      this.getvideos();
+      this.getTopEmpresas();
+    }
+
+    if (anonimo == EnumLogin.anonimo) {
+      this.getvideos();
+      this.getTopEmpresas();
+    }
+
+    if (anonimo == EnumLogin.usuario) {
+      this.getvideos();
+      this.getTopEmpresas();
+      if (this.usuario.isNullOrBlank) {
+        await this.getUsuario();
+        await  this.loginInitOption();
+      }
     }
   }
 
@@ -60,15 +78,15 @@ class HomeController extends GetxController {
     update();
   }
 
+  Future getUsuario() async {
+    this.anonimo = EnumLogin.usuario;
+    this.usuario = await repositorio.getUsuario();
+    update();
+  }
+
   void selectPage(int page) {
+    print(page);
     this.page = page;
-    switch (page) {
-      case 0:
-        controller?.reset();
-        controller?.forward();
-        break;
-      default:
-    }
     update(['bottomBar']);
   }
 
@@ -76,7 +94,10 @@ class HomeController extends GetxController {
     await GetStorage().erase();
     await googleLogOut();
     await FacebookAuth.instance.logOut();
-    Get.offAllNamed('/');
+    //await Get.find<PublicacionesController>().dispose();
+    this.anonimo = EnumLogin.notLogin;
+    this.selectPage(0);
+    update();
   }
 
   void getImage(String tipo) async {
@@ -110,6 +131,19 @@ class HomeController extends GetxController {
     if (response is HomeResponse) print(response);
   }
 
+  Future getTokenAnonimo() async {
+    final response = await repositorio.getTokenAnonimo();
+    if (response is ResponseHome) {
+      final box = GetStorage();
+      await box.write('token', response.tokenAnonimo);
+      Get.find<Dio>().options.headers = {
+        HttpHeaders.authorizationHeader: 'Bearer ${response.tokenAnonimo}'
+      };
+
+    }
+    if (response is ErrorResponse) print(response.error);
+  }
+
   void getvideos() async {
     final response = await repositorio.getVideosYoutbe();
     if (response is ErrorResponse) print(response.error);
@@ -128,7 +162,15 @@ class HomeController extends GetxController {
       update(['top']);
     }
   }
+ 
+  Future loginInitOption() async {
+     await this.getUsuario();
+     this._inicialPushNotificacitions();
+     this.registroActividad();
+     this._verificarTokenPush();
+  }
 
+  
   void _verificarTokenPush() async {
     final token = await this.pushNotification.getToken();
     final response =
@@ -138,8 +180,7 @@ class HomeController extends GetxController {
           ? print('El token ya esta registrado')
           : print('se registro el token');
     }
-    if(response is ErrorResponse)
-     this._errorResponse(response.getError);
+    if (response is ErrorResponse) this._errorResponse(response.getError);
   }
 
   void _inicialPushNotificacitions() async {

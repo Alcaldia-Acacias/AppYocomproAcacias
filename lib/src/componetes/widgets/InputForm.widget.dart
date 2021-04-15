@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class InputForm extends StatelessWidget {
 
   final TextEditingController controller;
-  final String placeholder,textHelp;
+  final String placeholder,textHelp,initialValue;
   final IconData leftIcon,rightIcon;
   final FocusNode foco;
   final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon,textarea,autofocus,textcenter;
@@ -16,6 +16,7 @@ class InputForm extends StatelessWidget {
   InputForm({
   Key key, 
   this.placeholder,
+  this.initialValue,
   this.textHelp,
   this.leftIcon, 
   this.rightIcon, 
@@ -41,6 +42,7 @@ class InputForm extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 20),
       child: TextFormField(
              key               : ValueKey(placeholder),
+             initialValue      : initialValue,
              textAlign         : textcenter ? TextAlign.center : TextAlign.start,
              readOnly          : readOnly,
              focusNode         : foco,

@@ -2,7 +2,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:comproacacias/src/componetes/categorias/views/categorias.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/empresas/views/search.view.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/home/views/Inicio.view.dart';
+import 'package:comproacacias/src/componetes/login/views/login.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/views/publicaciones.page.dart';
 import 'package:comproacacias/src/componetes/usuario/views/menu.view.dart';
 import 'package:comproacacias/src/componetes/usuario/views/menu2.view.dart';
@@ -16,54 +18,47 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorBuscar = Theme.of(context).primaryColor;
-    // ----- old Home ------
-    return Scaffold(
-           body  : GetBuilder<HomeController>(
-                   id: 'bottomBar',
-                   builder: (state){
-                     return IndexedStack(
-                            index: state.page,
-                            children: <Widget>[
-                             InicioPage(),
-                             /* Stack(
-                             children: <Widget>[
-                                   _cortina(),
-                                   _logo(),
-                                   _search(colorBuscar),
-                                 
-                             ],
-                             ), */
-                             PublicacionesPage(),
-                             CategoriasPage(),
-                             //MenuUsarioExt()
-                             MenuUsuarioPage(),
-                             
-                            ],
-                     );
-                   }
-                   ),
-           bottomNavigationBar: CurvedNavigationBar(
-                                index: 0,
-                                height: 65.0,
-                                items: <Widget>[
-                                        Icon(Icons.home, size: 30,color: Colors.white),
-                                        Icon(Icons.message, size: 30,color: Colors.white),
-                                        Icon(Icons.list, size: 30,color: Colors.white),
-                                        //Icon(Icons.star, size: 30,color: Colors.white),
-                                        Icon(Icons.more_vert, size: 30,color: Colors.white),
-                                ],
-                                color: Theme.of(context).primaryColor,
-                                buttonBackgroundColor: Theme.of(context).primaryColor,
-                                backgroundColor: Colors.transparent,
-                                onTap: (index)=>Get.find<HomeController>().selectPage(index),
-
-        ),
-           
-    );
+    return GetBuilder<HomeController>(
+        id: 'bottomBar',
+        builder: (state) {
+          return Scaffold(
+            body: IndexedStack(
+              index: state.page,
+              children: <Widget>[
+                if(state.anonimo == EnumLogin.anonimo || state.anonimo == EnumLogin.notLogin) 
+                LoginPage(),
+                InicioPage(),
+                PublicacionesPage(),
+                CategoriasPage(),
+                if(state.anonimo == EnumLogin.usuario)
+                MenuUsuarioPage(),
+              ],
+            ),
+            bottomNavigationBar: CurvedNavigationBar(
+              index  : state.page,
+              height : 65.0,
+              items  : <Widget>[
+                if(state.anonimo == EnumLogin.anonimo || state.anonimo == EnumLogin.notLogin) 
+                Icon(Icons.login_outlined, size: 30, color: Colors.white),
+                Icon(Icons.home, size: 30, color: Colors.white),
+                Icon(Icons.message, size: 30, color: Colors.white),
+                Icon(Icons.list, size: 30, color: Colors.white),
+                if(state.anonimo == EnumLogin.usuario)
+                Icon(Icons.more_vert, size: 30, color: Colors.white),
+                
+              ],
+              color: Theme.of(context).primaryColor,
+              buttonBackgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Colors.transparent,
+              onTap: (index) {
+                 state.selectPage(index);
+              }
+            ),
+          );
+        });
   }
 
-Widget  _cortina() {
+/* Widget  _cortina() {
   return  SlideInDown(
           //manualTrigger: true,
           //controller   : (controller)=> Get.find<HomeController>().controller = controller,
@@ -71,9 +66,9 @@ Widget  _cortina() {
           duration     : Duration(milliseconds: 300),
           child        : Image.asset('assets/imagenes/cortina.png')
           );
-}
+} */
 
-Widget _logo() {
+/* Widget _logo() {
   return  Container(
           margin    : EdgeInsets.only(top:40),
           alignment : Alignment(0.0,-0.8),
@@ -83,9 +78,9 @@ Widget _logo() {
                       height : 250,
           ),
   );
-}
+} */
 
-Widget _search(Color color) {
+/* Widget _search(Color color) {
   return GestureDetector(
          child: Align(
                 alignment: Alignment(0.0,0.5),
@@ -111,7 +106,6 @@ Widget _search(Color color) {
          ),
          onTap: () => Get.to(SearchPage())
   );
-}
-
+} */
 
 }

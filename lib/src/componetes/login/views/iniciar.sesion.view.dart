@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
+import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/views/sendEmail.view.dart';
 import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';

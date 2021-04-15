@@ -1,6 +1,8 @@
 import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
 import 'package:comproacacias/src/componetes/categorias/models/categoria.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,16 +10,27 @@ class CategoriasController extends GetxController {
   final CategoriaRepositorio repositorio;
 
   CategoriasController({this.repositorio});
+  HomeController homeController = Get.find<HomeController>();
   String categoria = '';
   List<Empresa> empresas = [];
   List<Categoria> categorias = [];
   ScrollController controllerListEmpresas;
   TextEditingController buscarController = TextEditingController();
   int _pagina = 0;
+  bool anonimo = false;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    if (homeController.anonimo == EnumLogin.notLogin) {
+      await homeController.getTokenAnonimo();
+      this.anonimo = true;
+    }
+
+    if (homeController.anonimo == EnumLogin.anonimo) {
+      this.anonimo = true;
+    }
+
     this.getCategorias();
   }
 
@@ -63,7 +76,7 @@ class CategoriasController extends GetxController {
       this._pagina = 0;
       this.getEmpresasByCategoria(categoria);
     } else {
-      final reponse =  await repositorio.buscarEmpresasPorCategoria(
+      final reponse = await repositorio.buscarEmpresasPorCategoria(
           categoria, buscarController.text);
       this.empresas = reponse;
       update(['categorias']);

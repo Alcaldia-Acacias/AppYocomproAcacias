@@ -98,7 +98,8 @@ Widget  _header(HomeController state) {
                                               onPressed: ()=>DialogImagePicker.openDialog(
                                                              titulo: 'Escoge tu Imagen',
                                                              onTapArchivo : () => state.getImage('archivo'),
-                                                             onTapCamera  : () => state.getImage('camara')
+                                                             onTapCamera  : () => state.getImage('camara'),
+                                                             complete     : () => print('se cerro el dialogo')
                                               )                           
                                      )
                                      )

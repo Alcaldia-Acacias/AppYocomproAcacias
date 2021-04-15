@@ -11,11 +11,16 @@ class PublicacionesRepositorio {
   Dio _dio = Get.find<Dio>();
 
   Future<List<Publicacion>> getPublicaciones(int page, int id) async {
-    final response = await _dio
-        .get('/publicaciones', queryParameters: {'page': page, 'id': id});
-    return response.data
-        .map<Publicacion>((publicacion) => Publicacion.toJson(publicacion))
-        .toList();
+    try {
+      final response = await _dio
+          .get('/publicaciones', queryParameters: {'page': page, 'id': id});
+      return response.data
+          .map<Publicacion>((publicacion) => Publicacion.toJson(publicacion))
+          .toList();
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   Future meGustaPublicacion(int idPublicacion, int idUsuario) async {
@@ -65,8 +70,7 @@ class PublicacionesRepositorio {
     imagenes.forEach((imagen) async {
       data.files.add(MapEntry(
         imagen.nombre,
-        MultipartFile.fromFileSync(imagen.file.path,
-            filename: imagen.nombre),
+        MultipartFile.fromFileSync(imagen.file.path, filename: imagen.nombre),
       ));
     });
 

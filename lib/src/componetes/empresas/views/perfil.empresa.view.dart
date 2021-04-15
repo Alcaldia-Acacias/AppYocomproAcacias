@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/empresas/controller/empresas.controller.dart';
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/views/formproduct.view.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificacion.widget.dart';
@@ -30,7 +31,7 @@ class PerfilEmpresaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<EmpresasController>(
            id: 'empresa',
-           init: EmpresasController(repositorio: EmpresaRepositorio(),empresa: empresa),
+           //init: EmpresasController(repositorio: EmpresaRepositorio(),empresa: this.empresa),
            builder: (state){
              
              return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -42,7 +43,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                    backgroundColor: Colors.grey[300],
                                    body : Column(
                                           children: <Widget>[
-                                                    _header(),
+                                                    _header(state),
                                                     SizedBox(height:30),
                                                     _titulo(state.titulo,state.pagina),
                                                     Expanded(
@@ -76,7 +77,7 @@ class PerfilEmpresaPage extends StatelessWidget {
 
   }
 
- Widget _header() {
+ Widget _header(EmpresasController state) {
      return  SizedBox(
              height : 260,
              width  : Get.width,
@@ -122,7 +123,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                 alignment: Alignment(0.0,0.05),
                                 child: CalificacionWidget()
                                 ),*/
-                                if(!propia)
+                                if(!propia && state.homeController.anonimo == EnumLogin.usuario)
                                 Align(
                                 alignment: Alignment(0.92,1),
                                 child: RawChip(

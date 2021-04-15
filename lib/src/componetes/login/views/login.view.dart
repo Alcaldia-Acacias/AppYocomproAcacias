@@ -1,6 +1,7 @@
 
 import 'package:animate_do/animate_do.dart';
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
+import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/views/iniciar.sesion.view.dart';
 import 'package:comproacacias/src/componetes/login/views/registro.view.dart';
 import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
@@ -16,6 +17,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return GetBuilder<LoginController>(
+           init: LoginController(repositorio: LoginRepositorio()),
            builder: (state){
               return Scaffold(
                      body:  Stack(

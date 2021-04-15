@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/models/login_user.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
@@ -51,6 +52,7 @@ class LoginController extends GetxController {
   bool loading = false;
   bool codigo = false;
   LoginUsuario _usuario;
+  HomeController homeController = Get.find<HomeController>();
 
   void submitFormLogin() async {
     if (formKeyLogin.currentState.validate()) {
@@ -159,7 +161,7 @@ class LoginController extends GetxController {
     }
   }
 
-  // metodos privados
+  
 
   void _loginError(String error) async {
     Get.back();
@@ -183,12 +185,14 @@ class LoginController extends GetxController {
     Get.find<Dio>().options.headers = {
       HttpHeaders.authorizationHeader: 'Bearer ${box.read('token')}'
     };
-    Get.offAllNamed('/home');
+    await homeController.loginInitOption();
+    homeController.selectPage(1);
+    Get.back();
   }
 
   void _openDialog() {
     Get.dialog(AlertDialogLoading(titulo: 'Iniciando'),
-        barrierDismissible: false);
+        barrierDismissible: false).whenComplete(() => Get.back());
   }
 
   void _loading() {

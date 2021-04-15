@@ -100,7 +100,9 @@ final String urlImagenes = Get.find<HomeController>().urlImagenes;
               onPressed: ()=>DialogImagePicker.openDialog(
                              titulo       : 'Escoge la imagen',
                              onTapArchivo : ()=>state.getImage('archivo'),
-                             onTapCamera  : ()=>state.getImage('camara')
+                             onTapCamera  : ()=>state.getImage('camara'), 
+                             complete     : (){},
+                             
               )
               ) 
              ],

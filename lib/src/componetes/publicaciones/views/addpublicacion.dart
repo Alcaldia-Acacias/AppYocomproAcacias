@@ -3,6 +3,7 @@ import 'package:comproacacias/src/componetes/publicaciones/controllers/formPubli
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
+import 'package:comproacacias/src/componetes/widgets/dialogAlert.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,14 +12,14 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 class FormPublicacionPage extends StatelessWidget {
   final bool update;
   final Publicacion publicacion;
-  FormPublicacionPage({Key key,this.update,this.publicacion}) : super(key: key);
+  FormPublicacionPage({Key key,this.update = false,this.publicacion}) : super(key: key);
   final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
            child: GetBuilder<FormPublicacionesController>(
                   id: 'formulario_publicaciones',
-                  init: FormPublicacionesController(repositorio: PublicacionesRepositorio()),
+                  init: FormPublicacionesController(repositorio: PublicacionesRepositorio(),publicacion: publicacion,updatePublicacion: update),
                   builder: (state) {
                     return Scaffold(
                                appBar: AppBar(
@@ -36,7 +37,7 @@ class FormPublicacionPage extends StatelessWidget {
                                                               placeholder : 'Escribe Tu publicación',
                                                               controller  : state.publicacionController,
                                                               textarea    : true,
-                                                              requerido   : true,  
+                                                              requerido   : true, 
                                                               ),
                                                               _escojerEmpresa(state),
                                                               SizedBox(height: 10),
@@ -52,7 +53,15 @@ class FormPublicacionPage extends StatelessWidget {
                                                      backgroundColor : Get.theme.primaryColor,
                                                      icon            : Icon(Icons.add,color: Colors.white),
                                                      label           : Text('Publicar',style:TextStyle(color: Colors.white)),
-                                                     onPressed       : ()=>state.addPublicacion()
+                                                     onPressed       : (){
+                                                       if(state.formKey.currentState.validate() && 
+                                                          state.imagenes.length > 0 && 
+                                                          state.empresa.id > 0){
+                                                          this._loadingDialog();
+                                                          state.addPublicacion();
+                                                       }
+                                                       else Get.snackbar('Error', 'Faltan datos o imagenes');
+                                                     }
                                                      ),
                             );
                   }
@@ -66,7 +75,7 @@ Widget _escojerEmpresa(FormPublicacionesController state) {
          leading : Icon(Icons.business),
          // ignore: can_be_null_after_null_aware
          title   : Text('${state.empresa?.nombre.isNull ? 'Selecione una empresa' : state.empresa.nombre}'),
-         onTap   : ()=>_dialogEmpresas(state),
+         onTap   : update  ? null : ()=>_dialogEmpresas(state),
   );
 }
 
@@ -110,7 +119,7 @@ Widget _imagenes(FormPublicacionesController state) {
          spacing: 2,
          runSpacing: 2,
          children: [
-             if(state.imagenes.length < 5)
+             if(state.imagenes.length < 5 || state.imagenesUpdate.length < 5)
                GestureDetector(
                child: Container(
                       height : 100,
@@ -128,6 +137,7 @@ Widget _imagenes(FormPublicacionesController state) {
                           }
                ),
                ),
+              if(!update)
               ...state.imagenes.asMap()
                                .entries
                                .map((imagen) => GestureDetector(
@@ -147,9 +157,39 @@ Widget _imagenes(FormPublicacionesController state) {
                                                                           Get.snackbar('Error', 'No seleciono una imagen');  
                                                            }
                                                 ),
-                               ) 
-              )
+                               )
+               
+              ),
+              if(update)
+              ...state.imagenesUpdate.asMap()
+                                     .entries
+                                     .map((imagen) => GestureDetector(
+                                                      child: FadeInImage(
+                                                             height : 100,
+                                                             width  : Get.width *0.29,
+                                                             fit    : BoxFit.cover,
+                                                             placeholder: AssetImage('assets/imagenes/load_image.gif'), 
+                                                             image: NetworkImage('${Get.find<HomeController>().urlImagenes}/galeria/${imagen.value}')
+                                                      ),
+                                                      onTap: ()=>DialogImagePicker.openDialog(
+                                                                 titulo       : 'Cambia la Imagen',
+                                                                 onTapArchivo : ()=>state.getImage('archivo',true,imagen.key),
+                                                                 onTapCamera  : ()=>state.getImage('camara',true,imagen.key),
+                                                                 complete     : (){
+                                                                                if(state.status == PublicacionState.notImage)
+                                                                                Get.snackbar('Error', 'No seleciono una imagen');  
+                                                                 }
+                                                      ),
+                                      )
+                                     
+                                     )
          ]
   );
+}
+_loadingDialog(){
+   Get.dialog(
+      AlertDialogLoading(titulo: 'Publicando...'),
+      barrierDismissible: false
+    ).whenComplete(() => Get.back());
 }
 }

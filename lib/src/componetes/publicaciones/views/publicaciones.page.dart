@@ -1,5 +1,6 @@
 
 
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/views/addpublicacion.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.widget.dart';
@@ -13,6 +14,7 @@ class PublicacionesPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return GetBuilder<PublicacionesController>(
+           //init: PublicacionesController(repositorio: PublicacionesRepositorio()),
            id: 'publicaciones',
            builder: (state)
                     => Scaffold(
@@ -30,15 +32,17 @@ class PublicacionesPage extends StatelessWidget {
                          ),
                        ),
                        backgroundColor: Colors.grey[300],
-                       floatingActionButton: FloatingActionButton.extended(
-                                             heroTag: 'publicar',
-                                             label : Text('Publicar',
-                                                     style: TextStyle(color: Colors.white),
-                                             ),
-                                             icon  : Icon(Icons.edit,color:Colors.white),
-                                             backgroundColor: Get.theme.primaryColor,
-                                             onPressed: ()=>Get.to(FormPublicacionPage()), 
+                       floatingActionButton: state.homeController.anonimo == EnumLogin.usuario
+                                             ?
+                                             FloatingActionButton.extended(
+                                             heroTag         : 'publicar',
+                                             icon            : Icon(Icons.edit,color:Colors.white),
+                                             backgroundColor : Get.theme.primaryColor,
+                                             label           : Text('Publicar',style: TextStyle(color: Colors.white)),
+                                             onPressed       : ()=>Get.to(FormPublicacionPage()), 
+                                             
                                              )
+                                             : null
                     )
  );
     

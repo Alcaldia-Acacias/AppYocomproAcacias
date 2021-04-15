@@ -6,7 +6,7 @@ class DialogImagePicker {
       {String titulo,
       Function onTapArchivo,
       Function onTapCamera,
-      Function complete}) {
+      @required Function complete}) {
     Get.defaultDialog(
         title: titulo,
         content: Container(

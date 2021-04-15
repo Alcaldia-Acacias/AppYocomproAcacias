@@ -163,6 +163,10 @@ class InicioPage extends StatelessWidget {
                                                                        }
                                                       )
                                          ),
+                                         onEditingComplete: (){
+                                            Get.to(SearchPage(initSearch: state.searchControllerHome.text));
+                                            state.resetInput();
+                                         },
                                
                                ),
            ),

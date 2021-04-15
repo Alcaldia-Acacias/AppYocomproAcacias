@@ -60,6 +60,7 @@ class HomeRepocitorio {
       ).toList();
       return HomeResponse(videos: videos);
     } catch (error) {
+      print(error);
       return ErrorResponse(error);
     }
   }
@@ -83,6 +84,14 @@ class HomeRepocitorio {
     try {
       final response = await _dio.put('/usuarios/add/token',data: data);
       return ResponseHome(registrarToken: response.data);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
+  Future<ResponseModel> getTokenAnonimo() async {
+    try {
+      final response = await _dio.get('/usuarios/anonimo/token');
+      return ResponseHome(tokenAnonimo: response.data);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }

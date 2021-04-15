@@ -4,6 +4,7 @@ import 'package:comproacacias/src/componetes/categorias/controllers/categorias.c
 import 'package:comproacacias/src/componetes/categorias/data/categorias.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/home/views/home.vista.dart';
 import 'package:comproacacias/src/componetes/login/views/offline.page.dart';
 import 'package:comproacacias/src/plugins/inyection.dependeci.dart';
@@ -25,13 +26,13 @@ import 'package:intl/intl.dart';
 //import 'package:intl/locale.dart';
 
  main() async {
- WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Intl.defaultLocale = 'es_ES';
   await GetStorage.init();
   await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
-  Dependecias.init('http://localhost:8000');
+  Dependecias.init('http://192.168.2.101:8000');
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final  internetCheck = await verificationInternet();
   runApp(MyApp(internetCheck:internetCheck));
@@ -41,7 +42,6 @@ import 'package:intl/intl.dart';
 class MyApp extends StatelessWidget {
   final internetCheck;
   final box  = GetStorage();
-  PublicacionesRepositorio repoPublicaciones = PublicacionesRepositorio();
   MyApp({Key key, this.internetCheck}) : super(key: key);
   @override
   Widget build(BuildContext context)  {
@@ -80,9 +80,14 @@ class MyApp extends StatelessWidget {
         name: '/home', 
         page: ()=>HomePage(),
         bindings: [
-          BindingsBuilder.put( () => HomeController(repositorio:HomeRepocitorio(),urlImagenes: 'http://localhost:8000/imagenes')),
-          BindingsBuilder.put( () => PublicacionesController(repositorio:PublicacionesRepositorio())),
-          BindingsBuilder.put( () => CategoriasController(repositorio:CategoriaRepositorio()))
+          BindingsBuilder.put( () => HomeController(
+                                     anonimo     :  _getEnumLogin(),
+                                     repositorio :  HomeRepocitorio(),
+                                     urlImagenes : 'http://192.168.2.101:8000/imagenes'
+                                     )
+          ),
+          BindingsBuilder.put(() => PublicacionesController(repositorio: PublicacionesRepositorio())),
+          BindingsBuilder.put(() => CategoriasController(repositorio:CategoriaRepositorio())),
         ]
         ),
         GetPage(
@@ -103,14 +108,27 @@ class MyApp extends StatelessWidget {
     if(box.hasData('token') && internetCheck)
        return '/home';
     if(box.hasData('token') && !internetCheck)
-       return '/home';
+       return '/offline';
     if(!box.hasData('token') && !internetCheck)
-       return '/';   
+       return '/offline';   
     if(!box.hasData('token') && internetCheck)
-       return '/';
+       return '/home';
     return '/';
   }
+  
+  EnumLogin _getEnumLogin(){
+  if(box.hasData('token') &&  box.hasData('id'))
+   return EnumLogin.usuario;
+  if(!box.hasData('token') && !box.hasData('id'))
+   return EnumLogin.notLogin;
+  if(box.hasData('token') &&  !box.hasData('id'))
+   return EnumLogin.anonimo;
+  return EnumLogin.notLogin;
+  }
+  
+
 }
+
 
  Future<bool> verificationInternet() async {
      try {
@@ -122,4 +140,4 @@ class MyApp extends StatelessWidget {
     return false;
   }
   return false;
-  }
+}

@@ -115,8 +115,8 @@ Widget _texto(HelpController state) {
   _correo(HelpController state) {
     return ListTile(
     leading        : Icon(Icons.mail),
-    title          : Text('empresariostic@acacias.com'), 
-    onTap          : ()=>state.gotoMail('empresariostic@acacias.com'), 
+    title          : Text('empresariostic@acacias.gov.co'), 
+    onTap          : ()=>state.gotoMail('empresariostic@acacias.gov.co'), 
     );
   }
 }

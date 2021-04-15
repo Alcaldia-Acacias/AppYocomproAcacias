@@ -235,7 +235,8 @@ class FormEmpresaPage extends StatelessWidget {
                       onPressed : ()=>DialogImagePicker.openDialog(
                                       titulo: 'Escoge tu Logo',
                                       onTapArchivo: ()=> state.getImage('archivo'),
-                                      onTapCamera : ()=> state.getImage('camara')
+                                      onTapCamera : ()=> state.getImage('camara'),
+                                      complete    : ()=> print('se cerro el dialogo')
                       ) 
                 )
              ]        

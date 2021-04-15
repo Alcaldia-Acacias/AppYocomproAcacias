@@ -1,4 +1,5 @@
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/cometario.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/like.model.dart';
@@ -6,7 +7,6 @@ import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.mo
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
 import 'package:get_storage/get_storage.dart';
 
 class PublicacionesController extends GetxController {
@@ -14,6 +14,7 @@ class PublicacionesController extends GetxController {
 
   PublicacionesController({this.repositorio});
 
+  HomeController homeController = Get.find<HomeController>();
   List<Publicacion> publicaciones = [];
   List<Publicacion> publicacionesByempresa = [];
   ScrollController controller;
@@ -22,16 +23,37 @@ class PublicacionesController extends GetxController {
   bool loading = false;
   final box = GetStorage();
   int idUsuario;
+  bool anonimo = false;
   @override
   void onInit() async {
+    if (homeController.anonimo == EnumLogin.notLogin) {
+      await homeController.getTokenAnonimo();
+      this.anonimo = true;
+    }
+
+    if (homeController.anonimo == EnumLogin.anonimo) {
+      this.anonimo = true;
+    }
     super.onInit();
-    idUsuario = box.read('id');
+    idUsuario = box.read('id') ?? 1;
     controller = controller = ScrollController(initialScrollOffset: 0);
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent)
         this.getPublicaciones();
     });
     this.getPublicaciones();
+  }
+
+  @override
+  void onClose() {
+    if (controller.hasClients || controller.hasClients == null)
+      controller?.dispose();
+    super.onClose();
+  }
+
+  Future dispose() async {
+    if (controller.hasClients || controller.hasClients == null)
+      controller?.dispose();
   }
 
   void getPublicaciones() async {
@@ -45,12 +67,6 @@ class PublicacionesController extends GetxController {
   void getNewPublicaciones() async {
     publicaciones = await repositorio.getPublicaciones(0, idUsuario);
     update(['publicaciones']);
-  }
-
-  @override
-  void onClose() {
-    controller?.dispose();
-    super.onClose();
   }
 
   void _animationFinalController() {
@@ -74,7 +90,7 @@ class PublicacionesController extends GetxController {
   }
 
   void noMegustaAction(int idPublicacion, int index) async {
-   await repositorio.noMeGustaPublicacion(idPublicacion, idUsuario);
+    await repositorio.noMeGustaPublicacion(idPublicacion, idUsuario);
     this._removeUsuarioLike(index);
     update(['publicaciones']);
   }
@@ -82,27 +98,24 @@ class PublicacionesController extends GetxController {
   void comentarPublicacion(int idPublicacion, int index) async {
     final usuario = Get.find<HomeController>().usuario;
     if (comentarioController.text.isNotEmpty) {
-       await repositorio.comentarPublicacion(
+      await repositorio.comentarPublicacion(
           comentarioController.text, idPublicacion, idUsuario);
       this._addComentario(usuario, index);
       comentarioController?.clear();
-      update(['comentarios','publicaciones']);
+      update(['comentarios', 'publicaciones']);
     }
   }
 
   void _addComentario(Usuario usuario, int index) {
     final comentarios = publicaciones[index].numeroComentarios;
     final comentario = Comentario(
-                       comentario : comentarioController.text,
-                       fecha      : DateTime.now().toString(),
-                       usuario    : Usuario(
-                                    nombre : usuario.nombre,
-                                    imagen : usuario.imagen,
-                                    id     : usuario.id
-                       )
-    );
-    publicaciones[index].comentarios.insert(0,comentario);
-    publicaciones[index] = publicaciones[index].copyWith(numeroComentarios: (comentarios+1));
+        comentario: comentarioController.text,
+        fecha: DateTime.now().toString(),
+        usuario: Usuario(
+            nombre: usuario.nombre, imagen: usuario.imagen, id: usuario.id));
+    publicaciones[index].comentarios.insert(0, comentario);
+    publicaciones[index] =
+        publicaciones[index].copyWith(numeroComentarios: (comentarios + 1));
   }
 
   void _addusuarioLike(Usuario usuario, int index) {
@@ -124,10 +137,8 @@ class PublicacionesController extends GetxController {
         .indexWhere((like) => like.usuario.id == idUsuario));
   }
 
-  void addPublicacion(Publicacion publicacion){
+  void addPublicacion(Publicacion publicacion) {
     this.publicaciones.insert(0, publicacion);
     update(['publicaciones']);
   }
-
-
 }

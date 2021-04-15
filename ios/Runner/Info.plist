@@ -47,15 +47,15 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Habilite los permisos para aceder ala camara.</string>
+	<string>Yo compro acacias necesita tu permiso para usar la camara,y utlizar tus tomas para fines informativos.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Habilite los permisos de ubicacion en segundo plano.</string>
+	<string>Yo compro acacias necesita tu permiso para saber tu ubicacion, para fines informativos y localizar tu comercio.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Habilite los permisos de ubicacion.</string>
+	<string>Yo compro acacias necesita tu permiso para saber tu ubicacion, para fines informativos y localizar tu comercio.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Habilite los permisos de microfono.</string>
+	<string>Yo compro acacias necesita tu permiso para usar la camara,y utlizar tus videos para fines informativos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Habilite los permisos de acceso a archivos.</string>
+	<string>Yo compro acacias necesita tu permiso para acceder a tus archivo de imagene,y utlizarlos para fines informativos.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
