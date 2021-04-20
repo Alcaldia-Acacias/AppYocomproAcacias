@@ -68,7 +68,7 @@ Widget _header(Publicacion publicacion) {
                                    style:TextStyle(fontWeight:FontWeight.bold)
                                   ),
                   subtitle       : Text(publicacion.formatFecha()),
-                  trailing       : publicacion.editar || anonimo == EnumLogin.usuario
+                  trailing       : publicacion.editar && anonimo == EnumLogin.usuario
                                    ? 
                                    IconButton(
                                    icon: Icon(Icons.more_horiz), 
@@ -378,30 +378,37 @@ Widget _imagenes(List<String> imagenes) {
                       ListTile(
                       leading : Icon(Icons.edit,color: Get.theme.accentColor),
                       title   : Text('Editar Publicacion'),
-                      onTap   : ()=>Get.to(FormPublicacionPage(update: true,publicacion: publicacion)),
+                      onTap   : ()=>Get.to(FormPublicacionPage(update: true,publicacion: publicacion,index:index)),
                       ),
                       ListTile(
                       leading : Icon(Icons.delete,color: Get.theme.primaryColor),
                       title   : Text('Eliminar Publicacion'),
-                      onTap   : ()=>_deleteAlertPublicacion(),
+                      onTap   : ()=>_deleteAlertPublicacion(index,publicacion.id),
                       )
                      ],
            ),
            )
     );
   }
- _deleteAlertPublicacion(){
+ _deleteAlertPublicacion(int index, int id){
    Get.back();
    return Get.defaultDialog(
           title   : 'Eliminar Publicacion',
-          content : Text('¿Desea Eliminar la Publicacion?'),
+          content : GetBuilder<PublicacionesController>(
+                    id: 'delete_dialogo',
+                    builder: (state) {
+                      if(state.deleteDialogo)
+                         return CircularProgressIndicator();
+                      else return  Text('¿Desea Eliminar la Publicacion?');
+                    }
+                    ),
           actions : <Widget>[
                     RaisedButton.icon(
                     color     : Get.theme.primaryColor,
                     icon      : Icon(Icons.delete), 
                     label     : Text('Eliminar'),
                     textColor : Colors.white,
-                    onPressed : (){}
+                    onPressed : () => Get.find<PublicacionesController>().deletePublicacion(index, id)
                     ),
                     RaisedButton(
                     child     : Text('cancelar'),

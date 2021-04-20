@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
@@ -116,6 +118,13 @@ Widget _logo() {
                 logo    : 'assets/imagenes/facebook_icon.png',
                 texto   : 'Regístrate con Facebook',
                 onPress : ()=>Get.find<LoginController>().singInFacebookUsuario()
+                ),
+                SizedBox(height: 20),
+                if(Platform.isIOS)
+                ButtonSocialSing(
+                logo    : 'assets/imagenes/apple.png',
+                texto   : 'Regístrate con Apple',
+                onPress : ()=>Get.find<LoginController>().singInAppleUsuario()
                 )
               ],
      ),

@@ -31,7 +31,7 @@ class PerfilEmpresaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<EmpresasController>(
            id: 'empresa',
-           //init: EmpresasController(repositorio: EmpresaRepositorio(),empresa: this.empresa),
+           init: EmpresasController(repositorio: EmpresaRepositorio(),empresa: this.empresa),
            builder: (state){
              
              return AnnotatedRegion<SystemUiOverlayStyle>(

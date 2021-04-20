@@ -4,6 +4,8 @@ import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.re
 import 'package:comproacacias/src/componetes/publicaciones/models/cometario.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/like.model.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.model.dart';
+import 'package:comproacacias/src/componetes/publicaciones/models/reponse.model.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +22,8 @@ class PublicacionesController extends GetxController {
   ScrollController controller;
   int _pagina = 0;
   TextEditingController comentarioController = TextEditingController();
-  bool loading = false;
+  bool loading = false, deleteDialogo = false;
+
   final box = GetStorage();
   int idUsuario;
   bool anonimo = false;
@@ -141,4 +144,22 @@ class PublicacionesController extends GetxController {
     this.publicaciones.insert(0, publicacion);
     update(['publicaciones']);
   }
+  void updatePublicacion(Publicacion publicacion, int index) {
+    this.publicaciones[index] = this.publicaciones[index].copyWith(texto: publicacion.texto,imagenes: publicacion.imagenes);
+    Get.back();
+    update(['publicaciones']);
+  }
+
+  void deletePublicacion(int index, int idPublicacion) async {
+   final response = await this.repositorio.deletePublicacion(idPublicacion);
+   this.deleteDialogo = true;
+   update(['delete_dialogo']);
+   if(response is ResponsePublicacion && response.delete) {
+    this.publicaciones.removeAt(index);
+    this.deleteDialogo = false;
+    Get.back();
+    update(['publicaciones','delete_publicacion']);
+  }
+  if(response is ErrorResponse)print(response.error);
+}
 }

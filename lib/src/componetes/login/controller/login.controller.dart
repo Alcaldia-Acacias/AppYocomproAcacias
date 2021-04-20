@@ -8,6 +8,7 @@ import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogAlert.widget.dart';
+import 'package:comproacacias/src/plugins/apple_sing.dart';
 import 'package:comproacacias/src/plugins/facebook_sing.dart';
 import 'package:comproacacias/src/plugins/google_sing_in.dart';
 import 'package:dio/dio.dart';
@@ -93,6 +94,14 @@ class LoginController extends GetxController {
       this._verificarResponse(response);
     }
   }
+  void singInAppleUsuario() async {
+    Get.back();
+    _usuario = await _appleAsingUsuario();
+    if (!_usuario.isNullOrBlank) {
+      final response = await repositorio.addUsuario(_usuario.toMap());
+      this._verificarResponse(response);
+    }
+  }
 
   void loginGoogle() async {
     this._openDialog();
@@ -110,6 +119,15 @@ class LoginController extends GetxController {
      if (!_usuario.isNullOrBlank) {
       final response =
           await repositorio.login(_usuario.email, '', _usuario.facebookId);
+      this._verificarResponse(response);
+    }
+  }
+  void loginApple() async {
+    this._openDialog();
+    _usuario = await _appleAsingUsuario();
+     if (!_usuario.isNullOrBlank) {
+      final response =
+          await repositorio.login(_usuario.email, '', _usuario.appleId);
       this._verificarResponse(response);
     }
   }
@@ -246,6 +264,23 @@ class LoginController extends GetxController {
         usuario: userFacebook.email,
         administrador: false,
         facebookId: userFacebook.uid
+      );
+    } catch (error) {
+      Get.back();
+      Get.snackbar('Error', 'Ocurrio un error');
+      return null;
+    }
+  }
+  Future<LoginUsuario> _appleAsingUsuario() async {
+    try {
+      final UserCredential credential = await signInWithApple();
+      final userApple = credential.user;
+      return LoginUsuario(
+        imagen: '',
+        nombre: userApple.displayName,
+        usuario: userApple.email,
+        administrador: false,
+        appleId: userApple.uid
       );
     } catch (error) {
       Get.back();

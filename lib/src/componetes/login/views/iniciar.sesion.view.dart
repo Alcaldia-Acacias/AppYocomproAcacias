@@ -1,7 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
-import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/views/sendEmail.view.dart';
 import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
@@ -59,13 +59,16 @@ class LoginFormPage extends StatelessWidget {
                                                             _buttonSubmit(state.loading),
                                                             SizedBox(height: 20),
                                                             Text('O ingresa con'),
-                                                               SizedBox(height: 5),
+                                                            SizedBox(height: 5),
                                                             Row(
                                                             children: [
                                                               Expanded(child: _googleSingInButton() ),
                                                               Expanded(child: _facebookSingInButton() ),
+
                                                             ],
-                                                            )
+                                                            ),
+                                                            if(Platform.isIOS)
+                                                            _appleSingInButton(),
                                                          ],
                                              ) 
                                              ),
@@ -117,6 +120,15 @@ class LoginFormPage extends StatelessWidget {
            texto   : 'Facebook',
            fontSize: 10.1,
            onPress : ()=>Get.find<LoginController>().loginFacebook(),
+    );
+  }
+ Widget _appleSingInButton() {
+    return ButtonSocialSing(
+           logo    : 'assets/imagenes/apple.png',
+           texto   : 'Inicia Sesion con Apple',
+           fontSize: 14,
+           centerText: true,
+           onPress : ()=>Get.find<LoginController>().loginApple(),
     );
   }
    

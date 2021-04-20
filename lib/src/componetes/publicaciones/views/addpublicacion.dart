@@ -12,7 +12,8 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 class FormPublicacionPage extends StatelessWidget {
   final bool update;
   final Publicacion publicacion;
-  FormPublicacionPage({Key key,this.update = false,this.publicacion}) : super(key: key);
+  final int index;
+  FormPublicacionPage({Key key,this.update = false,this.publicacion,this.index}) : super(key: key);
   final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
@@ -52,13 +53,16 @@ class FormPublicacionPage extends StatelessWidget {
                                                      heroTag         : 'publicar',
                                                      backgroundColor : Get.theme.primaryColor,
                                                      icon            : Icon(Icons.add,color: Colors.white),
-                                                     label           : Text('Publicar',style:TextStyle(color: Colors.white)),
+                                                     label           : Text('${update ? 'Actualizar' : 'Publicar'}',style:TextStyle(color: Colors.white)),
                                                      onPressed       : (){
                                                        if(state.formKey.currentState.validate() && 
-                                                          state.imagenes.length > 0 && 
+                                                          (state.imagenes.length > 0 || state.imagenesUpdate.length > 0) && 
                                                           state.empresa.id > 0){
                                                           this._loadingDialog();
+                                                          if(!update)
                                                           state.addPublicacion();
+                                                          if(update)
+                                                          state.updatePublicaciones(index);
                                                        }
                                                        else Get.snackbar('Error', 'Faltan datos o imagenes');
                                                      }
@@ -119,7 +123,7 @@ Widget _imagenes(FormPublicacionesController state) {
          spacing: 2,
          runSpacing: 2,
          children: [
-             if(state.imagenes.length < 5 || state.imagenesUpdate.length < 5)
+             if(state.imagenes.length < 5 && state.imagenesUpdate.length < 5)
                GestureDetector(
                child: Container(
                       height : 100,
@@ -165,11 +169,13 @@ Widget _imagenes(FormPublicacionesController state) {
                                      .entries
                                      .map((imagen) => GestureDetector(
                                                       child: FadeInImage(
-                                                             height : 100,
-                                                             width  : Get.width *0.29,
-                                                             fit    : BoxFit.cover,
-                                                             placeholder: AssetImage('assets/imagenes/load_image.gif'), 
-                                                             image: NetworkImage('${Get.find<HomeController>().urlImagenes}/galeria/${imagen.value}')
+                                                             height      : 100,
+                                                             width       : Get.width *0.29,
+                                                             fit         : BoxFit.cover,
+                                                             placeholder : AssetImage('assets/imagenes/load_image.gif'), 
+                                                             image       : imagen.value.isaFile
+                                                                           ? FileImage(imagen.value.file)
+                                                                           : NetworkImage('$urlImagenLogo/galeria/${imagen.value.nombre}')
                                                       ),
                                                       onTap: ()=>DialogImagePicker.openDialog(
                                                                  titulo       : 'Cambia la Imagen',

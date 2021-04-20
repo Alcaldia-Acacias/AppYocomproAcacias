@@ -5,6 +5,7 @@ class LoginUsuario extends Usuario {
   final bool administrador;
   final String googleId;
   final String facebookId;
+  final String appleId;
 
   LoginUsuario( 
       {nombre,
@@ -14,7 +15,8 @@ class LoginUsuario extends Usuario {
       this.password,
       this.administrador,
       this.googleId,
-      this.facebookId
+      this.facebookId,
+      this.appleId
      })
       : super(nombre: nombre, email: usuario, cedula: cedula, imagen: imagen);
 
@@ -26,6 +28,7 @@ class LoginUsuario extends Usuario {
         "usuario": email,
         "administrador": administrador,
         "google_id": googleId ?? null,
-        "facebook_id": facebookId ?? null
+        "facebook_id": facebookId ?? null,
+        "apple_id": appleId ?? null
         };
 }

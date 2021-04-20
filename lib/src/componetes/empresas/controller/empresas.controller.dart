@@ -21,7 +21,7 @@ class EmpresasController extends GetxController {
   List<Empresa> empresas;
   final EmpresaRepositorio repositorio;
   Empresa empresa;
-  EmpresasController({this.repositorio, this.empresas});
+  EmpresasController({this.repositorio, this.empresas,this.empresa});
 
   PageController pageViewController;
   String titulo = "Información";
