@@ -117,7 +117,7 @@ Widget _footer(Publicacion publicacion, int index) {
                     labelStyle: TextStyle(color:publicacion.megusta ? Colors.pink[300] : Colors.grey[400]),
                     onPressed:()=>   publicacion.megusta 
                                      ? Get.find<PublicacionesController>().noMegustaAction(publicacion.id,index)
-                                     : Get.find<PublicacionesController>().megustaAction(publicacion.id,index),
+                                     : Get.find<PublicacionesController>().megustaAction(publicacion.id,index,publicacion.empresa.idUsuario),
                     avatar:Icon(
                            Icons.thumb_up,
                            color: publicacion.megusta ? Colors.pink[300] : Colors.grey[400]
@@ -224,7 +224,7 @@ Widget _textField() {
                                     suffixIcon     : IconButton(
                                                      icon: Icon(Icons.send), 
                                                      onPressed: (){
-                                                       state.comentarPublicacion(publicacion.id, index);
+                                                       state.comentarPublicacion(publicacion.id, index,publicacion.empresa.idUsuario);
                                                      }
                                                      ),
                                     contentPadding : EdgeInsets.all(10),

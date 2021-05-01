@@ -19,6 +19,16 @@ class EmpresaRepositorio {
         ?.toList();
   }
 
+  Future<ResponseModel> getEmpresaByid(int idEmpresa) async {
+   try {
+    final response = await this._dio.get('/empresas/id/$idEmpresa');
+    return ResponseEmpresa(empresa: Empresa.toJson(response.data));
+   } catch (error) {
+     return ErrorResponse(error);
+   }
+    
+  }
+
   Future<List<Calificacion>> getCalificacionesByEmpresa(int idEmpresa) async {
     final response = await this._dio.get('/calificaciones/empresa/$idEmpresa');
     return response.data
@@ -68,13 +78,14 @@ class EmpresaRepositorio {
   }
 
   Future<ResponseModel> calificarEmpresa(
-      int idUsuario, int idEmpresa, int extrellas,
+      int idUsuario, int idEmpresa, int extrellas,int idDestinatario,
       [String comentario]) async {
     final data = jsonEncode({
       "id_usuario": idUsuario,
       "id_empresa": idEmpresa,
-      "extrellas": extrellas,
-      "comentario": comentario
+      "extrellas" : extrellas,
+      "comentario": comentario,
+      "id_usuario_destinatario": idDestinatario
     });
     try {
       final response = await this._dio.post('/calificaciones/add', data: data);

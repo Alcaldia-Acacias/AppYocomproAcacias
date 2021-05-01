@@ -23,26 +23,44 @@ class PublicacionesRepositorio {
     }
   }
 
-  Future meGustaPublicacion(int idPublicacion, int idUsuario) async {
-    final data =
-        jsonEncode({'id_usuario': idUsuario, 'id_publicacion': idPublicacion});
+  Future<ResponseModel> getPublicacionById(int idPublicacion) async {
+    try {
+      final response = await _dio
+          .get('/publicaciones/$idPublicacion');
+      final publicacion =  Publicacion.toJson(response.data);
+      return  ResponsePublicacion(publicacion: publicacion);
+    } catch (error) {
+      return  ErrorResponse(error);
+    }
+  }
+
+  Future meGustaPublicacion(
+      int idPublicacion, int idUsuario, int idUsuarioDestinatario) async {
+    final data = jsonEncode({
+      'id_usuario': idUsuario,
+      'id_publicacion': idPublicacion,
+      "id_usuario_destinatario": idUsuarioDestinatario
+    });
     final response = await _dio.post('/likes/add', data: data);
     return response.data;
   }
 
   Future noMeGustaPublicacion(int idPublicacion, int idUsuario) async {
-    final data =
-        jsonEncode({'id_usuario': idUsuario, 'id_publicacion': idPublicacion});
+    final data = jsonEncode({
+      'id_usuario': idUsuario,
+      'id_publicacion': idPublicacion,
+    });
     final response = await _dio.delete('/likes/delete', data: data);
     return response.data;
   }
 
   Future comentarPublicacion(
-      String comentario, int idPublicacion, int idUsuario) async {
+      String comentario, int idPublicacion, int idUsuario,int idDestinatario) async {
     final data = jsonEncode({
       'comentario': comentario,
       'id_publicacion': idPublicacion,
-      'id_usuario': idUsuario
+      'id_usuario': idUsuario,
+      'id_usuario_destinatario':idDestinatario
     });
     try {
       final response = await _dio.post('/comentarios/add', data: data);
@@ -80,15 +98,16 @@ class PublicacionesRepositorio {
       return ErrorResponse(error);
     }
   }
+
   Future<ResponseModel> updatePublicacion(
       Publicacion publicacion, List<ImageFile> imagenes) async {
     FormData data = FormData.fromMap({...publicacion.toMap()});
     imagenes.forEach((imagen) async {
-      if(imagen.isaFile)
-      data.files.add(MapEntry(
-        imagen.nombre,
-        MultipartFile.fromFileSync(imagen.file.path, filename: imagen.nombre),
-      ));
+      if (imagen.isaFile)
+        data.files.add(MapEntry(
+          imagen.nombre,
+          MultipartFile.fromFileSync(imagen.file.path, filename: imagen.nombre),
+        ));
     });
     try {
       final response = await _dio.put('/publicaciones/update', data: data);
@@ -97,6 +116,7 @@ class PublicacionesRepositorio {
       return ErrorResponse(error);
     }
   }
+
   Future<ResponseModel> deletePublicacion(int idPublicacion) async {
     try {
       final response = await _dio.delete('/publicaciones/$idPublicacion');

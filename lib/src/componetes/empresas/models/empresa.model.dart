@@ -1,6 +1,6 @@
 
 class Empresa {
-  final int id,idCategoria;
+  final int id,idCategoria,idUsuario;
   final String 
       nombre,
       urlLogo,
@@ -18,6 +18,7 @@ class Empresa {
   Empresa(
      {this.id,
       this.idCategoria,
+      this.idUsuario,
       this.nombre,
       this.nit,
       this.urlLogo,
@@ -51,7 +52,8 @@ factory Empresa.toJson(Map<String,dynamic> json)
        longitud   : json['longitud']    ?? '',
        popular    : json['popular']     ?? 0,
        estado     : json['estado']      ?? false,
-       idCategoria: json['id_categoria']
+       idCategoria: json['id_categoria'],
+       idUsuario  : json['id_usuario']
     );
 Empresa copyWith({
    int id,

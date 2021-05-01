@@ -1,5 +1,6 @@
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
+import 'package:comproacacias/src/componetes/home/models/notificacion.model.dart';
 import 'package:comproacacias/src/componetes/home/models/response.model.dart';
 import 'package:comproacacias/src/componetes/home/models/youtubeVideo.model.dart';
 import 'package:comproacacias/src/componetes/home/models/update.model.dart';
@@ -12,7 +13,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:youtube_api/youtube_api.dart';
 
 class HomeRepocitorio {
-
   final _dio = Get.find<Dio>();
   final _box = GetStorage();
 
@@ -46,18 +46,28 @@ class HomeRepocitorio {
     }
   }
 
+  Future<ResponseModel> leerNotificacion(int idNotificacion) async {
+    try {
+      final response = await _dio.put('/notificaciones/leida',
+          data: {"id_notificacion": idNotificacion});
+      return ResponseHome(notificacionLeida: response.data['leida']);
+    } catch (error) {
+      return ErrorResponse(error);
+    }
+  }
+
   Future<ResponseModel> getVideosYoutbe() async {
     List<YT_API> result = [];
     final String tokenYoutube = 'AIzaSyAmvIdl1EiTbeVgC5ulmnIij47jES4kL7E';
     YoutubeAPI ytApi = YoutubeAPI(tokenYoutube);
     try {
-      result =  await ytApi.channel('UCAPP8tro1pewJCHQ2zCkcuA');
-       final videos =  result.map((video) => YouTubeVideo(
-                                    url       : video.url,
-                                    urlImagen : video.thumbnail['high']['url'],
-                                    fecha     : video.publishedAt
-                                  )
-      ).toList();
+      result = await ytApi.channel('UCAPP8tro1pewJCHQ2zCkcuA');
+      final videos = result
+          .map((video) => YouTubeVideo(
+              url: video.url,
+              urlImagen: video.thumbnail['high']['url'],
+              fecha: video.publishedAt))
+          .toList();
       return HomeResponse(videos: videos);
     } catch (error) {
       print(error);
@@ -76,22 +86,34 @@ class HomeRepocitorio {
       return ErrorResponse(error);
     }
   }
-  Future<ResponseModel> registrarTokenPush(token,idUsuario) async {
-    FormData data = FormData.fromMap({
-      "id_usuario": idUsuario,
-      "token": token
-    });
+
+  Future<ResponseModel> registrarTokenPush(token, idUsuario) async {
+    FormData data = FormData.fromMap({"id_usuario": idUsuario, "token": token});
     try {
-      final response = await _dio.put('/usuarios/add/token',data: data);
+      final response = await _dio.put('/usuarios/add/token', data: data);
       return ResponseHome(registrarToken: response.data);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }
   }
+
   Future<ResponseModel> getTokenAnonimo() async {
     try {
       final response = await _dio.get('/usuarios/anonimo/token');
       return ResponseHome(tokenAnonimo: response.data);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
+
+  Future<ResponseModel> getNotificaciones(int idUsuario) async {
+    try {
+      final response = await _dio.get('/notificaciones/$idUsuario');
+      final notificaciones = response.data
+          .map<Notificacion>(
+              (notificacion) => Notificacion.toJson(notificacion))
+          .toList();
+      return ResponseHome(notificaciones: notificaciones);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }

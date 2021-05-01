@@ -14,6 +14,7 @@ import 'package:comproacacias/src/componetes/login/views/login.view.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,15 +25,19 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 //import 'package:intl/locale.dart';
-
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
  main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Intl.defaultLocale = 'es_ES';
   await GetStorage.init();
   await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
-  Dependecias.init('http://localhost:8000');
+  Dependecias.init('http://192.168.2.105:8000');
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final  internetCheck = await verificationInternet();
   runApp(MyApp(internetCheck:internetCheck));
@@ -47,7 +52,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context)  {
   
     return GetMaterialApp(
-      localizationsDelegates: [
+      localizationsDelegates: [ 
        GlobalMaterialLocalizations.delegate,
        GlobalWidgetsLocalizations.delegate,
        GlobalCupertinoLocalizations.delegate,
@@ -66,7 +71,7 @@ class MyApp extends StatelessWidget {
                      color: Colors.white,
                      textTheme: TextTheme(
                                 // ignore: deprecated_member_use
-                                title: TextStyle(color:Colors.black,fontSize: 20)
+                                title: TextStyle(color:Colors.black,fontSize: 15)
                      ),
                      iconTheme:  IconThemeData(
                                  color: Colors.black
@@ -74,7 +79,7 @@ class MyApp extends StatelessWidget {
         )
       ),
      
-      initialRoute: _inititialRoute(),
+      initialRoute: '/home',
       getPages: [
         GetPage(
         name: '/home', 
@@ -83,7 +88,7 @@ class MyApp extends StatelessWidget {
           BindingsBuilder.put( () => HomeController(
                                      anonimo     :  _getEnumLogin(),
                                      repositorio :  HomeRepocitorio(),
-                                     urlImagenes : 'http://localhost:8000/imagenes'
+                                     urlImagenes : 'http://192.168.2.105:8000/imagenes'
                                      )
           ),
           BindingsBuilder.put(() => PublicacionesController(repositorio: PublicacionesRepositorio())),
@@ -125,13 +130,11 @@ class MyApp extends StatelessWidget {
    return EnumLogin.anonimo;
   return EnumLogin.notLogin;
   }
-  
-
 }
 
 
  Future<bool> verificationInternet() async {
-     try {
+    try {
     final result = await InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       return true;

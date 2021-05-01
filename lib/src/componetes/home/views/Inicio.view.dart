@@ -5,12 +5,15 @@ import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart'
 import 'package:comproacacias/src/componetes/empresas/views/perfil.empresa.view.dart';
 import 'package:comproacacias/src/componetes/empresas/views/search.view.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
+import 'package:comproacacias/src/componetes/home/views/notificaciones.view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:badges/badges.dart';
 class InicioPage extends StatelessWidget {
   InicioPage({Key key}) : super(key: key);
   final String urlImagenLogo = Get.find<HomeController>().urlImagenes;
+  final anonimo = Get.find<HomeController>().anonimo;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -20,29 +23,10 @@ class InicioPage extends StatelessWidget {
              appBar: AppBar(
                      leading : Image.asset('assets/imagenes/logo.png'),
                      title   : Text('Yo Compro Acacias',style: TextStyle(fontSize: 21,fontWeight: FontWeight.w400)),
-                     /* GetBuilder<HomeController>(
-                            builder: (state) => TextField(
-                            controller : state.searchControllerHome,
-                            style      : TextStyle(fontSize: 18),
-                            decoration : InputDecoration(
-                                         hintText   : "Buscar",
-                                         hintStyle  : TextStyle(fontSize: 15),
-                                         border     : InputBorder.none,
-                                         suffixIcon : IconButton(
-                                                      icon: Icon(Icons.search),
-                                                      color: Get.theme.primaryColor,
-                                                      onPressed: () {
-                                                        Get.to(SearchPage(initSearch: state.searchControllerHome.text));
-                                                        state.resetInput();x
-                                                      }
-                                         )
-                            ),
-                            //onChanged  : (value) => state.searchEmpresa()
-                     ),
-                     ), */
                      elevation: 0,
                      actions: [
-                       //_butonIconNotification(),
+                       if(anonimo == EnumLogin.usuario)
+                       _butonIconNotification(),
                        SizedBox(width: 15),
                      ],
              ),
@@ -81,10 +65,16 @@ class InicioPage extends StatelessWidget {
                       itemCount        : state.videos.length,
                       itemBuilder      : (_,int index) {
                                          return GestureDetector(
-                                                child: CachedNetworkImage(
-                                                         imageUrl    : '${state.videos[index].urlImagen}',
-                                                         placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
-                                                         errorWidget : (context, url, error) => Icon(Icons.error),
+                                                child: ClipRRect(
+                                                       borderRadius: BorderRadius.circular(20),
+                                                       child: CachedNetworkImage(
+                                                              fit         : BoxFit.cover,
+                                                              width       : 200,
+                                                              height      : 200,
+                                                              imageUrl    : '${state.videos[index].urlImagen}',
+                                                              placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
+                                                              errorWidget : (context, url, error) => Icon(Icons.error),
+                                                  ),
                                                 ),
                                                 onTap: ()=> state.videos[index].goToVideo(),
                                          );
@@ -112,17 +102,29 @@ class InicioPage extends StatelessWidget {
   }
 
   _butonIconNotification() {
-    return Badge(
-           badgeContent : Text('4',style: TextStyle(color: Colors.white,fontSize: 13)),
-           position     : BadgePosition(top: 3,start: 28),
-           badgeColor   : Colors.red,
-           child        : IconButton(
-                          icon      : Icon(Icons.notifications_outlined),
-                          color     : Colors.grey,
-                          iconSize  : 30,
-                          onPressed : (){}
-           ),
-    );
+   return  GetBuilder<HomeController>(
+           builder: (state){
+           if(state.notificacionesNoLeidas > 0)
+           return Badge(
+                  badgeContent : Text('${state.notificacionesNoLeidas}',
+                                      style: TextStyle(color: Colors.white,fontSize: 13)),
+                  position     : BadgePosition(top: 3,start: 28),
+                  badgeColor   : Colors.red,
+                  child        : IconButton(
+                                 icon      : Icon(Icons.notifications_outlined),
+                                 color     : Colors.grey,
+                                 iconSize  : 30,
+                                 onPressed : ()=>Get.to(NotificationPage())
+                  ),
+           );
+           return IconButton(
+                  icon      : Icon(Icons.notifications_outlined),
+                  color     : Colors.grey,
+                  iconSize  : 30,
+                  onPressed : ()=>Get.to(NotificationPage())
+           );
+           }
+           );
   }
 
   _titulo(String titulo) {

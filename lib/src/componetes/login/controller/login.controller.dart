@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
 import 'package:comproacacias/src/componetes/login/models/login_user.model.dart';
+import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/login/models/usuariologin.model.dart';
 import 'package:comproacacias/src/componetes/login/models/recovery.model.dart';
@@ -54,6 +55,8 @@ class LoginController extends GetxController {
   bool codigo = false;
   LoginUsuario _usuario;
   HomeController homeController = Get.find<HomeController>();
+  PublicacionesController publicacionesController =
+      Get.find<PublicacionesController>();
 
   void submitFormLogin() async {
     if (formKeyLogin.currentState.validate()) {
@@ -94,6 +97,7 @@ class LoginController extends GetxController {
       this._verificarResponse(response);
     }
   }
+
   void singInAppleUsuario() async {
     Get.back();
     _usuario = await _appleAsingUsuario();
@@ -116,16 +120,17 @@ class LoginController extends GetxController {
   void loginFacebook() async {
     this._openDialog();
     _usuario = await _facebookAsingUsuario();
-     if (!_usuario.isNullOrBlank) {
+    if (!_usuario.isNullOrBlank) {
       final response =
           await repositorio.login(_usuario.email, '', _usuario.facebookId);
       this._verificarResponse(response);
     }
   }
+
   void loginApple() async {
     this._openDialog();
     _usuario = await _appleAsingUsuario();
-     if (!_usuario.isNullOrBlank) {
+    if (!_usuario.isNullOrBlank) {
       final response =
           await repositorio.login(_usuario.email, '', _usuario.appleId);
       this._verificarResponse(response);
@@ -179,13 +184,13 @@ class LoginController extends GetxController {
     }
   }
 
-  
-
   void _loginError(String error) async {
-    Get.back();
-    if (error == 'DATA_INCORRECT')
+    if (error == 'DATA_INCORRECT') {
+      Get.back();
       Get.snackbar('Datos Incorrectos', 'Contraseña no valida');
+    }
     if (error == 'USER_NO_EXITS') {
+      Get.back();
       Get.snackbar('Usuario no existe', '');
       this.resetSendEmail();
     }
@@ -205,12 +210,14 @@ class LoginController extends GetxController {
     };
     await homeController.loginInitOption();
     homeController.selectPage(1);
+    publicacionesController.updateIdUsuario();
     Get.back();
   }
 
   void _openDialog() {
     Get.dialog(AlertDialogLoading(titulo: 'Iniciando'),
-        barrierDismissible: false).whenComplete(() => Get.back());
+            barrierDismissible: false)
+        .whenComplete(() => Get.back());
   }
 
   void _loading() {
@@ -259,29 +266,28 @@ class LoginController extends GetxController {
       final UserCredential credential = await signInWithFacebook();
       final userFacebook = credential.user;
       return LoginUsuario(
-        imagen: '',
-        nombre: userFacebook.displayName,
-        usuario: userFacebook.email,
-        administrador: false,
-        facebookId: userFacebook.uid
-      );
+          imagen: '',
+          nombre: userFacebook.displayName,
+          usuario: userFacebook.email,
+          administrador: false,
+          facebookId: userFacebook.uid);
     } catch (error) {
       Get.back();
       Get.snackbar('Error', 'Ocurrio un error');
       return null;
     }
   }
+
   Future<LoginUsuario> _appleAsingUsuario() async {
     try {
       final UserCredential credential = await signInWithApple();
       final userApple = credential.user;
       return LoginUsuario(
-        imagen: '',
-        nombre: userApple.displayName,
-        usuario: userApple.email,
-        administrador: false,
-        appleId: userApple.uid
-      );
+          imagen: '',
+          nombre: userApple.displayName,
+          usuario: userApple.email,
+          administrador: false,
+          appleId: userApple.uid);
     } catch (error) {
       Get.back();
       Get.snackbar('Error', 'Ocurrio un error');

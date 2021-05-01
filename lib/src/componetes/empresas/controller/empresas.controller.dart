@@ -224,7 +224,7 @@ class EmpresasController extends GetxController {
     final idUsuario = box.read('id');
     if (extrellas > 0) {
       final response = await this.repositorio.calificarEmpresa(
-          idUsuario, empresa.id, extrellas, calificarController.text);
+          idUsuario, empresa.id, extrellas,empresa.idUsuario,calificarController.text);
       if (response is ErrorResponse) this._error(response.getError);
       if (response is ResponseEmpresa) {
         Get.back();

@@ -85,9 +85,9 @@ class PublicacionesController extends GetxController {
     update(['empresa']);
   }
 
-  void megustaAction(int idPublicacion, int index) async {
+  void megustaAction(int idPublicacion, int index, int idUsuarioEmpresa) async {
     final usuario = Get.find<HomeController>().usuario;
-    await repositorio.meGustaPublicacion(idPublicacion, idUsuario);
+    await repositorio.meGustaPublicacion(idPublicacion, idUsuario,idUsuarioEmpresa);
     this._addusuarioLike(usuario, index);
     update(['publicaciones']);
   }
@@ -98,17 +98,22 @@ class PublicacionesController extends GetxController {
     update(['publicaciones']);
   }
 
-  void comentarPublicacion(int idPublicacion, int index) async {
+  void comentarPublicacion(int idPublicacion, int index, int idUsuarioEmpresa) async {
     final usuario = Get.find<HomeController>().usuario;
     if (comentarioController.text.isNotEmpty) {
       await repositorio.comentarPublicacion(
-          comentarioController.text, idPublicacion, idUsuario);
+          comentarioController.text, idPublicacion, idUsuario,idUsuarioEmpresa);
       this._addComentario(usuario, index);
       comentarioController?.clear();
       update(['comentarios', 'publicaciones']);
     }
   }
 
+ Future<void> updateIdUsuario() async {
+   this.idUsuario = await box.read('id');
+   this.getNewPublicaciones();
+   update(['publicaciones']);
+ }
   void _addComentario(Usuario usuario, int index) {
     final comentarios = publicaciones[index].numeroComentarios;
     final comentario = Comentario(
