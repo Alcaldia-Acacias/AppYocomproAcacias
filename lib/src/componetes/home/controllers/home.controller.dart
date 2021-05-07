@@ -213,6 +213,7 @@ class HomeController extends GetxController {
       this.notificacionesNoLeidas++;
       this.getNotificaciones();
     });
+    
     this.pushNotification.onOpenApp().onData((message) {
       final tipo = Notificacion.getTipo(message.data['tipo']);
       final  int idTipo = int.parse(message.data['id_tipo']);

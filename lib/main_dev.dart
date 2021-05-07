@@ -29,6 +29,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('Handling a background message ${message.messageId}');
 }
+
  main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -37,7 +38,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await GetStorage.init();
   await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
-  Dependecias.init('http://192.168.2.105:8000');
+  Dependecias.init('http://192.168.160.193:8000');
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final  internetCheck = await verificationInternet();
   runApp(MyApp(internetCheck:internetCheck));
@@ -88,7 +89,7 @@ class MyApp extends StatelessWidget {
           BindingsBuilder.put( () => HomeController(
                                      anonimo     :  _getEnumLogin(),
                                      repositorio :  HomeRepocitorio(),
-                                     urlImagenes : 'http://192.168.2.105:8000/imagenes'
+                                     urlImagenes : 'http://192.168.160.193:8000/imagenes'
                                      )
           ),
           BindingsBuilder.put(() => PublicacionesController(repositorio: PublicacionesRepositorio())),
@@ -122,13 +123,13 @@ class MyApp extends StatelessWidget {
   }
   
   EnumLogin _getEnumLogin(){
-  if(box.hasData('token') &&  box.hasData('id'))
-   return EnumLogin.usuario;
-  if(!box.hasData('token') && !box.hasData('id'))
-   return EnumLogin.notLogin;
-  if(box.hasData('token') &&  !box.hasData('id'))
-   return EnumLogin.anonimo;
-  return EnumLogin.notLogin;
+    if(box.hasData('token') &&  box.hasData('id'))
+     return EnumLogin.usuario;
+    if(!box.hasData('token') && !box.hasData('id'))
+     return EnumLogin.notLogin;
+    if(box.hasData('token') &&  !box.hasData('id'))
+     return EnumLogin.anonimo;
+    return EnumLogin.notLogin;
   }
 }
 
