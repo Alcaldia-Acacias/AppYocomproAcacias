@@ -41,7 +41,7 @@ class NotificationPage extends StatelessWidget {
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       if(notificaciones[i].tipo == NotificacionTipo.MEGUSTA)
-                                                         Text('le dio me gusta a tu publicacion'),
+                                                         Text('${notificaciones[i].usuario.nombre}'),
                                                       if(
                                                          notificaciones[i].tipo == NotificacionTipo.COMENTARIO || 
                                                          notificaciones[i].tipo == NotificacionTipo.MENSAJE
@@ -92,7 +92,7 @@ class NotificationPage extends StatelessWidget {
  Widget _getTitulo(Notificacion notificacion) {
    if(notificacion.tipo == NotificacionTipo.MEGUSTA)
       return Text(
-            '${notificacion.usuario.nombre}',
+            'Recibiste un me gusta de',
              style: TextStyle(fontWeight: FontWeight.bold)
       );
    if(notificacion.tipo == NotificacionTipo.COMENTARIO)
@@ -107,9 +107,10 @@ class NotificationPage extends StatelessWidget {
       );
    if(notificacion.tipo == NotificacionTipo.MENSAJE)
       return Text(
-            'Yo Compro Acacias te envio un mensaje',
+            'Yo Compro Acaciás te envio un mensaje',
              style: TextStyle(fontWeight: FontWeight.bold)
       );
     return Container();
  }
 }
+

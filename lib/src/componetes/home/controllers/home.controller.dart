@@ -213,18 +213,20 @@ class HomeController extends GetxController {
       this.notificacionesNoLeidas++;
       this.getNotificaciones();
     });
-    
+
     this.pushNotification.onOpenApp().onData((message) {
       final tipo = Notificacion.getTipo(message.data['tipo']);
-      final  int idTipo = int.parse(message.data['id_tipo']);
-      this._onOpenAppNotification(tipo, idTipo,message.notification.body);
+      final int idTipo = int.parse(message.data['id_tipo']);
+      this._onOpenAppNotification(tipo, idTipo, message.notification.body);
       this.notificacionesNoLeidas++;
       this.getNotificaciones();
     });
     this.pushNotification.onBackground().then((message) {
-      final tipo = Notificacion.getTipo(message.data['tipo']);
-      final  int idTipo = int.parse(message.data['id_tipo']);
-      this._onOpenAppNotification(tipo, idTipo,message.notification.body);
+      if (message?.data != null) {
+        final tipo = Notificacion.getTipo(message.data['tipo']);
+        final int idTipo = int.parse(message.data['id_tipo']);
+        this._onOpenAppNotification(tipo, idTipo, message.notification.body);
+      }
     });
   }
 
@@ -241,22 +243,27 @@ class HomeController extends GetxController {
         .notifications
         .indexWhere((notificacion) => notificacion.id == idNotificacion);
     this.notifications[index] = this.notifications[index].copyWith(leida: true);
-    if(this.notificacionesNoLeidas > 0)
-      this.notificacionesNoLeidas --;
+    if (this.notificacionesNoLeidas > 0) this.notificacionesNoLeidas--;
     update();
   }
 
-  void _onOpenAppNotification(NotificacionTipo tipo,int idTipo,String mensaje){
-      switch (tipo) {
-         case NotificacionTipo.MEGUSTA      : Get.to(PublicacionPage(idPublicacion:idTipo,pagina: 1));
-                                              break;
-         case NotificacionTipo.COMENTARIO   : Get.to(PublicacionPage(idPublicacion:idTipo,pagina: 0));
-                                              break;
-         case NotificacionTipo.CALIFICACION : Get.to(CalificacionesLisTPage(idEmpresa:idTipo));
-                                              break;
-         case NotificacionTipo.MENSAJE      : Get.to(MensajePage(mensaje:mensaje, fecha: 'Ahora'));
-                                              break;
-         default: break;
-      }
+  void _onOpenAppNotification(
+      NotificacionTipo tipo, int idTipo, String mensaje) {
+    switch (tipo) {
+      case NotificacionTipo.MEGUSTA:
+        Get.to(PublicacionPage(idPublicacion: idTipo, pagina: 1));
+        break;
+      case NotificacionTipo.COMENTARIO:
+        Get.to(PublicacionPage(idPublicacion: idTipo, pagina: 0));
+        break;
+      case NotificacionTipo.CALIFICACION:
+        Get.to(CalificacionesLisTPage(idEmpresa: idTipo));
+        break;
+      case NotificacionTipo.MENSAJE:
+        Get.to(MensajePage(mensaje: mensaje, fecha: 'Ahora'));
+        break;
+      default:
+        break;
+    }
   }
 }

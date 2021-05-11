@@ -30,7 +30,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
 }
 
- main() async {
+main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -38,104 +38,88 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await GetStorage.init();
   await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
-  Dependecias.init('http://192.168.160.193:8000');
+  Dependecias.init('http://192.168.1.3:8000');
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  final  internetCheck = await verificationInternet();
-  runApp(MyApp(internetCheck:internetCheck));
+  final internetCheck = await verificationInternet();
+  runApp(MyApp(internetCheck: internetCheck));
 }
 
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   final internetCheck;
-  final box  = GetStorage();
+  final box = GetStorage();
   MyApp({Key key, this.internetCheck}) : super(key: key);
   @override
-  Widget build(BuildContext context)  {
-  
+  Widget build(BuildContext context) {
     return GetMaterialApp(
-      localizationsDelegates: [ 
-       GlobalMaterialLocalizations.delegate,
-       GlobalWidgetsLocalizations.delegate,
-       GlobalCupertinoLocalizations.delegate,
-       DefaultCupertinoLocalizations.delegate
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate
       ],
-      supportedLocales: [  const Locale('es'),],
+      supportedLocales: [
+        const Locale('es'),
+      ],
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: Color.fromRGBO(255,57,163, 1),
-        accentColor : Color.fromRGBO(0, 201, 211, 1),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-
-        appBarTheme: AppBarTheme(
-                     brightness: Brightness.light,
-                     color: Colors.white,
-                     textTheme: TextTheme(
-                                // ignore: deprecated_member_use
-                                title: TextStyle(color:Colors.black,fontSize: 15)
-                     ),
-                     iconTheme:  IconThemeData(
-                                 color: Colors.black
-                     )
-        )
-      ),
-     
+          primaryColor: Color.fromRGBO(255, 57, 163, 1),
+          accentColor: Color.fromRGBO(0, 201, 211, 1),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          appBarTheme: AppBarTheme(
+              brightness: Brightness.light,
+              color: Colors.white,
+              textTheme: TextTheme(
+                  // ignore: deprecated_member_use
+                  title: TextStyle(color: Colors.black, fontSize: 15)),
+              iconTheme: IconThemeData(color: Colors.black))),
       initialRoute: '/home',
       getPages: [
+        GetPage(name: '/home', page: () => HomePage(), bindings: [
+          BindingsBuilder.put(() => HomeController(
+              anonimo: _getEnumLogin(),
+              repositorio: HomeRepocitorio(),
+              urlImagenes: 'http://192.168.1.3:8000/imagenes')),
+          BindingsBuilder.put(() =>
+              PublicacionesController(repositorio: PublicacionesRepositorio())),
+          BindingsBuilder.put(
+              () => CategoriasController(repositorio: CategoriaRepositorio())),
+        ]),
         GetPage(
-        name: '/home', 
-        page: ()=>HomePage(),
-        bindings: [
-          BindingsBuilder.put( () => HomeController(
-                                     anonimo     :  _getEnumLogin(),
-                                     repositorio :  HomeRepocitorio(),
-                                     urlImagenes : 'http://192.168.160.193:8000/imagenes'
-                                     )
-          ),
-          BindingsBuilder.put(() => PublicacionesController(repositorio: PublicacionesRepositorio())),
-          BindingsBuilder.put(() => CategoriasController(repositorio:CategoriaRepositorio())),
-        ]
+          name: '/',
+          page: () => LoginPage(),
+          binding: BindingsBuilder.put(
+              () => LoginController(repositorio: LoginRepositorio())),
         ),
         GetPage(
-        name: '/', 
-        page: ()=>LoginPage(),
-        binding : BindingsBuilder.put(() => LoginController(repositorio:LoginRepositorio())),
-        ),
-        GetPage(
-        name: '/offline', 
-        page: ()=>OfflinePage(),
-        binding : BindingsBuilder.put(() => LoginController(repositorio:LoginRepositorio())),
+          name: '/offline',
+          page: () => OfflinePage(),
+          binding: BindingsBuilder.put(
+              () => LoginController(repositorio: LoginRepositorio())),
         ),
       ],
     );
   }
 
-  String _inititialRoute()  {
-    if(box.hasData('token') && internetCheck)
-       return '/home';
-    if(box.hasData('token') && !internetCheck)
-       return '/offline';
-    if(!box.hasData('token') && !internetCheck)
-       return '/offline';   
-    if(!box.hasData('token') && internetCheck)
-       return '/home';
+  String _inititialRoute() {
+    if (box.hasData('token') && internetCheck) return '/home';
+    if (box.hasData('token') && !internetCheck) return '/offline';
+    if (!box.hasData('token') && !internetCheck) return '/offline';
+    if (!box.hasData('token') && internetCheck) return '/home';
     return '/';
   }
-  
-  EnumLogin _getEnumLogin(){
-    if(box.hasData('token') &&  box.hasData('id'))
-     return EnumLogin.usuario;
-    if(!box.hasData('token') && !box.hasData('id'))
-     return EnumLogin.notLogin;
-    if(box.hasData('token') &&  !box.hasData('id'))
-     return EnumLogin.anonimo;
+
+  EnumLogin _getEnumLogin() {
+    if (box.hasData('token') && box.hasData('id')) return EnumLogin.usuario;
+    if (!box.hasData('token') && !box.hasData('id')) return EnumLogin.notLogin;
+    if (box.hasData('token') && !box.hasData('id')) return EnumLogin.anonimo;
     return EnumLogin.notLogin;
   }
 }
 
-
- Future<bool> verificationInternet() async {
-    try {
+Future<bool> verificationInternet() async {
+  try {
     final result = await InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       return true;

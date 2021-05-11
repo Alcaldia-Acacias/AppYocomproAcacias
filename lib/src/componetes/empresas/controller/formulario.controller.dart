@@ -71,7 +71,7 @@ class FormEmpresaController extends GetxController {
       urlImagen = empresa.urlLogo;
       idCategoria = empresa.idCategoria;
     }
-   
+
     super.onInit();
   }
 
@@ -118,10 +118,9 @@ class FormEmpresaController extends GetxController {
   }
 
   void updateEmpresaSubmit() async {
-
     if (this._formValid() && !this.idCategoria.isNull) {
       final idUsuario = box.read('id');
-       this._openDialogo('Actulizando Empresa');
+      this._openDialogo('Actulizando Empresa');
       final response = await repositorio.updateEmpresa(
           this._getEmpresa(id: empresa.id), idUsuario,
           path: image?.path);
@@ -147,7 +146,7 @@ class FormEmpresaController extends GetxController {
   void getImage(String tipo) async {
     final imagecapture = await imageCapture.getImage(tipo);
     if (!imagecapture.isNullOrBlank) {
-       image =  await CompressImagePlugin.getImage(imagecapture);
+      image = await CompressImagePlugin.getImage(imagecapture);
       Get.back();
       update(['formulario_empresa']);
     }
@@ -176,8 +175,7 @@ class FormEmpresaController extends GetxController {
       latitud: latitudController.text,
       longitud: longitudController.text,
       popular: 0,
-      estado: false
-      );
+      estado: empresa.estado);
 
   void getCategoria(Categoria categoria) {
     this.idCategoria = categoria.id;
@@ -190,7 +188,7 @@ class FormEmpresaController extends GetxController {
       Get.snackbar('No estas Conectdo', 'Conectate a Internet');
     if (error == 'EMPRESA_EXIST')
       Get.snackbar('La Empresa ya existe', 'verifique el nit de la empresa');
-     Get.back();
+    Get.back();
   }
 
   void _addEmpresa(ResponseEmpresa response) {
@@ -207,9 +205,8 @@ class FormEmpresaController extends GetxController {
     }
   }
 
-  void _openDialogo(String texto){
-    Get.dialog(
-     AlertDialogLoading(titulo: texto)
-    ).whenComplete(() => Get.back());
+  void _openDialogo(String texto) {
+    Get.dialog(AlertDialogLoading(titulo: texto))
+        .whenComplete(() => Get.back());
   }
 }
