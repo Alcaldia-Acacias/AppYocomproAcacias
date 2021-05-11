@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 
 
 class ErrorResponse  extends ResponseModel{
   
-  final DioError error;
+  final dio.DioError error;
   ErrorResponse(this.error);
 
   String get getError {

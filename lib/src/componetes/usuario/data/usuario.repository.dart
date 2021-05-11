@@ -4,13 +4,13 @@ import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/reporte.model.dart';
 import 'package:comproacacias/src/componetes/usuario/models/updateresponse.model.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class UsuarioRepocitorio {
 
-  final _dio = Get.find<Dio>();
+  final _dio = Get.find<dio.Dio>();
   Future<ResponseModel> updateUsuario(int id, Map<String, dynamic> update,
       [String currentPassword, String token]) async {
     this._verificarToken(token);
@@ -23,7 +23,7 @@ class UsuarioRepocitorio {
     try {
       final response = await this._dio.put('/usuarios/update', data: data);
       return UsuarioResponse.toJson(response.data);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -34,7 +34,7 @@ class UsuarioRepocitorio {
     try {
       final response = await this._dio.post('/reportes/add', data: data);
       return UsuarioResponse.toJson(response.data);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }

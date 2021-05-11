@@ -28,34 +28,34 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.0
-  get: ^3.13.2
-  curved_navigation_bar: ^0.3.4
+  cupertino_icons: ^1.0.3
+  get: ^4.1.4
+  curved_navigation_bar: ^0.3.7
   dio:
-  intl: ^0.16.1
-  animate_do: ^1.7.3
-  cached_network_image: ^2.3.2+1
-  url_launcher: ^5.7.2
-  get_storage: ^1.3.1
-  flutter_slidable: ^0.5.7
-  geolocator: ^6.1.0
-  image_picker: ^0.6.7+12
-  uuid: ^2.2.2
-  path_provider: ^1.6.24
-  flutter_image_compress: ^0.7.0
-  firebase_core: ^0.5.3
-  firebase_auth: ^0.18.4+1
-  google_sign_in: ^4.5.9
-  flutter_facebook_auth: ^2.0.1
-  badges: ^1.1.6
-  youtube_api: ^0.8.0
-  firebase_messaging: "^8.0.0-dev.1"
-  sign_in_with_apple: ^2.5.2
-  crypto: ^2.1.5
+  intl: ^0.17.0
+  animate_do: ^2.0.0
+  cached_network_image: ^3.0.0
+  url_launcher: ^6.0.3
+  get_storage: ^2.0.2
+  flutter_slidable: ^0.6.0
+  geolocator: ^7.0.3
+  image_picker: ^0.7.4
+  uuid: ^3.0.4
+  path_provider: ^2.0.1
+  flutter_image_compress: ^1.0.0
+  firebase_core: ^1.1.1
+  firebase_auth: ^1.1.4
+  google_sign_in: ^5.0.2
+  flutter_facebook_auth: ^3.3.3+1
+  badges: ^1.2.0
+  #youtube_api: ^0.8.0
+  firebase_messaging: ^9.1.4
+  sign_in_with_apple: ^3.0.0
+  crypto: ^3.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.8.0"
+  flutter_launcher_icons: "^0.9.0"
 flutter_icons:
   ios: true
   image_path: "assets/imagenes/icon_ios.png"

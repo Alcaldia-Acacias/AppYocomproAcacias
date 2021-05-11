@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EmpresasController extends GetxController {
   
@@ -153,7 +154,7 @@ class EmpresasController extends GetxController {
     String telefono,
   ) async {
     String url() {
-      if (Platform.isIOS) {
+      if (!kIsWeb && Platform.isIOS) {
         return "whatsapp://wa.me/+57$telefono/?text=${Uri.parse('')}";
       } else {
         return "whatsapp://send?phone=+57$telefono&text=${Uri.parse('')}";

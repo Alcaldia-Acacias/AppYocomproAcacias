@@ -16,7 +16,7 @@ import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:comproacacias/src/plugins/notificationPush.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
@@ -137,7 +137,7 @@ class HomeController extends GetxController {
     if (response is ResponseHome) {
       final box = GetStorage();
       await box.write('token', response.tokenAnonimo);
-      Get.find<Dio>().options.headers = {
+      Get.find<dio.Dio>().options.headers = {
         HttpHeaders.authorizationHeader: 'Bearer ${response.tokenAnonimo}'
       };
     }

@@ -5,6 +5,7 @@ import 'package:comproacacias/src/componetes/login/controller/login.controller.d
 import 'package:comproacacias/src/componetes/login/views/sendEmail.view.dart';
 import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
@@ -67,7 +68,7 @@ class LoginFormPage extends StatelessWidget {
 
                                                             ],
                                                             ),
-                                                            if(Platform.isIOS)
+                                                            if(!kIsWeb && Platform.isIOS)
                                                             _appleSingInButton(),
                                                          ],
                                              ) 

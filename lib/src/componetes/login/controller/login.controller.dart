@@ -12,7 +12,7 @@ import 'package:comproacacias/src/componetes/widgets/dialogAlert.widget.dart';
 import 'package:comproacacias/src/plugins/apple_sing.dart';
 import 'package:comproacacias/src/plugins/facebook_sing.dart';
 import 'package:comproacacias/src/plugins/google_sing_in.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -205,7 +205,7 @@ class LoginController extends GetxController {
     final box = GetStorage();
     await box.write('token', response.token);
     await box.write('id', response.usuario.id);
-    Get.find<Dio>().options.headers = {
+    Get.find<dio.Dio>().options.headers = {
       HttpHeaders.authorizationHeader: 'Bearer ${box.read('token')}'
     };
     await homeController.loginInitOption();

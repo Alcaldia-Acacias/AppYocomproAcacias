@@ -8,6 +8,7 @@ import 'package:comproacacias/src/componetes/login/views/iniciar.sesion.view.dar
 import 'package:comproacacias/src/componetes/login/views/registro.view.dart';
 import 'package:comproacacias/src/componetes/login/widgets/button_apple.dart';
 import 'package:comproacacias/src/componetes/login/widgets/button_google.widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
@@ -121,7 +122,7 @@ Widget _logo() {
                 onPress : ()=>Get.find<LoginController>().singInFacebookUsuario()
                 ),
                 SizedBox(height: 20),
-                if(Platform.isIOS)
+                if(!kIsWeb && Platform.isIOS)
                 ButtonAppleSing(
                 texto: 'Registrarse con Apple', 
                 onTap: ()=>Get.find<LoginController>().singInAppleUsuario()

@@ -82,8 +82,7 @@ class PerfilEmpresaPage extends StatelessWidget {
              height : 260,
              width  : Get.width,
              child  : Stack(
-                      overflow : Overflow.visible,
-                      children : <Widget>[
+                      clipBehavior: Clip.none, children : <Widget>[
                                  Positioned.fill(
                                  child :  empresa.urlLogo == ''
                                           ?

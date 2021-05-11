@@ -1,10 +1,10 @@
 import 'package:comproacacias/src/componetes/categorias/models/categoria.model.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 
 class CategoriaRepositorio {
-  Dio _dio = Get.find<Dio>();
+  dio.Dio _dio = Get.find<dio.Dio>();
 
   Future<List<Empresa>> getEmpresasByCategoria(String categoria,int page) async {
     final response = await _dio.get('/empresas/categoria/$categoria',queryParameters: {'page': page});

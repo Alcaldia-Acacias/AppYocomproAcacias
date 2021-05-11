@@ -6,12 +6,12 @@ import 'package:comproacacias/src/componetes/productos/models/producto.model.dar
 import 'package:comproacacias/src/componetes/empresas/models/reponseEmpresa.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 
 class EmpresaRepositorio {
-  final _dio = Get.find<Dio>();
-
+  final _dio = Get.find<dio.Dio>();
+ 
   Future<List<Producto>> getProductosByEmpresa(int idpublicaciones) async {
     final response = await this._dio.get('/productos/empresa/$idpublicaciones');
     return response.data
@@ -38,16 +38,16 @@ class EmpresaRepositorio {
 
   Future<ResponseModel> addEmpresa(
       Empresa empresa, int idUsuario, String path) async {
-    FormData data = FormData.fromMap({
+    dio.FormData data = dio.FormData.fromMap({
       ...empresa.toMap(idUsuario),
-      "file": await MultipartFile.fromFile(path, filename: "imagen.jpg")
+      "file": await dio.MultipartFile.fromFile(path, filename: "imagen.jpg")
     });
     try {
       final response = await this._dio.post('/empresas/add/',
-          data: data, options: Options(contentType: 'multipart/form-data'));
+          data: data, options: dio.Options(contentType: 'multipart/form-data'));
       print(response.data);
       return ResponseEmpresa(id: response.data['id']);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -56,7 +56,7 @@ class EmpresaRepositorio {
     try {
       final response = await this._dio.delete('/empresas/delete/$id');
       return ResponseEmpresa(delete: response.data['delete']);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -64,15 +64,15 @@ class EmpresaRepositorio {
   Future<ResponseModel> updateEmpresa(Empresa empresa, int idUsuario,
       {String path}) async {
     try {
-      FormData data = FormData.fromMap({
+      dio.FormData data = dio.FormData.fromMap({
         ...empresa.toMap(idUsuario),
         "file": path.isNull
             ? null
-            : await MultipartFile.fromFile(path, filename: "imagen.jpg")
+            : await dio.MultipartFile.fromFile(path, filename: "imagen.jpg")
       });
       final response = await this._dio.put('/empresas/update', data: data);
       return ResponseEmpresa(update: response.data['update']);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -90,7 +90,7 @@ class EmpresaRepositorio {
     try {
       final response = await this._dio.post('/calificaciones/add', data: data);
       return ResponseEmpresa(calificacion: Calificacion.toJson(response.data));
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -98,16 +98,16 @@ class EmpresaRepositorio {
   Future<ResponseModel> addProducto(Producto producto, int idEmpresa,
       {String path}) async {
     try {
-      FormData data = FormData.fromMap({
+      dio.FormData data = dio.FormData.fromMap({
         ...producto.toMap(idEmpresa),
         "file": path.isNull
             ? null
-            : await MultipartFile.fromFile(path, filename: "${producto.imagen}")
+            : await dio.MultipartFile.fromFile(path, filename: "${producto.imagen}")
       });
       final response = await this._dio.post('/productos/add', data: data);
       print(response.data);
       return ResponseEmpresa(idProducto: response.data);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -116,7 +116,7 @@ class EmpresaRepositorio {
     try {
       final response = await this._dio.delete('/productos/delete/$idProducto');
       return ResponseEmpresa(delete: response.data);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -124,16 +124,16 @@ class EmpresaRepositorio {
   Future<ResponseModel> updateProducto(Producto producto, int idEmpresa,
       {String path}) async {
     try {
-      FormData data = FormData.fromMap({
+      dio.FormData data = dio.FormData.fromMap({
         "id": producto.id,
         ...producto.toMap(idEmpresa),
         "file": path.isNull
             ? null
-            : await MultipartFile.fromFile(path, filename: "${producto.imagen}")
+            : await dio.MultipartFile.fromFile(path, filename: "${producto.imagen}")
       });
       final response = await this._dio.put('/productos/update', data: data);
       return ResponseEmpresa(update: response.data);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -145,7 +145,7 @@ class EmpresaRepositorio {
           ?.map<Empresa>((empresa) => Empresa?.toJson(empresa))
           ?.toList();
       return ResponseEmpresa(empresas: empresas);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -153,11 +153,11 @@ class EmpresaRepositorio {
   Future<ResponseModel> registrarVisitaEmpresa(
       int idEmpresa, int idUsuario) async {
     try {
-      FormData data =
-          FormData.fromMap({"id_empresa": idEmpresa, "id_usuario": idUsuario});
+      dio.FormData data =
+          dio.FormData.fromMap({"id_empresa": idEmpresa, "id_usuario": idUsuario});
       final response = await _dio.post('/visitas/add/', data: data);
       return ResponseEmpresa(visita: response.data['visita']);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }

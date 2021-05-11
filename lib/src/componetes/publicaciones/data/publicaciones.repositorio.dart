@@ -4,11 +4,11 @@ import 'package:comproacacias/src/componetes/publicaciones/models/publicacion.mo
 import 'package:comproacacias/src/componetes/publicaciones/models/reponse.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:comproacacias/src/componetes/response/models/response.model.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 
 class PublicacionesRepositorio {
-  Dio _dio = Get.find<Dio>();
+  dio.Dio _dio = Get.find<dio.Dio>();
 
   Future<List<Publicacion>> getPublicaciones(int page, int id) async {
     try {
@@ -65,7 +65,7 @@ class PublicacionesRepositorio {
     try {
       final response = await _dio.post('/comentarios/add', data: data);
       return response.data;
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return error.response.data;
     }
   }
@@ -83,36 +83,36 @@ class PublicacionesRepositorio {
 
   Future<ResponseModel> addPublicacion(
       Publicacion publicacion, List<ImageFile> imagenes) async {
-    FormData data = FormData.fromMap({...publicacion.toMap()});
+    dio.FormData data = dio.FormData.fromMap({...publicacion.toMap()});
     await Future.delayed(Duration(seconds: 6));
     imagenes.forEach((imagen) async {
       data.files.add(MapEntry(
         imagen.nombre,
-        MultipartFile.fromFileSync(imagen.file.path, filename: imagen.nombre),
+        dio.MultipartFile.fromFileSync(imagen.file.path, filename: imagen.nombre),
       ));
     });
     try {
       final response = await _dio.post('/publicaciones/add', data: data);
       return ResponsePublicacion(id: response.data);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
 
   Future<ResponseModel> updatePublicacion(
       Publicacion publicacion, List<ImageFile> imagenes) async {
-    FormData data = FormData.fromMap({...publicacion.toMap()});
+    dio.FormData data = dio.FormData.fromMap({...publicacion.toMap()});
     imagenes.forEach((imagen) async {
       if (imagen.isaFile)
         data.files.add(MapEntry(
           imagen.nombre,
-          MultipartFile.fromFileSync(imagen.file.path, filename: imagen.nombre),
+          dio.MultipartFile.fromFileSync(imagen.file.path, filename: imagen.nombre),
         ));
     });
     try {
       final response = await _dio.put('/publicaciones/update', data: data);
       return ResponsePublicacion(update: response.data['update']);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }
@@ -121,7 +121,7 @@ class PublicacionesRepositorio {
     try {
       final response = await _dio.delete('/publicaciones/$idPublicacion');
       return ResponsePublicacion(delete: response.data['delete']);
-    } on DioError catch (error) {
+    } on dio.DioError catch (error) {
       return ErrorResponse(error);
     }
   }

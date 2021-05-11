@@ -86,8 +86,8 @@ Widget  _header(HomeController state) {
                                        )
                                  ),
                                  Stack(
-                                 overflow: Overflow.visible,
-                                   children: [
+                                 clipBehavior: Clip.none, 
+                                 children: [
                                      _imageUsuario(state),
                                      Positioned(
                                      bottom : 0,
