@@ -41,6 +41,14 @@ main() async {
   //await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
   Dependecias.init('http://localhost:8000');
+  if (kIsWeb) {
+    FacebookAuth.instance.webInitialize(
+      appId: "740152296610262",
+      cookie: true,
+      xfbml: true,
+      version: "v9.0",
+    );
+  }
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   if (!kIsWeb) {
     internetCheck = await verificationInternet();
