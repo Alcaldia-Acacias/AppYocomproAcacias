@@ -10,7 +10,8 @@ class ButtonAppleSing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-           child: Card(   
+           child: Card( 
+                  color: Colors.black87,  
                   child: Padding(
                         padding :  EdgeInsets.all(10.0),
                         child   : Row(
@@ -19,7 +20,7 @@ class ButtonAppleSing extends StatelessWidget {
                                   children: [
                                   Image.asset('assets/imagenes/apple.png',width: 30,height: 30),
                                   SizedBox(width:10),
-                                  Text(texto)              
+                                  Text(texto,style: TextStyle(color: Colors.white))              
                                   ],
                         ),
                   ),

@@ -112,7 +112,7 @@ class InicioPage extends StatelessWidget {
                   badgeColor   : Colors.red,
                   child        : IconButton(
                                  icon      : Icon(Icons.notifications_outlined),
-                                 color     : Colors.grey,
+                                 color     : Get.theme.primaryColor,
                                  iconSize  : 30,
                                  onPressed : ()=>Get.to(NotificationPage())
                   ),

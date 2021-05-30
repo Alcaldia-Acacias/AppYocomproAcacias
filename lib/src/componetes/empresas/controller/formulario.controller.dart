@@ -175,7 +175,7 @@ class FormEmpresaController extends GetxController {
       latitud: latitudController.text,
       longitud: longitudController.text,
       popular: 0,
-      estado: empresa.estado);
+      estado: empresa?.estado ?? false);
 
   void getCategoria(Categoria categoria) {
     this.idCategoria = categoria.id;

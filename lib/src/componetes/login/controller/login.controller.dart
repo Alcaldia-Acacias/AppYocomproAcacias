@@ -19,6 +19,7 @@ import 'package:get/get.dart';
 
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginController extends GetxController {
   final LoginRepositorio repositorio;
@@ -108,7 +109,7 @@ class LoginController extends GetxController {
   }
 
   void loginGoogle() async {
-    this._openDialog();
+    this._openDialog(registrando: false);
     _usuario = await _googleAsingUsuario();
     if (!_usuario.isNullOrBlank) {
       final response =
@@ -118,7 +119,7 @@ class LoginController extends GetxController {
   }
 
   void loginFacebook() async {
-    this._openDialog();
+    this._openDialog(registrando: false);
     _usuario = await _facebookAsingUsuario();
     if (!_usuario.isNullOrBlank) {
       final response =
@@ -128,7 +129,7 @@ class LoginController extends GetxController {
   }
 
   void loginApple() async {
-    this._openDialog();
+    this._openDialog(registrando: false);
     _usuario = await _appleAsingUsuario();
     if (!_usuario.isNullOrBlank) {
       final response =
@@ -184,6 +185,14 @@ class LoginController extends GetxController {
     }
   }
 
+  void goToPolitica() async {
+    if (await canLaunch('https://www.acacias.gov.co/publicaciones/1/politicas-de-privacidad-y-condiciones-de-uso/')) {
+      await launch('https://www.acacias.gov.co/publicaciones/1/politicas-de-privacidad-y-condiciones-de-uso/');
+    } else {
+      throw 'Could not launch';
+    }
+  }
+
   void _loginError(String error) async {
     if (error == 'DATA_INCORRECT') {
       Get.back();
@@ -191,7 +200,7 @@ class LoginController extends GetxController {
     }
     if (error == 'USER_NO_EXITS') {
       Get.back();
-      Get.snackbar('Usuario no existe', '');
+      Get.snackbar('Usuario no existe', 'Registrate');
       this.resetSendEmail();
     }
     if (error == 'USER_EXITS')
@@ -214,10 +223,10 @@ class LoginController extends GetxController {
     Get.back();
   }
 
-  void _openDialog() {
+  void _openDialog({bool registrando = true}) {
     Get.dialog(AlertDialogLoading(titulo: 'Iniciando'),
             barrierDismissible: false)
-        .whenComplete(() => Get.back());
+        .whenComplete(() => registrando ? Get.back() : null);
   }
 
   void _loading() {

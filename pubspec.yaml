@@ -52,6 +52,7 @@ dependencies:
   firebase_messaging: "^8.0.0-dev.1"
   sign_in_with_apple: ^2.5.2
   crypto: ^2.1.5
+  bottom_navy_bar: ^5.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

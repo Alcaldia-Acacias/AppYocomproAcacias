@@ -28,8 +28,8 @@ class LoginPage extends StatelessWidget {
                                    _cortina(),
                                    _logo(),
                                    _button('Iniciar Sesión'),
-                                   _button('Registrate'),
-                                 
+                                   _button('Registrate'), 
+                                   _politica()
                              ],
                              ),
               );
@@ -134,6 +134,25 @@ Widget _logo() {
               ],
      ),
    )
+   );
+ }
+
+ Widget _politica() {
+   return Align(
+          alignment: Alignment(0,0.9),
+          child    : GestureDetector(
+                     child: Padding(
+                            padding : EdgeInsets.all(19.0),
+                            child   : Text('Ver politica de privacidad',
+                                      style: TextStyle(
+                                             fontSize   : 16,
+                                             decoration : TextDecoration.underline,
+                                             color      : Colors.blue
+                                      ),
+                                      ),
+                     ),
+                     onTap: ()=>Get.find<LoginController>().goToPolitica(),
+          ),
    );
  }
 }
