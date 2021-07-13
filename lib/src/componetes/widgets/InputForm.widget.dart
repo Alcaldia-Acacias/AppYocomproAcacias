@@ -8,7 +8,7 @@ class InputForm extends StatelessWidget {
   final String placeholder,textHelp,initialValue;
   final IconData leftIcon,rightIcon;
   final FocusNode foco;
-  final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon,textarea,autofocus,textcenter;
+  final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon,textarea,autofocus,textcenter,enabled;
   final Function onEditingComplete,onButtonIcon;
  
 
@@ -31,6 +31,7 @@ class InputForm extends StatelessWidget {
   this.textarea = false,
   this.autofocus   = false,
   this.textcenter = false,
+  this.enabled = true,
   this.onEditingComplete,
   this.onButtonIcon,
   })
@@ -42,6 +43,7 @@ class InputForm extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 20),
       child: TextFormField(
              key               : ValueKey(placeholder),
+             enabled           : enabled,
              initialValue      : initialValue,
              textAlign         : textcenter ? TextAlign.center : TextAlign.start,
              readOnly          : readOnly,

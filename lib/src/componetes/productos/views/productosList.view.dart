@@ -1,5 +1,6 @@
 import 'package:comproacacias/src/componetes/productos/controllers/tienda.controller.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
+import 'package:comproacacias/src/componetes/productos/views/pedidos.view.dart';
 import 'package:comproacacias/src/componetes/productos/views/producto.view.dart';
 import 'package:comproacacias/src/componetes/productos/widgets/productoCardLarge.widget.dart';
 import 'package:comproacacias/src/componetes/productos/widgets/productoCardSmall.widget.dart';
@@ -17,6 +18,13 @@ class ProductosList extends StatelessWidget {
                    leading   : Image.asset('assets/imagenes/logo.png'),
                    elevation : 0,
                    title     : Text('Tienda'),
+                   actions   : [
+                      IconButton(
+                      icon      : Icon(Icons.shopping_cart_outlined), 
+                      color     : Get.theme.primaryColor,
+                      onPressed : () => Get.to(PedidosPage())
+                      )
+                   ],
            ),
            body  : GetBuilder<TiendaController>(
                    init    : TiendaController(),

@@ -1,4 +1,5 @@
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/productos/views/listProductos.view.dart';
 import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:comproacacias/src/componetes/usuario/views/actulizarDatos.view.dart';
 import 'package:comproacacias/src/componetes/usuario/views/cambiarContrase%C3%B1a.view.dart';
@@ -46,14 +47,19 @@ Widget _menu(Usuario usuario) {
              onTap: ()=>Get.to(ListEmpresasPage(empresas:usuario.empresas)),
              ),
              MenuItemUsuario(
+             icon: Icons.shopping_basket_outlined,
+             titulo: 'Productos',
+             onTap: ()=> Get.to(ListProductos())
+             ),
+             MenuItemUsuario(
              icon: Icons.refresh,
              titulo: 'Actualizar Datos', 
              onTap : ()=>Get.to(UpdateDataUsuario(usuario:usuario)), 
              ),
-             MenuItemUsuario(
+             /* MenuItemUsuario(
              icon: Icons.info,
              titulo: 'Acerca',  
-             ),
+             ), */
              MenuItemUsuario(
              icon: Icons.help,
              titulo: 'Ayuda', 
