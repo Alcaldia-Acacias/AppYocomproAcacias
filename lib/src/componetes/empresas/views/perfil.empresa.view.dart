@@ -3,19 +3,19 @@ import 'package:comproacacias/src/componetes/empresas/controller/empresas.contro
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
-import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
+//import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/views/formproduct.view.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificacion.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificar.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/datosCard.widget.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
-import 'package:comproacacias/src/componetes/publicaciones/widgets/imagenes.widget.dart';
+//import 'package:comproacacias/src/componetes/publicaciones/widgets/imagenes.widget.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+//import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 
@@ -53,7 +53,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                                               _datos(),
                                                               _publicaciones(),
                                                               _calificaciones(),
-                                                              _productos()
+                                                              //_productos()
                                                            ],
                                                            onPageChanged: (page)=>state.getTitulo(page)
                                                           ,
@@ -265,7 +265,7 @@ Widget _publicaciones() {
   );
 }
 
-Widget _productos() {
+/* Widget _productos() {
   return GetBuilder<EmpresasController>(
          builder: (state){
            if(state.loading)
@@ -305,7 +305,7 @@ Widget _productos() {
   );
 
 
-}
+} */
 
 void _calificar() {
    Get.defaultDialog(
@@ -338,7 +338,7 @@ void _calificar() {
    );
   }
 
-Widget  _imagen(String imagen,int i) {
+/* Widget  _imagen(String imagen,int i) {
   return  GestureDetector(
           child: ClipRRect(
                  borderRadius: BorderRadius.circular(10),
@@ -359,9 +359,9 @@ Widget  _imagen(String imagen,int i) {
           );
         },
         );
-}
+} */
 
-Widget _nombre(String nombre) {
+/* Widget _nombre(String nombre) {
   return  Text('$nombre',
           overflow  : TextOverflow.ellipsis,
           maxLines  : 2,
@@ -371,9 +371,9 @@ Widget _nombre(String nombre) {
                   fontSize   : 16
           ),
           );
-}
+} */
 
-Widget _precio(int precio) {
+/* Widget _precio(int precio) {
   return  ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(
@@ -389,7 +389,7 @@ Widget _precio(int precio) {
                   )
                   )
            );
-}
+} */
 
 Widget _calificaciones() {
   return GetBuilder<EmpresasController>(
@@ -446,7 +446,7 @@ Widget _calificaciones() {
 
 }
 
-Widget _cardProducto(List<Producto> productos,int i){
+/* Widget _cardProducto(List<Producto> productos,int i){
   return Card(
          child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -474,9 +474,9 @@ Widget _cardProducto(List<Producto> productos,int i){
                 ),
               )
               );
-}
+} */
 
-void _dialogDeleteProducto(Producto producto, int index) {
+/* void _dialogDeleteProducto(Producto producto, int index) {
    Get.defaultDialog(
    title: 'Desea borrar el producto',
    content: Container(),
@@ -495,7 +495,7 @@ void _dialogDeleteProducto(Producto producto, int index) {
    ]
    );
 
-  }
+  } */
 
 }
 

@@ -26,7 +26,7 @@ class Publicacion {
       this.megusta,
       this.editar});
 
-factory Publicacion.toJson(Map<String,dynamic> json,)
+factory Publicacion.toJson(Map<String,dynamic> json)
    =>Publicacion(
      id                : json['id'] ?? 0,
      likes             : json['likes'] ?? '',

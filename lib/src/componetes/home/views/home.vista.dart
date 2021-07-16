@@ -99,9 +99,9 @@ class HomePage extends StatelessWidget {
            items  : <Widget>[
                     if(state.anonimo == EnumLogin.anonimo || state.anonimo == EnumLogin.notLogin) 
                     Icon(Icons.login_outlined, size: 30, color: Colors.white),
+                    Icon(Icons.home, size: 30, color: Colors.white),
                     if(state.anonimo == EnumLogin.usuario)
                     Icon(Icons.shopping_bag_outlined, size: 30, color: Colors.white),
-                    Icon(Icons.home, size: 30, color: Colors.white),
                     Icon(Icons.message, size: 30, color: Colors.white),
                     Icon(Icons.list, size: 30, color: Colors.white),
                     if(state.anonimo == EnumLogin.usuario)

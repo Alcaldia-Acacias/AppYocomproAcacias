@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/productos/controllers/formProducto.controller.dart';
-import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
+import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
@@ -33,7 +34,7 @@ final String urlImagenes = Get.find<HomeController>().urlImagenes;
                   ),
                   body: GetBuilder<FormProductoController>(
                         id: 'formulario_producto',
-                        init: FormProductoController(updateProducto: update),
+                        init: FormProductoController(updateProducto: update,repositorio: ProductosRepositorio()),
                         builder: (state){
                         return SingleChildScrollView(
                             padding: EdgeInsets.all(25),
@@ -45,7 +46,11 @@ final String urlImagenes = Get.find<HomeController>().urlImagenes;
                                            Text('Agrega hasta 5 imagenes'),
                                            SizedBox(height: 30),
                                            _imagenes(state),
-                                           SizedBox(height: 30),
+                                           SizedBox(height: 15),
+                                           _empresas(state),
+                                           SizedBox(height: 15),
+                                           _categorias(state),
+                                           SizedBox(height: 15),
                                            InputForm(
                                            placeholder: 'Nombre',
                                            controller        : state.nombreController,
@@ -91,7 +96,7 @@ final String urlImagenes = Get.find<HomeController>().urlImagenes;
       onTap : ()=>FocusScope.of(context).unfocus(),
     );
   }
-  Widget _addImagenWidget(ProductosController state) {
+  /* Widget _addImagenWidget(ProductosController state) {
     return Container(
            margin: EdgeInsets.only(bottom: 20),
            child: Row(
@@ -116,7 +121,7 @@ final String urlImagenes = Get.find<HomeController>().urlImagenes;
              ],
       ),
     );
-  }
+  } */
 
 Widget _button(FormProductoController state) {
   return MaterialButton(
@@ -125,11 +130,11 @@ Widget _button(FormProductoController state) {
          textColor: Colors.white,
          child: Text('${update ? 'Actualizar' : 'Agregar'}'),
          minWidth: double.maxFinite,
-         onPressed: (){}//()=>state.updateOrAddProducto(update)
+         onPressed: ()=> state.addProducto()//()=>state.updateOrAddProducto(update)
          );
 }
 
-Widget _imageProducto(ProductosController state)  {
+/* Widget _imageProducto(ProductosController state)  {
    
   switch (state.selectImage()) {
     case ImageSelect.NO_IMAGE:  return CircleAvatar(
@@ -165,7 +170,7 @@ Widget _imageProducto(ProductosController state)  {
     
     return Container();
 
-  }
+  } */
   Widget _imagenes(FormProductoController state) {
   return Wrap(
          spacing: 2,
@@ -252,6 +257,114 @@ Widget _imageProducto(ProductosController state)  {
              )
            ],
          );
+  }
+
+  _empresas(FormProductoController state) {
+    return GestureDetector(
+           child : Container(
+                   height : 50,
+                   color  : Colors.grey.shade200,
+                   child  : state.empresaSelecionada.isNullOrBlank ?
+                            Center(child: Text('Toca Para Escojer una empresa'))
+                            : ListTile(
+                              title   : Text(state.empresaSelecionada.nombre),
+                              leading : CircleAvatar(
+                                        backgroundImage: NetworkImage('$urlImagenes/logo/${state.empresaSelecionada.urlLogo}'),
+                              ),
+                            )
+           ),
+           onTap : ()=> _dialogoEmpresas(state),
+    );
+    }
+    
+_dialogoEmpresas(FormProductoController state) {
+       Get.bottomSheet(
+       Container(
+       color  : Colors.white,  
+       height : Get.height * 0.5,
+       child  : Column(
+                children: [
+                  Container(
+                  height : 50,
+                  child  : Center(child : Text('Escoje una Empresa')),  
+                  ),
+                  Expanded(
+                  child: ListView.builder(
+                         padding     : EdgeInsets.all(8),
+                         itemCount   : state.empresas.length,
+                         itemBuilder : (_,i){
+                           return ListTile(
+                                  leading: CircleAvatar(
+                                           backgroundImage: CachedNetworkImageProvider('$urlImagenes/logo/${state.empresas[i].urlLogo}'),
+                                  ),
+                                  title  : Text('${state.empresas[i].nombre}'),
+                                  onTap  : (){
+                                      state.selectEmpresa(state.empresas[i]);
+                                      Get.back();
+                                  },
+                           );
+                }
+       ),
+                  )
+                ],
+       )   
+       ) 
+    );
+}
+_dialogoCategorias(FormProductoController state) {
+       Get.bottomSheet(
+       Container(
+       color  : Colors.white,  
+       height : Get.height * 0.5,
+       child  : Column(
+                children: [
+                  Container(
+                  height : 50,
+                  child  : Center(child : Text('Escoje una Categoria')),  
+                  ),
+                  Expanded(
+                  child: ListView.builder(
+                         padding     : EdgeInsets.all(8),
+                         itemCount   : state.categorias.length,
+                         itemBuilder : (_,i){
+                           return ListTile(
+                                  leading: CircleAvatar(
+                                           backgroundColor: Get.theme.primaryColor,
+                                           child : Text('${i+1}'),
+                                  ),
+                                  title  : Text('${state.categorias[i].nombre}'),
+                                  onTap  : (){
+                                      state.selectCategoria(state.categorias[i]);
+                                      Get.back();
+                                  },
+                           );
+                }
+       ),
+                  )
+                ],
+       )   
+       ) 
+    );
+}
+
+_categorias(FormProductoController state) {
+    return GestureDetector(
+           child : Container(
+                   height : 50,
+                   color  : Colors.grey.shade200,
+                   child  : state.categoriaSelecionada.isNullOrBlank ?
+                            Center(child: Text('Toca Para Escojer una Categoria'))
+                            : ListTile(
+                              title   : Text(state.categoriaSelecionada.nombre),
+                              leading : CircleAvatar(
+                                        radius: 16,
+                                        backgroundColor: Get.theme.primaryColor,
+                                        child: Icon(Icons.check),
+                              ),
+                            )
+           ),
+           onTap : () => _dialogoCategorias(state)
+    );
   } 
 }
 

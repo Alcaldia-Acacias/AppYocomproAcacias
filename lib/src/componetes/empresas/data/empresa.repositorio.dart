@@ -95,7 +95,7 @@ class EmpresaRepositorio {
     }
   }
 
-  Future<ResponseModel> addProducto(Producto producto, int idEmpresa,
+  /* Future<ResponseModel> addProducto(Producto producto, int idEmpresa,
       {String path}) async {
     try {
       FormData data = FormData.fromMap({
@@ -110,7 +110,7 @@ class EmpresaRepositorio {
     } on DioError catch (error) {
       return ErrorResponse(error);
     }
-  }
+  } */
 
   Future<ResponseModel> deleteProducto(int idProducto) async {
     try {
@@ -121,7 +121,7 @@ class EmpresaRepositorio {
     }
   }
 
-  Future<ResponseModel> updateProducto(Producto producto, int idEmpresa,
+  /* Future<ResponseModel> updateProducto(Producto producto, int idEmpresa,
       {String path}) async {
     try {
       FormData data = FormData.fromMap({
@@ -136,7 +136,7 @@ class EmpresaRepositorio {
     } on DioError catch (error) {
       return ErrorResponse(error);
     }
-  }
+  } */
 
   Future<ResponseModel> searchEmpresa(String texto) async {
     try {
