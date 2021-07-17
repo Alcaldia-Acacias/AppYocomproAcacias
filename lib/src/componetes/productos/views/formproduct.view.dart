@@ -7,23 +7,22 @@ import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/dialogImage.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class FormProducto extends StatelessWidget {
 
  final bool update;
- final int idEmpresa;
  final Producto producto;
 
  FormProducto({
     Key key,
     this.update = false,
-    this.idEmpresa,
     this.producto}
  ) : super(key: key);
 
 
 final String urlImagenes = Get.find<HomeController>().urlImagenes;
-
+Uuid uuid = Uuid();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -34,7 +33,7 @@ final String urlImagenes = Get.find<HomeController>().urlImagenes;
                   ),
                   body: GetBuilder<FormProductoController>(
                         id: 'formulario_producto',
-                        init: FormProductoController(updateProducto: update,repositorio: ProductosRepositorio()),
+                        init: FormProductoController(updateProducto: update,repositorio: ProductosRepositorio(),productoUpdate: producto),
                         builder: (state){
                         return SingleChildScrollView(
                             padding: EdgeInsets.all(25),
@@ -96,32 +95,6 @@ final String urlImagenes = Get.find<HomeController>().urlImagenes;
       onTap : ()=>FocusScope.of(context).unfocus(),
     );
   }
-  /* Widget _addImagenWidget(ProductosController state) {
-    return Container(
-           margin: EdgeInsets.only(bottom: 20),
-           child: Row(
-             mainAxisAlignment: MainAxisAlignment.spaceAround,
-             children: [
-              _imageProducto(state),
-              RaisedButton(
-              color: Get.theme.primaryColor,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                     borderRadius: BorderRadius.circular(20)
-              ),
-              child: Text('Seleccionar imagen'),
-              onPressed: ()=>DialogImagePicker.openDialog(
-                             titulo       : 'Escoge la imagen',
-                             onTapArchivo : ()=>state.getImage('archivo'),
-                             onTapCamera  : ()=>state.getImage('camara'), 
-                             complete     : (){},
-                             
-              )
-              ) 
-             ],
-      ),
-    );
-  } */
 
 Widget _button(FormProductoController state) {
   return MaterialButton(
@@ -130,47 +103,14 @@ Widget _button(FormProductoController state) {
          textColor: Colors.white,
          child: Text('${update ? 'Actualizar' : 'Agregar'}'),
          minWidth: double.maxFinite,
-         onPressed: ()=> state.addProducto()//()=>state.updateOrAddProducto(update)
+         onPressed: (){
+           if(update)
+            state.updateProductos(producto.id);
+           else state.addProducto();
+         }
          );
 }
 
-/* Widget _imageProducto(ProductosController state)  {
-   
-  switch (state.selectImage()) {
-    case ImageSelect.NO_IMAGE:  return CircleAvatar(
-                                       radius: 40,
-                                       backgroundImage: AssetImage('assets/imagenes/no_product.png'),
-                                 );
-                                 break;
-    case ImageSelect.PATH_IMAGE: return ClipRRect(
-                                        borderRadius: BorderRadius.circular(300),
-                                        child:  FadeInImage(
-                                              height : 100,
-                                              width  : 100,
-                                              fit    : BoxFit.cover,
-                                              placeholder: AssetImage('assets/imagenes/load_image.gif'), 
-                                              image: FileImage(state.image),
-                                       )
-                                 );
-                                 break;
-    case ImageSelect.URL:  return ClipRRect(
-                                  borderRadius: BorderRadius.circular(300),
-                                  child:  FadeInImage(
-                                          height : 100,
-                                          width  : 100,
-                                          fit    : BoxFit.cover,
-                                          placeholder: AssetImage('assets/imagenes/load_image.gif'), 
-                                          image: NetworkImage('$urlImagenes/galeria/${producto.imagen}'),
-                                  ),
-                           );
-                           break;
-    default:break;
-  }
-
-    
-    return Container();
-
-  } */
   Widget _imagenes(FormProductoController state) {
   return Wrap(
          spacing: 2,
@@ -179,8 +119,8 @@ Widget _button(FormProductoController state) {
              if(state.imagenes.length < 5 && state.imagenesUpdate.length < 5)
                GestureDetector(
                child: Container(
-                      height : 80,
-                      width  : Get.width *0.29,
+                      height : 100,
+                      width  : Get.width *0.25,
                       color  : Colors.grey[350],
                       child  : Center(child:Icon(Icons.add,color: Colors.white)),
                ),
@@ -223,12 +163,12 @@ Widget _button(FormProductoController state) {
                                      .map((imagen) => GestureDetector(
                                                       child: FadeInImage(
                                                              height      : 100,
-                                                             width       : Get.width *0.29,
+                                                             width       : Get.width *0.25,
                                                              fit         : BoxFit.cover,
                                                              placeholder : AssetImage('assets/imagenes/load_image.gif'), 
                                                              image       : imagen.value.isaFile
                                                                            ? FileImage(imagen.value.file)
-                                                                           : NetworkImage('$urlImagenes/galeria/${imagen.value.nombre}')
+                                                                           : CachedNetworkImageProvider('$urlImagenes/galeria/${imagen.value.nombre}')
                                                       ),
                                                       onTap: ()=>DialogImagePicker.openDialog(
                                                                  titulo       : 'Cambia la Imagen',
@@ -246,20 +186,19 @@ Widget _button(FormProductoController state) {
   );
 }
 
-  _oferta(FormProductoController state) {
+_oferta(FormProductoController state) {
     return Row(
            mainAxisAlignment: MainAxisAlignment.spaceAround,
-           children: [
+         children: [
              Text('¿ es una Oferta ?'),
-             Checkbox(
-             value: state.oferta, 
-             onChanged: (value) => state.selectOferta(value)
-             )
-           ],
-         );
-  }
-
-  _empresas(FormProductoController state) {
+           Checkbox(
+           value: state.oferta, 
+           onChanged: (value) => state.selectOferta(value)
+           )
+         ],
+       );
+}
+ _empresas(FormProductoController state) {
     return GestureDetector(
            child : Container(
                    height : 50,

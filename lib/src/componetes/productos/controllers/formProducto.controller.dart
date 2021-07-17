@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
 import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/componetes/productos/models/categoriaProducto.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
@@ -17,9 +19,10 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class FormProductoController extends GetxController {
+
   final bool updateProducto;
   final ProductosRepositorio repositorio;
-
+  final Producto productoUpdate;
   List<ImageFile> imagenes = [];
   List<ImageFile> imagenesUpdate = [];
   List<CategoriaProducto> categorias = [];
@@ -44,19 +47,31 @@ class FormProductoController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final uid = Uuid();
 
-  FormProductoController({this.updateProducto, this.repositorio});
+  FormProductoController({this.updateProducto, this.repositorio,this.productoUpdate});
 
   @override
-  void onInit() {
+  void onInit() async {
     this.empresas = Get.find<HomeController>().usuario.empresas;
+
     if(categorias.length == 0){
       this._getcategorias();
+    }
+    if(updateProducto){
+      nombreController.text = productoUpdate.nombre;
+      descripcionController.text = productoUpdate.descripcion;
+      precioController.text = productoUpdate.precio.toString();
+      oferta = productoUpdate.oferta;
+      descripcionOfertaController.text = productoUpdate.descripcionOferta;
+      this.empresaSelecionada = productoUpdate.empresa;
+      this. categoriaSelecionada = productoUpdate.categoria;
+      this.imagenesUpdate = productoUpdate.imagenes.map<ImageFile>((imagen) => ImageFile(nombre: imagen,isaFile: false)).toList();
     }
     super.onInit();
   }
 
   void selectOferta(bool value) {
     this.oferta = value;
+    if(updateProducto)descripcionOfertaController.text = '';
     update(['formulario_producto']);
   }
 
@@ -72,28 +87,51 @@ class FormProductoController extends GetxController {
 
   void addProducto() async {
     if (this._validate()) {
-          final response = await this
-              .repositorio
-              .addProducto(this._getProducto(), empresaSelecionada.id, imagenes);
-          print(response);
-          if(response is ResponseProducto) print('${response.idProducto}');
-          if(response is ErrorResponse)    print('${response.getError}');
+      final response = await this
+          .repositorio
+          .addProducto(this._getProducto(), empresaSelecionada.id, imagenes);
+      if(response is ResponseProducto) {
+        Get.find<ProductosController>().addToListProducto(response.producto);
+        Get.back();
+      }
+      if(response is ErrorResponse){
+        Get.snackbar('Error', 'Ocurrio un error');
+      }
+    }
+    else print('Error en los datos');
+ }
+
+  void updateProductos(int id) async {
+    if (this._validate()) {
+      final producto = this._getProducto(id,true);
+      final response = await this
+          .repositorio
+          .updateProducto(producto, empresaSelecionada.id, imagenesUpdate);
+      if(response is ResponseProducto) {
+        Get.find<ProductosController>().updateToListProducto(producto,id);
+        Get.back();
+      }
+      if(response is ErrorResponse){
+        Get.snackbar('Error', 'Ocurrio un error');
+      }
     }
     else print('Error en los datos');
  }
     
- Producto _getProducto([int id]) {
+ Producto _getProducto([int id,bool update = false]) {
    return Producto(
-       id: id ?? 0,
-       nombre: nombreController.text,
-       descripcion: descripcionController.text,
-       descripcionOferta: descripcionOfertaController.text,
-       precio: int.parse(precioController.text),
-       imagenes: imagenes.map<String>((imagen) => imagen.nombre).toList(),
-       oferta: this.oferta,
-       categoria: categoriaSelecionada
-       );
-       
+       id                : id ?? 0,
+       nombre            : nombreController.text,
+       descripcion       : descripcionController.text,
+       descripcionOferta : descripcionOfertaController.text,
+       precio            : int.parse(precioController.text),
+       imagenes          :  update 
+                            ? imagenesUpdate.map<String>((imagen) => imagen.nombre).toList()
+                            : imagenes.map<String>((imagen) => imagen.nombre).toList(),
+       oferta            : this.oferta,
+       categoria         : categoriaSelecionada,
+       empresa           : empresaSelecionada
+   );       
  }
     
 void getImage(String tipo, [bool cambiar = false, int index]) async {
@@ -119,7 +157,7 @@ void getImage(String tipo, [bool cambiar = false, int index]) async {
    if (updateProducto) {
      this.imagenesUpdate[index] =
          this.imagenesUpdate[index].copyWith(file: image, isaFile: true);
-     await DefaultCacheManager().removeFile(
+     await CachedNetworkImage.evictFromCache(
          '${Get.find<HomeController>().urlImagenes}/galeria/${this.imagenesUpdate[index].nombre}');
    }
  }
@@ -149,12 +187,13 @@ void getImage(String tipo, [bool cambiar = false, int index]) async {
      Get.snackbar('Faltan Datos','Escoje una Empresa o Categoria');
      return false;
    }
-   if(imagenes.length < 1){
+   if(!updateProducto && imagenes.length < 1){
      Get.snackbar('Faltan Datos','Escoje al menos una imagen');
      return false;
    }
    return true;
  }
+
    
 }
 

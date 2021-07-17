@@ -281,7 +281,7 @@ class EmpresasController extends GetxController {
     }
   }
 
-  void addProductoList(Producto producto) {
+ /*  void addProductoList(Producto producto) {
     productos.add(producto);
     update();
   }
@@ -292,7 +292,7 @@ class EmpresasController extends GetxController {
         .indexWhere((productoList) => producto.id == productoList.id);
     this.productos[index] = producto;
     update();
-  }
+  } */
 
   void _initCalificacion() {
     this.startValue = List.generate(5, (index) => false);

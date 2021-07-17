@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/formPublicacion.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/data/publicaciones.repositorio.dart';
@@ -175,7 +176,7 @@ Widget _imagenes(FormPublicacionesController state) {
                                                              placeholder : AssetImage('assets/imagenes/load_image.gif'), 
                                                              image       : imagen.value.isaFile
                                                                            ? FileImage(imagen.value.file)
-                                                                           : NetworkImage('$urlImagenLogo/galeria/${imagen.value.nombre}')
+                                                                           : CachedNetworkImageProvider('$urlImagenLogo/galeria/${imagen.value.nombre}')
                                                       ),
                                                       onTap: ()=>DialogImagePicker.openDialog(
                                                                  titulo       : 'Cambia la Imagen',

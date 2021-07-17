@@ -10,22 +10,6 @@ import 'package:get/get.dart';
 class ProductosRepositorio {
   final _dio = Get.find<Dio>();
 
-  /* Future<ResponseModel> addProducto(Producto producto, int idEmpresa,
-      {String path}) async {
-    try {
-      FormData data = FormData.fromMap({
-        ...producto.toMap(idEmpresa),
-        "file": path == null
-            ? null
-            : await MultipartFile.fromFile(path, filename: "${producto.imagen}")
-      });
-      final response = await this._dio.post('/productos/add', data: data);
-      print(response.data);
-      return ResponseProducto(idProducto: response.data);
-    } on DioError catch (error) {
-      return ErrorResponse(error);
-    }
-  } */
 
   Future<ResponseModel> addProducto(
       Producto producto, int idEmpresa, List<ImageFile> imagenes) async {
@@ -38,8 +22,25 @@ class ProductosRepositorio {
         ));
       });
       final response = await this._dio.post('/productos/add', data: data);
-      print(response.data);
-      return ResponseProducto(idProducto: response.data);
+      return ResponseProducto(producto: Producto.toJson(response.data));
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
+
+  Future<ResponseModel> updateProducto(
+      Producto producto, int idEmpresa, List<ImageFile> imagenes) async {
+    try {
+      FormData data = FormData.fromMap({...producto.toMap(idEmpresa,producto.id)});
+      imagenes.forEach((imagen) async {
+        if(imagen.isaFile)
+        data.files.add(MapEntry(
+          imagen.nombre,
+          MultipartFile.fromFileSync(imagen.file.path, filename: imagen.nombre),
+        ));
+      });
+      final response = await this._dio.put('/productos/update', data: data);
+      return ResponseProducto(update: response.data);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }

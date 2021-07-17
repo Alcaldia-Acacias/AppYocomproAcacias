@@ -30,28 +30,35 @@ class Producto {
       precio            : json['precio'],
       oferta            : json['oferta']  ?? false,
       empresa           : Empresa.toJson(json['empresa']) ?? Empresa(),
-      categoria         : CategoriaProducto.toJson(json['categoria']) ?? CategoriaProducto()
+      categoria         : CategoriaProducto.toJson(json['categoria']) ?? CategoriaProducto(),
+      imagenes          : json['imagenes'].map<String>((imagen)=>'${imagen['nombre']}').toList() ?? []
       );
 
   Producto copyWith({
     int id,
     String nombre,
-    String imagen,
     int precio,
     List<String> imagenes,
     bool oferta,
-    Empresa empresa
+    Empresa empresa,
+    CategoriaProducto categoria,
+    String descripcionOferta,
+    String descripcion
   }) =>
       Producto(
-          id       : id       ?? this.id,
-          nombre   : nombre   ?? this.nombre,
-          precio   : precio   ?? this.precio,
-          imagenes : imagenes ?? this.imagenes,
-          oferta   : oferta   ?? this.oferta,
-          empresa  : empresa  ?? this.empresa
-          );
+          id                : id                 ?? this.id,
+          nombre            : nombre             ?? this.nombre,
+          precio            : precio             ?? this.precio,
+          imagenes          : imagenes           ?? this.imagenes,
+          oferta            : oferta             ?? this.oferta,
+          empresa           : empresa            ?? this.empresa,
+          categoria         : categoria          ?? this.categoria,
+          descripcionOferta : descripcionOferta  ?? this.descripcionOferta,
+          descripcion       : descripcion        ?? this.descripcion
+      );
 
-  Map<String,dynamic> toMap([int idEmpresa])=>{
+  Map<String,dynamic> toMap([int idEmpresa,int idProducto])=>{
+   "id"          : idProducto, 
    "nombre"      : nombre,
    "precio"      : precio,
    "descripcion" : descripcion,

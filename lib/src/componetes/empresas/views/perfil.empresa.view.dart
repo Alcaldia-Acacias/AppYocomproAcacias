@@ -61,14 +61,6 @@ class PerfilEmpresaPage extends StatelessWidget {
                                                     )
                                           ],
                                    ), 
-                                   floatingActionButton: propia && state.pagina == 3
-                                                         ? FloatingActionButton.extended(
-                                                           backgroundColor : Get.theme.primaryColor,
-                                                           label           : Text('Agregar',style: TextStyle(color:Colors.white)),
-                                                           icon            : Icon(Icons.add,color: Colors.white),
-                                                           onPressed       : ()=>Get.to(FormProducto(idEmpresa:empresa.id)) 
-                                                           )
-                                                          : null
                             ),
             );
            }

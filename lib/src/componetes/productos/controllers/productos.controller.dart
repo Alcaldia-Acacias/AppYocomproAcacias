@@ -1,16 +1,13 @@
-import 'dart:io';
-import 'package:comproacacias/src/componetes/empresas/controller/empresas.controller.dart';
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
-//import 'package:comproacacias/src/componetes/productos/models/response.producto.dart';
-//import 'package:comproacacias/src/componetes/response/models/error.model.dart';
-import 'package:comproacacias/src/plugins/compress.image.dart';
-import 'package:comproacacias/src/plugins/image_piker.dart';
-import 'package:flutter/material.dart';
+import 'package:comproacacias/src/componetes/productos/models/response.producto.dart';
+import 'package:comproacacias/src/componetes/response/models/error.model.dart';
 import 'package:get/get.dart';
-//import 'package:uuid/uuid.dart';
+
 
 class ProductosController extends GetxController {
+  
   final ProductosRepositorio repositorio;
   final int idEmpresa;
   final Producto producto;
@@ -22,148 +19,61 @@ class ProductosController extends GetxController {
       this.producto,
       this.actualizar = false});
 
-  File image;
-  ImageCapture imageCapture = Get.find<ImageCapture>();
-
-  TextEditingController calificarController = TextEditingController();
-
- /*  TextEditingController nombreProductoController = TextEditingController();
-  TextEditingController descripcionProductoController = TextEditingController();
-  TextEditingController precioProductoController = TextEditingController(); */
-
-/*   FocusNode nombreProductoFoco = FocusNode();
-  FocusNode descripcionProductoFoco = FocusNode();
-  FocusNode precioProductoFoco = FocusNode(); */
-  
-  /* ImageSelect imageSelect;
-  final formKey = GlobalKey<FormState>();
-  final uid = Uuid();
- */
+  List<Producto> productos = [];
 
   @override
   void onInit() {
-    //if (actualizar) this.initUpdateProducto();
+    final idUsuario = Get.find<HomeController>().usuario.id;
+    this._getProductosByUsuario(idUsuario);
     super.onInit();
   }
 
-  /* Producto _getProducto() {
-    return Producto(
-        id: actualizar ? producto.id : null,
-        nombre: nombreProductoController.text,
-        descripcion: descripcionProductoController.text,
-        imagen: this._getimageUrl(),
-        precio: int.parse(precioProductoController.text));
-  } */
+ void deleteProducto(int idProducto) async {
+    final response = await repositorio.deleteProducto(idProducto);
+    if(response is ResponseProducto){
+       if(response.delete)
+       this._deleteProductoList(idProducto);
+    }
+    if(response is ErrorResponse){
+      Get.snackbar('Error', '');
+    }
+  }
+  void addToListProducto(Producto producto) async{
+   this.productos.insert(0,producto);
+   update(['productos']);
+ }
 
-  void _addProductoList(int idProducto, Producto producto) {
-    final newProducto = producto.copyWith(id: idProducto);
-    Get.find<EmpresasController>().addProductoList(newProducto);
-    //this._resetFormProductos();
+  void updateToListProducto(Producto producto,int id) async{
+   final index = this.productos.indexWhere((producto) => producto.id == id);
+   this.productos[index] = this.productos[index].copyWith(
+     empresa           : producto.empresa,
+     categoria         : producto.categoria,
+     imagenes          : producto.imagenes,
+     nombre            : producto.nombre,
+     oferta            : producto.oferta,
+     descripcion       : producto.descripcion,
+     descripcionOferta : producto.descripcionOferta,
+     precio            : producto.precio
+   );
+   update(['productos']);
+ }
+  void _getProductosByUsuario(int idUsuario) async {
+    final response = await repositorio.getProductoByUsuario(idUsuario);
+    if(response is ResponseProducto){
+       this.productos = response.productos;
+       update(['productos']);
+    }
+    if(response is ErrorResponse)print('Error');
+  }
+
+  void _deleteProductoList(int idProducto) {
+    final index = this.productos.indexWhere((producto) => producto.id == idProducto);
+    this.productos.removeAt(index);
+    update(['productos']);
     Get.back();
   }
 
-  /* void addProducto() async {
-    if (formKey.currentState.validate()) {
-      final producto = this._getProducto();
-      final response = await repositorio.addProducto(producto, idEmpresa,
-          path: this._fileExist());
-      if (response is ErrorResponse) this._error(response.getError);
-      if (response is ResponseProducto)
-        this._addProductoList(response.idProducto, producto);
-    } else
-      Get.snackbar('Error', 'Faltan Datos');
-  } */
-
-  /* void updateProducto() async {
-    if (formKey.currentState.validate()) {
-      final producto = this._getProducto();
-      final response = await repositorio.updateProducto(producto, idEmpresa,
-          path: this._fileExist());
-      if (response is ErrorResponse) this._error(response.getError);
-      if (response is ResponseProducto) this._updateProductoList(producto);
-    } else
-      Get.snackbar('Error', 'Faltan Datos');
-  } */
-
- /*  void updateOrAddProducto(bool update) {
-    if (update)
-      this.updateProducto();
-    else
-      this.addProducto();
-  } */
-
- /*  void _resetFormProductos() {
-    nombreProductoController.text = '';
-    descripcionProductoController.text = '';
-    precioProductoController.text = '';
-    image.delete();
-  } */
-
-  String _fileExist() {
-    if (image?.path == null)
-      return null;
-    else
-      return image?.path;
-  }
-
-  void _error(String error) {
-    if (error == 'ERROR_DATA_BASE') {
-      Get.back();
-      Get.snackbar('Error', 'ocurrio un error',
-          snackPosition: SnackPosition.BOTTOM);
-    }
-    if (error == 'Connection refused' || error == 'Network is unreachable') {
-      if (Get.isDialogOpen) Get.back();
-      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
-    }
-  }
-
-  void getImage(String tipo) async {
-    final imagecapture = await imageCapture.getImage(tipo);
-    if (!imagecapture.isNullOrBlank) {
-      image = await CompressImagePlugin.getImage(imagecapture);
-      Get.back();
-      update();
-    }
-    if (imagecapture.isNullOrBlank) {
-      Get.back();
-      Get.snackbar('No seleciono ninguna Imagen', '',
-          snackPosition: SnackPosition.BOTTOM);
-    }
-  }
-
-  /* void initUpdateProducto() async {
-    nombreProductoController.text = producto.nombre;
-    descripcionProductoController.text = producto.descripcion;
-    precioProductoController.text = producto.precio.toString();
-    if (image?.path != null) await image.delete();
-  } */
-
- /*  ImageSelect selectImage() {
-    if (actualizar && producto.imagen != '' && image?.path == null)
-      return ImageSelect.URL;
-    if (actualizar && producto.imagen != '' && image?.path != null)
-      return ImageSelect.PATH_IMAGE;
-    if (actualizar && producto.imagen == '' && image?.path == null)
-      return ImageSelect.NO_IMAGE;
-    if (actualizar && producto.imagen == '' && image?.path != null)
-      return ImageSelect.PATH_IMAGE;
-    if (!actualizar && image?.path != null) return ImageSelect.PATH_IMAGE;
-    if (!actualizar && image?.path == null) return ImageSelect.NO_IMAGE;
-    return null;
-  } */
-
-  /* String _getimageUrl() {
-    if (image?.path == null && actualizar) return producto.imagen;
-    if (image?.path == null && !actualizar) return '';
-    if (image?.path != null) return '${uid.v4()}.jpg';
-    return null;
-  } */
-
-  void _updateProductoList(Producto producto) {
-    Get.find<EmpresasController>().updateProductoList(producto);
-    Get.back();
-  }
+  
 }
 
-enum ImageSelect { NO_IMAGE, URL, PATH_IMAGE }
+

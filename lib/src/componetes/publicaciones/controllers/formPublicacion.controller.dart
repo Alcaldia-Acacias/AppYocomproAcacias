@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
@@ -119,7 +120,7 @@ class FormPublicacionesController extends GetxController {
     this.imagenes[index] = this.imagenes[index].copyWith(file: image);
     if(updatePublicacion){
       this.imagenesUpdate[index] = this.imagenesUpdate[index].copyWith(file: image,isaFile: true);
-     await DefaultCacheManager().removeFile('${Get.find<HomeController>().urlImagenes}/galeria/${ this.imagenesUpdate[index].nombre}');
+     await CachedNetworkImage.evictFromCache('${Get.find<HomeController>().urlImagenes}/galeria/${ this.imagenesUpdate[index].nombre}');
     }
 
   }
