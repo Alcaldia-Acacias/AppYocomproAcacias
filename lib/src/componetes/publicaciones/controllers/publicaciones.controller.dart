@@ -33,18 +33,17 @@ class PublicacionesController extends GetxController {
       await homeController.getTokenAnonimo();
       this.anonimo = true;
     }
-
     if (homeController.anonimo == EnumLogin.anonimo) {
       this.anonimo = true;
     }
-    super.onInit();
     idUsuario = box.read('id') ?? 1;
-    controller = controller = ScrollController(initialScrollOffset: 0);
+    controller = ScrollController(initialScrollOffset: 0);
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent)
         this.getPublicaciones();
     });
     this.getPublicaciones();
+    super.onInit();
   }
 
   @override

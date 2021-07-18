@@ -15,7 +15,6 @@ import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class FormProductoController extends GetxController {
@@ -52,10 +51,8 @@ class FormProductoController extends GetxController {
   @override
   void onInit() async {
     this.empresas = Get.find<HomeController>().usuario.empresas;
-
-    if(categorias.length == 0){
-      this._getcategorias();
-    }
+    this.categorias = Get.find<ProductosController>().categorias;
+   
     if(updateProducto){
       nombreController.text = productoUpdate.nombre;
       descripcionController.text = productoUpdate.descripcion;
@@ -168,16 +165,7 @@ void getImage(String tipo, [bool cambiar = false, int index]) async {
      imagenesUpdate.add(
          ImageFile(file: image, nombre: '${uid.v4()}.jpg', isaFile: true));
  }
-    
- void _getcategorias() async {
-   final response = await repositorio.getCategorias();
-   if(response is ResponseProducto){
-     this.categorias = response.categorias;
-     update();
-   }
-   if(response is ErrorResponse) print(response.getError);
- }
-    
+        
  bool _validate() {
    if(!this.formKey.currentState.validate()){
      Get.snackbar('Faltan Datos','Llena los datos requeridos');

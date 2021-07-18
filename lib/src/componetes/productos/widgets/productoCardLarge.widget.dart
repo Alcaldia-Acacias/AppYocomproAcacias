@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProductoCardLarge extends StatelessWidget {
 
-  final String imagen;
-  final bool oferta;
-  const ProductoCardLarge({Key key,this.imagen,this.oferta}) : super(key: key);
-  final imagenEmpresa = 'https://gestionpyme.com/wp-content/uploads/2015/09/shutterstock_227788621.jpg';
+  final Producto producto;
+
+  ProductoCardLarge({Key key,this.producto}) : super(key: key);
+  String urlImagenes = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +31,7 @@ class ProductoCardLarge extends StatelessWidget {
                           ],
                          ),
                          _precio(),
-                         if(oferta)
+                         if(producto.oferta)
                          _oferta()
                         ],
            )
@@ -43,11 +45,13 @@ Widget _empresa() {
            mainAxisAlignment: MainAxisAlignment.spaceAround,
            children: [
              CircleAvatar(
-             backgroundImage: NetworkImage(imagenEmpresa),   
+             backgroundImage:  producto.empresa.urlLogo.isNullOrBlank
+                               ? AssetImage('assets/imagenes/no_image.jpeg')
+                               : NetworkImage('$urlImagenes/logo/${producto.empresa.urlLogo}'),   
              ),
              SizedBox(width: 10),
              Flexible(
-             child: Text('Nombre Empresa largo es my largo extremada mente largo',
+             child: Text('${producto.empresa.nombre}',
                     overflow : TextOverflow.ellipsis,
                     style    : TextStyle(fontSize: 12),    
                     maxLines : 2,
@@ -61,7 +65,7 @@ Widget _empresa() {
 Widget _imagen() {
   return Expanded(
       child: CachedNetworkImage(
-             imageUrl    : imagen,
+             imageUrl    : '$urlImagenes/galeria/${producto.imagenes[0]}',
              fit         : BoxFit.cover,
              placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
              errorWidget : (context, url, error) => Icon(Icons.error),
@@ -75,20 +79,20 @@ Widget _precio() {
          right  : 2,
          child  : RawChip(
                   backgroundColor: Colors.white,
-                  label: Text('\u0024 5000',style: TextStyle(color: Get.theme.primaryColor))
+                  label: Text('\u0024 ${producto.precio}',style: TextStyle(color: Get.theme.primaryColor))
                   ),
          );
 }
 
 Widget _oferta() {
   return Positioned(
-         top: 45,
-         left: 0,
-         child: Icon(
-                Icons.star_rate,
-                color:Colors.yellow,
-                size: 40,
-                )
+         top    : 48,
+         left   : 3,
+         child  : RawChip(
+                  backgroundColor: Colors.white,
+                  label          : Text('Oferta'),
+                  avatar         : Icon(Icons.star,color: Colors.yellow),
+         )
          );
 }
 }

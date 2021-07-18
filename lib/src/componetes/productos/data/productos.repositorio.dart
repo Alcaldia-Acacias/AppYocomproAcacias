@@ -27,6 +27,24 @@ class ProductosRepositorio {
       return ErrorResponse(error);
     }
   }
+  Future<ResponseModel> getAllProductos(int page,{bool oferta}) async {
+    try {
+      final response = await this._dio.get('/productos',queryParameters: {'page': page,'oferta' : oferta});
+      final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
+      return ResponseProducto(productos: productos);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
+  Future<ResponseModel> getAllProductosByCategoria(int page,int idCategoria) async {
+    try {
+      final response = await this._dio.get('/productos/categoria/$idCategoria',queryParameters: {'page': page,});
+      final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
+      return ResponseProducto(productos: productos);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  }
 
   Future<ResponseModel> updateProducto(
       Producto producto, int idEmpresa, List<ImageFile> imagenes) async {
@@ -78,22 +96,16 @@ class ProductosRepositorio {
     } on DioError catch (error) {
       return ErrorResponse(error);
     }
-  }
-
-  /* Future<ResponseModel> updateProducto(Producto producto, int idEmpresa,
-      {String path}) async {
+  } 
+  Future<ResponseModel> getProductoByEmpresa(int idEmpresa) async {
     try {
-      FormData data = FormData.fromMap({
-        "id": producto.id,
-        ...producto.toMap(idEmpresa),
-        "file": path.isNull
-            ? null
-            : await MultipartFile.fromFile(path, filename: "${producto.imagen}")
-      });
-      final response = await this._dio.put('/productos/update', data: data);
-      return ResponseProducto(update: response.data);
+      final response = await this._dio.get('/productos/empresa/$idEmpresa');
+      final productos = response.data
+          .map<Producto>((producto) => Producto.toJson(producto))
+          .toList();
+      return ResponseProducto(productos: productos);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }
-  } */
+  } 
 }

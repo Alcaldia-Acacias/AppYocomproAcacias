@@ -1,4 +1,7 @@
-import 'package:comproacacias/src/componetes/productos/controllers/tienda.controller.dart';
+import 'dart:ui';
+
+import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
+import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/views/pedidos.view.dart';
 import 'package:comproacacias/src/componetes/productos/views/producto.view.dart';
@@ -26,8 +29,9 @@ class ProductosList extends StatelessWidget {
                       )
                    ],
            ),
-           body  : GetBuilder<TiendaController>(
-                   init    : TiendaController(),
+           body  : GetBuilder<ProductosController>(
+                   init    : ProductosController(repositorio: ProductosRepositorio()),
+                   id      : 'productos',
                    builder : (state){
                      return Padding(
                        padding: const EdgeInsets.all(8.0),
@@ -48,7 +52,7 @@ class ProductosList extends StatelessWidget {
     );
   }
 
- Widget _categorias(TiendaController state) {
+ Widget _categorias(ProductosController state) {
    return Container(
           height : 60,
           child  : ListView.separated(
@@ -58,12 +62,21 @@ class ProductosList extends StatelessWidget {
                    itemBuilder      : (_,i){
                          return RawChip(
                                 backgroundColor : Colors.white,
-                                label           : Text(state.categorias[i]),
+                                label           : Text(state.categorias[i].nombre),
                                 shape           : RoundedRectangleBorder(
                                                   borderRadius : BorderRadius.circular(20),
                                                   side         : BorderSide(color: Get.theme.primaryColor)
                                 ),
-                                onPressed: (){},
+                                selected        : state.categorias[i].selecionada,
+                                selectedColor   : Get.theme.primaryColor,
+                                labelStyle      : state.categorias[i].selecionada
+                                                  ? TextStyle(color: Colors.white)
+                                                  : null,
+                                checkmarkColor  : Colors.white,
+                                onPressed       : () => state.filterProductosSelect(
+                                                        indexCategoria: i,
+                                                        idCategoria: state.categorias[i].id
+                                ),
                                    
                          );
                    }
@@ -78,34 +91,55 @@ class ProductosList extends StatelessWidget {
     );
   }
 
-Widget _ofertas(TiendaController state) {
+Widget _ofertas(ProductosController state) {
    return Container(
           margin: EdgeInsets.only(top:5),
           height : 110,
           child  : ListView.separated(
+                   controller       : state.controllerOferta,
                    scrollDirection  : Axis.horizontal,
                    separatorBuilder : (_,i) => SizedBox(width: 10),
-                   itemCount        : 10,
+                   itemCount        : state.allWithOfertaProductos.length + 1,
                    itemBuilder      : (_,i){
+                         if(i == state.allWithOfertaProductos.length){
+                           return Center(
+                                  child : Padding(
+                                          padding: EdgeInsets.all(20),
+                                          child  : CircularProgressIndicator(),
+                                  ),
+                           );
+                         }
                          return GestureDetector(
-                                child : ProductoCardSmall(imagen: state.imagenes[0]),
-                                onTap : () =>Get.to(ProductoPage(producto: Producto())),
+                                child : ProductoCardSmall(producto: state.allWithOfertaProductos[i]),
+                                onTap : () =>Get.to(ProductoPage(producto: state.allProductos[i])),
                                 );
                    }
           )
    );
   }
 
-  Widget _productos(TiendaController state) {
+  Widget _productos(ProductosController state) {
     return Expanded(
            child: StaggeredGridView.countBuilder(
+                  controller     : state.controller,
                   crossAxisCount : 4,
-                  itemCount      : 8,
+                  itemCount      : state.allProductos.length + 1,
                   itemBuilder    : (_, int i) {
+                     if(i == state.allProductos.length){
+                        return Center(
+                               child: Container(
+                                      padding : EdgeInsets.all(10),
+                                      child   : CircularProgressIndicator(),
+                                      )
+                        );
+                     }
                      return GestureDetector(
-                            child: ProductoCardLarge(imagen: state.imagenes[0],oferta: true),
-                            onTap: ()=>Get.to(ProductoPage(producto: Producto())),
-                            );
+                            child: ProductoCardLarge(
+                                   producto:  state.allProductos[i],
+                            ),
+                            onTap: ()=>Get.to(ProductoPage(producto: state.allProductos[i]))
+                     );
+                            
                   },
                   staggeredTileBuilder: (int i) => StaggeredTile.count(2, i.isEven ? 3 : 4),
                   mainAxisSpacing: 6.0,

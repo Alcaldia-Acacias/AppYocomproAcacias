@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProductoCardSmall extends StatelessWidget {
   
-  final String imagen;
+  final Producto producto;
   
-  const ProductoCardSmall({Key key,this.imagen}) : super(key: key);
-
+  ProductoCardSmall({Key key,this.producto}) : super(key: key);
+  final urlImagen = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -20,7 +22,7 @@ class ProductoCardSmall extends StatelessWidget {
         child: ClipRRect( 
                    borderRadius : BorderRadius.circular(20),
                    child        : CachedNetworkImage(
-                                  imageUrl    : imagen,
+                                  imageUrl    : '$urlImagen/galeria/${producto.imagenes[0]}',
                                   fit         : BoxFit.cover,
                                   placeholder : (context, url) =>  Image.asset('assets/imagenes/load_image.gif'),
                                   errorWidget : (context, url, error) => Icon(Icons.error),
@@ -31,7 +33,7 @@ class ProductoCardSmall extends StatelessWidget {
         alignment: Alignment(0,1.24),
         child: RawChip(
                backgroundColor: Get.theme.primaryColor,
-               label: Text('\u0024 5000',style:TextStyle(color: Colors.white)),
+               label: Text('\u0024 ${producto.precio}',style:TextStyle(color: Colors.white)),
                ), 
         )
       ],

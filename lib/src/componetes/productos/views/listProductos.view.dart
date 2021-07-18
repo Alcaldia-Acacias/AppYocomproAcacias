@@ -3,7 +3,6 @@ import 'package:comproacacias/src/componetes/home/controllers/home.controller.da
 import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
 import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/componetes/productos/views/formproduct.view.dart';
-import 'package:comproacacias/src/componetes/publicaciones/views/addpublicacion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
@@ -19,9 +18,12 @@ class ListProductos extends StatelessWidget {
                    elevation : 0,
            ),
            body  : GetBuilder<ProductosController>(
-                   init:  ProductosController(repositorio: ProductosRepositorio()),
                    id: 'productos',
                    builder: (state){
+                     if(state.loadingProductos)
+                      return Center(child: CircularProgressIndicator());
+                     if(state.productos.length == 0)
+                      return Center(child: Text('No Hay Productos'));
                      return _listProductos(state);
                    },
            ),
