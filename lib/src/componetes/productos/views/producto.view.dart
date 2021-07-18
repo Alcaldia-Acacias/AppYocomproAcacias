@@ -9,12 +9,16 @@ import 'package:get/get.dart';
 
 class ProductoPage extends StatelessWidget {
   
-  final Producto producto;
-  ProductoPage({Key key,this.producto}) : super(key: key);
+  
+  ProductoPage({Key key}) : super(key: key);
   final urlImagenes = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GetBuilder<ProductosController>(
+           id: 'producto',
+           builder: (state){
+           var producto = state.productoSelecionado;
+           return Scaffold(
            appBar: AppBar(
                    elevation : 0,
                    title: Text('${producto.empresa.nombre}'),
@@ -25,23 +29,25 @@ class ProductoPage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
-                       _imagenes(),
-                       _descripcion(),
-                       _botonPedir(),
+                       _imagenes(producto),
+                       _descripcion(producto),
+                       _botonPedir(producto),
                        SizedBox(height: 8),
                        Text('Mas Productos',
                           textAlign: TextAlign.left,
                           style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold)
                    ),
-                       _masProductos()
+                       _masProductos(producto)
                      ],
              ),
                         ),
            )
+       );
+    },
     );
   }
 
-Widget _imagenes() {
+Widget _imagenes(Producto producto) {
   return Expanded(
          flex: 3,
          child: Padding(
@@ -49,7 +55,7 @@ Widget _imagenes() {
            child: Swiper(
                   itemCount: producto.imagenes.length,
                   pagination: SwiperPagination(),
-                  itemWidth: 300,
+                  itemWidth: 500,
                   layout: SwiperLayout.STACK,
                   itemBuilder: (_,i){
                     return ClipRRect(
@@ -67,9 +73,9 @@ Widget _imagenes() {
          );
 }
 
-Widget _descripcion() {
+Widget _descripcion(Producto producto) {
   return Expanded(
-         flex: 1,
+         flex: producto.oferta ? 2 : 1,
          child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -83,13 +89,26 @@ Widget _descripcion() {
                        maxLines: 3,
                        overflow: TextOverflow.ellipsis,
                  ),
-                 )
+                 ),
+                 if(producto.oferta)
+                 RawChip(
+                  backgroundColor: Colors.white,
+                  label          : Text('Oferta'),
+                  avatar         : Icon(Icons.star,color: Colors.yellow),
+                 ),
+                 if(producto.oferta)
+                 Flexible(
+                 child: Text('${producto.descripcionOferta}',
+                       maxLines: 3,
+                       overflow: TextOverflow.ellipsis,
+                 ),
+                 ),
                 ],
          )
          );
 }
 
-Widget _botonPedir() {
+Widget _botonPedir(Producto producto) {
   return Expanded(
          flex:  1,
          child: Card(
@@ -116,9 +135,9 @@ Widget _botonPedir() {
          );
 }
 
-  _masProductos() {
+  _masProductos(Producto producto) {
     return Expanded(
-           flex: 2,
+           flex: producto.oferta ? 1 : 2,
            child: GetBuilder<ProductosController>(
                   id     : 'productos_empresa',
                   builder:  (state){
@@ -136,7 +155,7 @@ Widget _botonPedir() {
                            itemBuilder      : (_,i){
                                  return GestureDetector(
                                         child : ProductoCardSmall(producto: state.productosByEmpresa[i]),
-                                        onTap : () =>Get.to(ProductoPage(producto: Producto())),
+                                        onTap : () => state.selectProducto(state.productosByEmpresa[i])
                                         );
                            }
                     );

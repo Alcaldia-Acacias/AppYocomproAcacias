@@ -12,13 +12,15 @@ class ProductosController extends GetxController {
   
   final ProductosRepositorio repositorio;
   final int idEmpresa;
-  final Producto producto;
+
 
 
   ProductosController(
       {this.repositorio,
       this.idEmpresa,
-      this.producto});
+      });
+
+  Producto productoSelecionado;
 
   List<Producto> productos = [];
   List<Producto> allProductos = [];
@@ -30,7 +32,7 @@ class ProductosController extends GetxController {
   int _paginaOferta = 0;
   int _paginaFilter = 0;
   
-  bool loading    = false;
+  bool loading  = false;
   
 
   ScrollController controller = ScrollController(initialScrollOffset: 0);
@@ -131,6 +133,10 @@ class ProductosController extends GetxController {
     }
   }
 
+  void selectProducto(Producto producto) {
+    this.productoSelecionado = producto;
+    update(['producto']);
+  }
   void _getProductosByUsuario(int idUsuario) async {
     this.loading = true;
     update(['productos']);

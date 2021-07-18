@@ -111,8 +111,9 @@ Widget _ofertas(ProductosController state) {
                          return GestureDetector(
                                 child : ProductoCardSmall(producto: state.allWithOfertaProductos[i]),
                                 onTap : () {
-                                  Get.to(ProductoPage(producto: state.allWithOfertaProductos[i]));
+                                  Get.to(ProductoPage());
                                   state.getProductosByEmpresa(state.allWithOfertaProductos[i].empresa.id);
+                                  state.selectProducto(state.allWithOfertaProductos[i]);
                                 }
                                 );
                    }
@@ -140,8 +141,9 @@ Widget _ofertas(ProductosController state) {
                                    producto:  state.allProductos[i],
                             ),
                            onTap : () {
-                                  Get.to(ProductoPage(producto: state.allProductos[i]));
+                                  Get.to(ProductoPage());
                                   state.getProductosByEmpresa(state.allProductos[i].empresa.id);
+                                  state.selectProducto(state.allProductos[i]);
                                 }
                      );
                             
