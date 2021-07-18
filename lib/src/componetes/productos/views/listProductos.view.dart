@@ -20,7 +20,7 @@ class ListProductos extends StatelessWidget {
            body  : GetBuilder<ProductosController>(
                    id: 'productos',
                    builder: (state){
-                     if(state.loadingProductos)
+                     if(state.loading)
                       return Center(child: CircularProgressIndicator());
                      if(state.productos.length == 0)
                       return Center(child: Text('No Hay Productos'));

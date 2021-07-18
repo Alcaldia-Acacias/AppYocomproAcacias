@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
 import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
-import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/views/pedidos.view.dart';
 import 'package:comproacacias/src/componetes/productos/views/producto.view.dart';
 import 'package:comproacacias/src/componetes/productos/widgets/productoCardLarge.widget.dart';
@@ -111,7 +110,10 @@ Widget _ofertas(ProductosController state) {
                          }
                          return GestureDetector(
                                 child : ProductoCardSmall(producto: state.allWithOfertaProductos[i]),
-                                onTap : () =>Get.to(ProductoPage(producto: state.allProductos[i])),
+                                onTap : () {
+                                  Get.to(ProductoPage(producto: state.allWithOfertaProductos[i]));
+                                  state.getProductosByEmpresa(state.allWithOfertaProductos[i].empresa.id);
+                                }
                                 );
                    }
           )
@@ -137,7 +139,10 @@ Widget _ofertas(ProductosController state) {
                             child: ProductoCardLarge(
                                    producto:  state.allProductos[i],
                             ),
-                            onTap: ()=>Get.to(ProductoPage(producto: state.allProductos[i]))
+                           onTap : () {
+                                  Get.to(ProductoPage(producto: state.allProductos[i]));
+                                  state.getProductosByEmpresa(state.allProductos[i].empresa.id);
+                                }
                      );
                             
                   },

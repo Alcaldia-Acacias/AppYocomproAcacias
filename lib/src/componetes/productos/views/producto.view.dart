@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/widgets/productoCardSmall.widget.dart';
 import 'package:flutter/material.dart';
@@ -118,18 +119,29 @@ Widget _botonPedir() {
   _masProductos() {
     return Expanded(
            flex: 2,
-           child: ListView.separated(
-                   padding: EdgeInsets.symmetric(horizontal: 2,vertical: 10),
-                   scrollDirection  : Axis.horizontal,
-                   separatorBuilder : (_,i) => SizedBox(width: 10),
-                   itemCount        : 0,
-                   itemBuilder      : (_,i){
-                         return GestureDetector(
-                                child : ProductoCardSmall(),
-                                onTap : () =>Get.to(ProductoPage(producto: Producto())),
-                                );
-                   }
-          )
-           );
+           child: GetBuilder<ProductosController>(
+                  id     : 'productos_empresa',
+                  builder:  (state){
+                    if(state.loading){
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if(state.productosByEmpresa.length == 0){
+                      return Center(child: Text('No hay Productos'));
+                    }
+                    return ListView.separated(
+                           padding: EdgeInsets.symmetric(horizontal: 2,vertical: 10),
+                           scrollDirection  : Axis.horizontal,
+                           separatorBuilder : (_,i) => SizedBox(width: 10),
+                           itemCount        : state.productosByEmpresa.length,
+                           itemBuilder      : (_,i){
+                                 return GestureDetector(
+                                        child : ProductoCardSmall(producto: state.productosByEmpresa[i]),
+                                        onTap : () =>Get.to(ProductoPage(producto: Producto())),
+                                        );
+                           }
+                    );
+                  },
+           )
+    );
   }
 }

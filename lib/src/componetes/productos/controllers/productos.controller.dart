@@ -23,15 +23,15 @@ class ProductosController extends GetxController {
   List<Producto> productos = [];
   List<Producto> allProductos = [];
   List<Producto> allWithOfertaProductos = [];
-  List<Producto> filterProductos = [];
+  List<Producto> productosByEmpresa = [];
   List<CategoriaProducto> categorias = [];
 
   int _pagina = 0;
   int _paginaOferta = 0;
   int _paginaFilter = 0;
   
-  bool loadingProductos    = false;
-  bool loadingAllProductos = false;
+  bool loading    = false;
+  
 
   ScrollController controller = ScrollController(initialScrollOffset: 0);
   ScrollController controllerOferta = ScrollController(initialScrollOffset: 0);
@@ -116,15 +116,28 @@ class ProductosController extends GetxController {
    this.allProductos = await this._getProductosByCategoria(categorias[indexCategoria].id);
    update(['productos']);
   }
-
+  
+   Future<void> getProductosByEmpresa(int idEmpresa) async {
+    this.loading = true;
+    update(['productos_empresa']);
+    final response = await repositorio.getProductoByEmpresa(idEmpresa);
+    if(response is ResponseProducto){
+      this.productosByEmpresa = response.productos;
+      this.loading = false;
+      update(['productos_empresa']);
+    }
+    if(response is ErrorResponse){
+      print(response.getError);
+    }
+  }
 
   void _getProductosByUsuario(int idUsuario) async {
-    this.loadingProductos = true;
+    this.loading = true;
     update(['productos']);
     final response = await repositorio.getProductoByUsuario(idUsuario);
     if(response is ResponseProducto){
        this.productos = response.productos;
-       this.loadingProductos = false;
+       this.loading = false;
        update(['productos']);
     }
     if(response is ErrorResponse)print('Error');
