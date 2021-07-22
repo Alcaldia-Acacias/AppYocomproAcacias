@@ -9,7 +9,7 @@ class ProductoCardLarge extends StatelessWidget {
   final Producto producto;
 
   ProductoCardLarge({Key key,this.producto}) : super(key: key);
-  String urlImagenes = Get.find<HomeController>().urlImagenes;
+  final String urlImagenes = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return Container(

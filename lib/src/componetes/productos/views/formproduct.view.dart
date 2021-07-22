@@ -22,7 +22,7 @@ class FormProducto extends StatelessWidget {
 
 
 final String urlImagenes = Get.find<HomeController>().urlImagenes;
-Uuid uuid = Uuid();
+ final Uuid uuid = Uuid();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -204,7 +204,7 @@ _oferta(FormProductoController state) {
                    height : 50,
                    color  : Colors.grey.shade200,
                    child  : state.empresaSelecionada.isNullOrBlank ?
-                            Center(child: Text('Toca Para Escojer una empresa'))
+                            Center(child: Text('Toca Para Escoger una empresa'))
                             : ListTile(
                               title   : Text(state.empresaSelecionada.nombre),
                               leading : CircleAvatar(
@@ -225,7 +225,7 @@ _dialogoEmpresas(FormProductoController state) {
                 children: [
                   Container(
                   height : 50,
-                  child  : Center(child : Text('Escoje una Empresa')),  
+                  child  : Center(child : Text('Escoge una Empresa')),  
                   ),
                   Expanded(
                   child: ListView.builder(
@@ -259,7 +259,7 @@ _dialogoCategorias(FormProductoController state) {
                 children: [
                   Container(
                   height : 50,
-                  child  : Center(child : Text('Escoje una Categoria')),  
+                  child  : Center(child : Text('Escoge una Categoria')),  
                   ),
                   Expanded(
                   child: ListView.builder(
@@ -292,7 +292,7 @@ _categorias(FormProductoController state) {
                    height : 50,
                    color  : Colors.grey.shade200,
                    child  : state.categoriaSelecionada.isNullOrBlank ?
-                            Center(child: Text('Toca Para Escojer una Categoria'))
+                            Center(child: Text('Toca Para Escoger una Categoria'))
                             : ListTile(
                               title   : Text(state.categoriaSelecionada.nombre),
                               leading : CircleAvatar(

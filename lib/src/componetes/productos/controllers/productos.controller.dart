@@ -1,24 +1,25 @@
+import 'dart:io';
+
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/componetes/productos/models/categoriaProducto.model.dart';
+import 'package:comproacacias/src/componetes/productos/models/pedido.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/response.producto.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 
 class ProductosController extends GetxController {
   
   final ProductosRepositorio repositorio;
-  final int idEmpresa;
 
-
-
-  ProductosController(
-      {this.repositorio,
-      this.idEmpresa,
-      });
+  ProductosController({this.repositorio});
 
   Producto productoSelecionado;
 
@@ -27,16 +28,21 @@ class ProductosController extends GetxController {
   List<Producto> allWithOfertaProductos = [];
   List<Producto> productosByEmpresa = [];
   List<CategoriaProducto> categorias = [];
+  List<Pedido> pedidos = [];
 
   int _pagina = 0;
   int _paginaOferta = 0;
   int _paginaFilter = 0;
+  int cantidadProducto = 1;
   
   bool loading  = false;
   
+  Usuario usuario;
 
   ScrollController controller = ScrollController(initialScrollOffset: 0);
   ScrollController controllerOferta = ScrollController(initialScrollOffset: 0);
+
+  TextEditingController controllerObservacion = TextEditingController();
 
   @override
   void onInit() {
@@ -135,8 +141,71 @@ class ProductosController extends GetxController {
 
   void selectProducto(Producto producto) {
     this.productoSelecionado = producto;
-    update(['producto']);
+    this.cantidadProducto = 1;
+    update(['producto','cantidad']);
   }
+
+  void cambiarCantidad({bool aumentar}){
+    if(aumentar){
+      this.cantidadProducto ++;
+      update(['cantidad']);
+    }
+    if(!aumentar && this.cantidadProducto > 0){
+      this.cantidadProducto --;
+      update(['cantidad']);
+    }
+  }
+ // pedido controller  
+  void addPedido(Producto producto){
+    Pedido pedido;
+    final newProducto = producto.copyWith(cantidad: this.cantidadProducto);
+
+    if(this._existPedido(newProducto.empresa.id)){
+      if(this._existProductoInPedido(newProducto.empresa.id,newProducto.id)){
+       Get.snackbar('Producto no agregado','el producto ya existe en el pedido');
+     }
+      if(!this._existProductoInPedido(newProducto.empresa.id,newProducto.id)){
+         final index = this.pedidos
+                       .indexWhere((pedido) => pedido.empresa.id == newProducto.empresa.id);
+         this.pedidos[index].productos.add(newProducto);
+     }
+   }
+   if(!this._existPedido(producto.empresa.id)){
+     pedido = Pedido(
+              id:  Uuid().v4(),
+              empresa : producto.empresa,
+              usuario : Get.find<HomeController>().usuario,
+              observacion: '',
+              productos: []
+     );
+     pedido.productos.add(newProducto);
+     this.pedidos.add(pedido);
+     Get.snackbar('Producto agregado','');
+   }
+   update(['carrito']);
+  }
+  //pedidos controller
+  void sendPedido(Pedido pedido) {
+   final newPedido = pedido.copyWith(observacion: controllerObservacion.text);
+   var texto = 'Hola Buenos Dias ${newPedido.empresa.nombre} soy ${newPedido.usuario.nombre} mi pedido es';
+   newPedido.productos.forEach((producto) {
+     texto = '$texto  ${producto.cantidad} de ${producto.nombre},';
+   });
+   texto = '$texto y con las siguientes observaciones: ${newPedido.observacion}';
+   print(texto);
+  }
+ 
+
+  //pedidos controller 
+  void deleteProductoOf(int index,int idEmpresa){
+    final indexPedido = this._indexPedidos(idEmpresa);
+    if(this.pedidos[indexPedido].productos.length == 1)
+      this.pedidos.removeAt(indexPedido);
+    else
+      this.pedidos[indexPedido].productos.removeAt(index);
+    update(['pedidos']);
+  }
+
   void _getProductosByUsuario(int idUsuario) async {
     this.loading = true;
     update(['productos']);
@@ -189,8 +258,45 @@ class ProductosController extends GetxController {
     }
     return this.allProductos;
   }
+ // pedido controller  
+  bool _existPedido(int idEmpresa) {
+   final index = this._indexPedidos(idEmpresa);
+   if(index == -1)
+    return false;
+   else return true;
+  }
+ // pedido controller  
+  bool _existProductoInPedido(int idEmpresa,int idProducto) {
+   final index = this._indexPedidos(idEmpresa);
+   final indexProducto = this.pedidos[index].productos
+                      .indexWhere((producto) => producto.id == idProducto);
+   if(indexProducto != -1)
+     return true;
+   else return false;
+  }
+  int _indexPedidos(int idEmpresa){
+    return this.pedidos
+          .indexWhere((pedido) => pedido.empresa.id == idEmpresa);
+  }
   
-  
+  void goToWhatsapp(
+    String telefono,
+    String texto
+  ) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/+57$telefono/?text=${Uri.parse('texto')}";
+      } else {
+        return "whatsapp://send?phone=+57$telefono&text=${Uri.parse('texto')}";
+      }
+    }
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+
 }
 
 

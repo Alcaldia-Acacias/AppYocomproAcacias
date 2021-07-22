@@ -172,11 +172,11 @@ void getImage(String tipo, [bool cambiar = false, int index]) async {
      return false;
    }
    if(empresaSelecionada.isNullOrBlank && categoriaSelecionada.isNullOrBlank){
-     Get.snackbar('Faltan Datos','Escoje una Empresa o Categoria');
+     Get.snackbar('Faltan Datos','Escoge una Empresa o Categoria');
      return false;
    }
    if(!updateProducto && imagenes.length < 1){
-     Get.snackbar('Faltan Datos','Escoje al menos una imagen');
+     Get.snackbar('Faltan Datos','Escoge al menos una imagen');
      return false;
    }
    return true;

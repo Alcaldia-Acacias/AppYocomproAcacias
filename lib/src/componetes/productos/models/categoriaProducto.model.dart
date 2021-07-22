@@ -1,4 +1,3 @@
-import 'package:comproacacias/src/componetes/categorias/models/categoria.model.dart';
 
 class CategoriaProducto {
   final int id;

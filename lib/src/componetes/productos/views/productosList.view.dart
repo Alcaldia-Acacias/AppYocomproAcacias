@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:badges/badges.dart';
 import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
 import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/componetes/productos/views/pedidos.view.dart';
@@ -21,11 +22,7 @@ class ProductosList extends StatelessWidget {
                    elevation : 0,
                    title     : Text('Tienda'),
                    actions   : [
-                      IconButton(
-                      icon      : Icon(Icons.shopping_cart_outlined), 
-                      color     : Get.theme.primaryColor,
-                      onPressed : () => Get.to(PedidosPage())
-                      )
+                    _butonIconNotification()
                    ],
            ),
            body  : GetBuilder<ProductosController>(
@@ -151,7 +148,33 @@ Widget _ofertas(ProductosController state) {
                   staggeredTileBuilder: (int i) => StaggeredTile.count(2, i.isEven ? 3 : 4),
                   mainAxisSpacing: 6.0,
                   crossAxisSpacing: 6.0,
-),
+           ),
     );
+  }
+  _butonIconNotification() {
+   return  GetBuilder<ProductosController>(
+           id: 'carrito',
+           builder: (state){
+           if(state.pedidos.length > 0)
+           return Badge(
+                  badgeContent : Text('${state.pedidos.length}',
+                                      style: TextStyle(color: Colors.white,fontSize: 13)),
+                  position     : BadgePosition(top: 3,start: 28),
+                  badgeColor   : Colors.red,
+                  child        : IconButton(
+                                 icon      : Icon(Icons.shopping_cart_outlined),
+                                 color     : Get.theme.primaryColor,
+                                 iconSize  : 30,
+                                 onPressed : ()=>Get.to(PedidosPage())
+                  ),
+           );
+           return IconButton(
+                  icon      : Icon(Icons.shopping_cart_outlined),
+                  color     : Colors.grey,
+                  iconSize  : 30,
+                  onPressed : ()=>Get.to(PedidosPage())
+           );
+           }
+           );
   }
 }

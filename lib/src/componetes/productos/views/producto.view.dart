@@ -127,6 +127,7 @@ Widget _botonPedir(Producto producto) {
                                       label           : Text('Agregar'),
                                       avatar          : Icon(Icons.add,color: Colors.white),
                                       labelStyle      : TextStyle(color: Colors.white),
+                                      onPressed       : ()=> _dialogoPedir(producto),
                                       )
                                     ],
                           ),
@@ -161,6 +162,58 @@ Widget _botonPedir(Producto producto) {
                     );
                   },
            )
+    );
+  }
+
+  _dialogoPedir(Producto producto) {
+    Get.defaultDialog(
+    title: 'Cantidad',
+    content :  _cantidad(producto),
+    actions :[
+        RaisedButton(
+        child    : Text('Agregar',style : TextStyle(color: Colors.white)),
+        color    : Get.theme.primaryColor,
+        onPressed: (){
+          Get.back();
+          Get.find<ProductosController>().addPedido(producto);
+        }
+        ),
+        RaisedButton(
+        child    : Text('Cancelar',style : TextStyle(color: Colors.white)),
+        color    : Get.theme.accentColor,
+        onPressed: ()=>Get.back()
+        ),     
+    ] 
+    );
+  }
+
+
+
+  _cantidad(Producto producto) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      width: 300,
+      child: GetBuilder<ProductosController>(
+             id: 'cantidad',
+             builder: (state){
+               return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                       RaisedButton(
+                       child    : Text('-',style : TextStyle(color: Colors.white,fontSize: 20)),
+                       color    : Get.theme.accentColor,
+                       onPressed: ()=> state.cambiarCantidad(aumentar: false)
+                       ),
+                       Text('${state.cantidadProducto}'),
+                       RaisedButton(
+                       child    : Text('+',style : TextStyle(color: Colors.white,fontSize: 20)),
+                       color    : Get.theme.primaryColor,
+                       onPressed: ()=> state.cambiarCantidad(aumentar: true)
+                       )
+                      ],
+               );
+             },
+      )
     );
   }
 }

@@ -46,7 +46,7 @@ class FormEmpresaController extends GetxController {
   FocusNode nitFoco = FocusNode();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   int currentPage = 0;
-  String titulo = 'Escoje tu Logo';
+  String titulo = 'Escoge tu Logo';
   final box = GetStorage();
   final picker = ImagePicker();
   File image;

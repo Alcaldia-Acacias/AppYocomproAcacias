@@ -1,13 +1,19 @@
 
-import 'package:comproacacias/src/componetes/productos/controllers/tienda.controller.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
+import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
+import 'package:comproacacias/src/componetes/productos/models/pedido.model.dart';
+import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
+import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class PedidosPage extends StatelessWidget {
-  const PedidosPage({Key key}) : super(key: key);
-final imagenEmpresa = 'https://gestionpyme.com/wp-content/uploads/2015/09/shutterstock_227788621.jpg';
-final imagen = 'https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/styles/2400/public/media/image/2020/08/hamburguesa-2028707.jpg?itok=YeexorXR';
+   
+  PedidosPage({Key key}) : super(key: key);
+  final urlImagenes = Get.find<HomeController>().urlImagenes;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,14 +21,15 @@ final imagen = 'https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/st
                    elevation : 0,
                    title     : Text('Pedidos'),
            ),
-           body: GetBuilder<TiendaController>(
-                builder: (state){
+           body: GetBuilder<ProductosController>(
+                 id: 'pedidos',
+                 builder: (state){
                    return ListView.separated(
-                          padding     : EdgeInsets.all(20),
-                          itemCount   : 3,
+                          padding     : EdgeInsets.all(30),
+                          itemCount   : state.pedidos.length,
                           separatorBuilder: (_,i)=>SizedBox(height: 30),
                           itemBuilder : (_,i){
-                            return _cardPedido();
+                            return _cardPedido(state.pedidos[i]);
                           }
                           );
                 }
@@ -30,9 +37,8 @@ final imagen = 'https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/st
     );
   }
 
-  Widget _cardPedido() {
+  Widget _cardPedido(Pedido pedido) {
     return Container(
-          
            clipBehavior : Clip.antiAlias,
            height       : 400,
            width        : 200,
@@ -42,27 +48,27 @@ final imagen = 'https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/st
            ),
            child      : Column(
                         children:<Widget>[
-                          _empresa(),
+                          _empresa(pedido.productos[0].empresa),
                           _divider(),
-                          _pedidos(),
+                          _pedidos(pedido.productos),
                           _divider(),
-                          _bottonPedir()
+                          _bottonPedir(pedido)
                         ],
            ),
     );
   }
 
-  Widget _empresa() {
+  Widget _empresa(Empresa empresa) {
     return Padding(
       padding:  EdgeInsets.all(8.0),
       child: Row(
              children: [
                CircleAvatar(
-               backgroundImage: NetworkImage(imagenEmpresa),  
+               backgroundImage: CachedNetworkImageProvider('$urlImagenes/logo/${empresa.urlLogo}'),  
                radius: 30,
                ),
                SizedBox(width: 30),
-               Text('Nombre Empresa'),
+               Text('${empresa.nombre}'),
              ],
       ),
     );
@@ -76,22 +82,24 @@ final imagen = 'https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/st
            );
  }
 
-Widget  _pedidos() {
+Widget  _pedidos(List<Producto> productos) {
   return Expanded(
          child : ListView.separated(
-                 itemCount: 10,
+                 itemCount: productos.length,
                  separatorBuilder: (_,i)=>SizedBox(height:10),
                  itemBuilder: (_,i){
                    return ListTile(
+                          isThreeLine: true,
                           leading : CircleAvatar(
-                                    backgroundImage: NetworkImage(imagen),
+                                    backgroundImage: CachedNetworkImageProvider('$urlImagenes/galeria/${productos[i].imagenes[0]}'),
                                     radius: 40,
                           ),
-                          title: Text('Nombre Producto'),
+                          title: Text('${productos[i].nombre}'),
+                          subtitle: Text('Cantidad: ${productos[i].cantidad}           Precio: \u0024 ${productos[i].precio}'),
                           trailing: IconButton(
                                     icon      : Icon(Icons.delete),
                                     color     : Colors.red,
-                                    onPressed : (){},
+                                    onPressed : ()=>Get.find<ProductosController>().deleteProductoOf(i,productos[i].empresa.id),
                           ),
                    );
                  }
@@ -99,13 +107,34 @@ Widget  _pedidos() {
   );
 }
 
-Widget _bottonPedir() {
+Widget _bottonPedir(Pedido pedido) {
   return GestureDetector(
          child: Container(
                 height : 60,
                 color  : Get.theme.primaryColor,
                 child  : Center(child: Text('Hacer Pedido',style:TextStyle(color: Colors.white))),
          ),
+         onTap: ()=>_dialogoObservacion(pedido)
   );
 }
+
+  _dialogoObservacion(Pedido pedido) {
+    Get.defaultDialog(
+    title   : 'Escribe una Observacion',
+    content : InputForm(
+              controller: Get.find<ProductosController>().controllerObservacion,
+              textarea: true,
+              placeholder: 'Observacion',
+
+    ),
+    actions: [
+      RaisedButton(
+      color    : Get.theme.primaryColor,
+      child    : Text('Pedir'),
+      textColor: Colors.white,
+      onPressed: () => Get.find<ProductosController>().sendPedido(pedido)
+      )
+    ]
+    );
+  }
 }

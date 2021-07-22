@@ -41,7 +41,7 @@ class FormPublicacionPage extends StatelessWidget {
                                                               textarea    : true,
                                                               requerido   : true, 
                                                               ),
-                                                              _escojerEmpresa(state),
+                                                              _escogerEmpresa(state),
                                                               SizedBox(height: 10),
                                                               Text('Imagenes (máximo 5)'),
                                                               SizedBox(height: 10),
@@ -75,7 +75,7 @@ class FormPublicacionPage extends StatelessWidget {
     );
   }
 
-Widget _escojerEmpresa(FormPublicacionesController state) {
+Widget _escogerEmpresa(FormPublicacionesController state) {
   return ListTile(
          leading : Icon(Icons.business),
          // ignore: can_be_null_after_null_aware

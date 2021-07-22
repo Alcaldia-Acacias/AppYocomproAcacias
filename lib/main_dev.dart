@@ -38,7 +38,7 @@ main() async {
   await GetStorage.init();
   await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
-  Dependecias.init('http://192.168.1.2:8000');
+  Dependecias.init('http://localhost:8000');
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final internetCheck = await verificationInternet();
   runApp(MyApp(internetCheck: internetCheck));
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
           BindingsBuilder.put(() => HomeController(
               anonimo: _getEnumLogin(),
               repositorio: HomeRepocitorio(),
-              urlImagenes: 'http://192.168.1.2:8000/imagenes')),
+              urlImagenes: 'http://localhost:8000/imagenes')),
           BindingsBuilder.put(() =>
               PublicacionesController(repositorio: PublicacionesRepositorio())),
           BindingsBuilder.put(
@@ -101,14 +101,13 @@ class MyApp extends StatelessWidget {
       ],
     );
   }
-
-  String _inititialRoute() {
+  /* String _inititialRoute() {
     if (box.hasData('token') && internetCheck) return '/home';
     if (box.hasData('token') && !internetCheck) return '/offline';
     if (!box.hasData('token') && !internetCheck) return '/offline';
     if (!box.hasData('token') && internetCheck) return '/home';
     return '/';
-  }
+  } */
 
   EnumLogin _getEnumLogin() {
     if (box.hasData('token') && box.hasData('id')) return EnumLogin.usuario;

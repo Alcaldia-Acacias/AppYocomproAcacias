@@ -107,7 +107,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  String _inititialRoute()  {
+  /* String _inititialRoute()  {
     if(box.hasData('token') && internetCheck)
        return '/home';
     if(box.hasData('token') && !internetCheck)
@@ -117,7 +117,7 @@ class MyApp extends StatelessWidget {
     if(!box.hasData('token') && internetCheck)
        return '/home';
     return '/';
-  }
+  } */
    EnumLogin _getEnumLogin(){
   if(box.hasData('token') &&  box.hasData('id'))
    return EnumLogin.usuario;

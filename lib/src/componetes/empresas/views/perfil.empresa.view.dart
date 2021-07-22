@@ -3,19 +3,15 @@ import 'package:comproacacias/src/componetes/empresas/controller/empresas.contro
 import 'package:comproacacias/src/componetes/empresas/data/empresa.repositorio.dart';
 import 'package:comproacacias/src/componetes/empresas/models/empresa.model.dart';
 import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
-//import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
-import 'package:comproacacias/src/componetes/productos/views/formproduct.view.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificacion.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/calificar.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/datosCard.widget.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
-//import 'package:comproacacias/src/componetes/publicaciones/widgets/imagenes.widget.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 
