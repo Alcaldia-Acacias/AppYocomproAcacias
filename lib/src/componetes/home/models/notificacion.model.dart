@@ -2,6 +2,7 @@ import 'package:comproacacias/src/componetes/usuario/models/usuario.model.dart';
 import 'package:intl/intl.dart';
 
 class Notificacion {
+  
   final int id;
   final Usuario usuario;
   final String titulo, mensaje, fecha;

@@ -13,6 +13,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:youtube_api/youtube_api.dart';
 
 class HomeRepocitorio {
+  
   final _dio = Get.find<Dio>();
   final _box = GetStorage();
 

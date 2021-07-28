@@ -23,29 +23,34 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:comproacacias/src/plugins/google_sing_in.dart';
 
+ 
+
 class HomeController extends GetxController {
+
   final HomeRepocitorio repositorio;
   final String urlImagenes;
-  EnumLogin anonimo;
 
   HomeController({this.repositorio, this.urlImagenes, this.anonimo});
-  AnimationController controller;
+
   int page = 0;
-  Usuario usuario;
-  File image;
+  int notificacionesNoLeidas = 0;
+
   List<YouTubeVideo> videos = [];
   List<Notificacion> notifications = [];
-  ImageCaptureAvatar imageCapture = ImageCaptureAvatar();
-  TextEditingController searchControllerHome = TextEditingController();
   List<Empresa> empresas = [];
   List<Empresa> topEmpresas = [];
+
+  AnimationController controller;
+  ImageCaptureAvatar imageCapture = ImageCaptureAvatar();
+  TextEditingController searchControllerHome = TextEditingController();
   PushNotification pushNotification = Get.find<PushNotification>();
-  int notificacionesNoLeidas = 0;
+  EnumLogin anonimo;
+  Usuario usuario;
+  File image;
+ 
 
   @override
   void onInit() async {
-    super.onInit();
-
     if (anonimo == EnumLogin.notLogin) {
       await this.getTokenAnonimo();
       this.getvideos();
@@ -60,12 +65,12 @@ class HomeController extends GetxController {
     if (anonimo == EnumLogin.usuario) {
       this.getvideos();
       this.getTopEmpresas();
-
       if (this.usuario.isNullOrBlank) {
         await this.getUsuario();
         await this.loginInitOption();
       }
     }
+    super.onInit();
   }
 
   @override
@@ -80,12 +85,6 @@ class HomeController extends GetxController {
     update();
   }
 
-  Future getUsuario() async {
-    this.anonimo = EnumLogin.usuario;
-    this.usuario = await repositorio.getUsuario();
-    update();
-  }
-
   void selectPage(int page) {
     this.page = page;
     update(['bottomBar']);
@@ -95,53 +94,15 @@ class HomeController extends GetxController {
     await GetStorage().erase();
     await googleLogOut();
     await FacebookAuth.instance.logOut();
-    //await Get.find<PublicacionesController>().dispose();
     this.anonimo = EnumLogin.notLogin;
     this.selectPage(0);
     update();
-  }
-
-  void getImage(String tipo) async {
-    final imageCap = await imageCapture.getImage(tipo);
-    if (!imageCap.isNullOrBlank) {
-      image = await CompressImagePlugin.getImage(
-          imageCap, imageCapture.height, imageCapture.width);
-      final response = await repositorio.updateImagen(image.path, usuario.id);
-      if (response is HomeResponse) {
-        Get.back();
-        imageCap.delete();
-        update();
-      }
-      if (response is ErrorResponse) this._errorResponse(response.getError);
-    }
-    if (imageCap.isNullOrBlank) {
-      Get.back();
-      Get.snackbar('No seleciono ninguna Imagen', '',
-          snackPosition: SnackPosition.BOTTOM);
-    }
-  }
-
-  void _errorResponse(String error) {
-    if (error == 'Connection refused')
-      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
   }
 
   void registroActividad() async {
     final response = await repositorio.registroActividad(this.usuario.id);
     if (response is ErrorResponse) print(response.error);
     if (response is HomeResponse) print(response);
-  }
-
-  Future getTokenAnonimo() async {
-    final response = await repositorio.getTokenAnonimo();
-    if (response is ResponseHome) {
-      final box = GetStorage();
-      await box.write('token', response.tokenAnonimo);
-      Get.find<Dio>().options.headers = {
-        HttpHeaders.authorizationHeader: 'Bearer ${response.tokenAnonimo}'
-      };
-    }
-    if (response is ErrorResponse) print(response.error);
   }
 
   void getvideos() async {
@@ -161,14 +122,6 @@ class HomeController extends GetxController {
       topEmpresas = response.empresas;
       update(['top']);
     }
-  }
-
-  Future loginInitOption() async {
-    await this.getUsuario();
-    this._inicialPushNotificacitions();
-    this.registroActividad();
-    this._verificarTokenPush();
-    this.getNotificaciones();
   }
 
   void getNotificaciones() async {
@@ -194,6 +147,58 @@ class HomeController extends GetxController {
     if (response is ErrorResponse) print(response.getError);
   }
 
+  Future<void> getTokenAnonimo() async {
+    final response = await repositorio.getTokenAnonimo();
+    if (response is ResponseHome) {
+      final box = GetStorage();
+      await box.write('token', response.tokenAnonimo);
+      Get.find<Dio>().options.headers = {
+        HttpHeaders.authorizationHeader: 'Bearer ${response.tokenAnonimo}'
+      };
+    }
+    if (response is ErrorResponse) print(response.error);
+  }
+
+  Future<void> loginInitOption() async {
+    await this.getUsuario();
+    this._inicialPushNotificacitions();
+    this.registroActividad();
+    this._verificarTokenPush();
+    this.getNotificaciones();
+  }
+  
+  Future<void> getUsuario() async {
+    this.anonimo = EnumLogin.usuario;
+    this.usuario = await repositorio.getUsuario();
+    update();
+  }
+  // usuario controller
+  Future<StateHomeEnum> getImage(String tipo) async {
+    final imageCap = await imageCapture.getImage(tipo);
+    if (!imageCap.isNullOrBlank) {
+      image = await CompressImagePlugin.getImage(
+          imageCap, imageCapture.height, imageCapture.width);
+      final response = await repositorio.updateImagen(image.path, usuario.id);
+      if (response is HomeResponse) {
+         imageCap.delete();
+         update();
+      }
+      if (response is ErrorResponse){
+          if(response.getError == 'Connection refused')
+           return StateHomeEnum.noInternet;
+      }
+    }
+    if (imageCap.isNullOrBlank){
+      return StateHomeEnum.noImageSelect;
+    }
+   return StateHomeEnum.imageSelect;
+  }
+  
+  /* void _errorResponse(String error) {
+    if (error == 'Connection refused')
+      Get.snackbar('No estas Conectdo', 'Conectate a Internet');
+  } */
+
   void _verificarTokenPush() async {
     final token = await this.pushNotification.getToken();
     final response =
@@ -203,7 +208,8 @@ class HomeController extends GetxController {
           ? print('El token ya esta registrado')
           : print('se registro el token');
     }
-    if (response is ErrorResponse) this._errorResponse(response.getError);
+    if (response is ErrorResponse) 
+        print(response.getError);
   }
 
   void _inicialPushNotificacitions() async {
@@ -228,14 +234,6 @@ class HomeController extends GetxController {
         this._onOpenAppNotification(tipo, idTipo, message.notification.body);
       }
     });
-  }
-
-  int _getNumberNotificaciones(List<Notificacion> notificaciones) {
-    if (notificaciones.length > 0)
-      return notificaciones
-          .map((e) => e.leida == false ? 1 : 0)
-          .reduce((value, elemento) => value + elemento);
-    return 0;
   }
 
   void _updateNotificaciones(int idNotificacion) {
@@ -266,4 +264,18 @@ class HomeController extends GetxController {
         break;
     }
   }
+ 
+  int _getNumberNotificaciones(List<Notificacion> notificaciones) {
+    if (notificaciones.length > 0)
+      return notificaciones
+          .map((e) => e.leida == false ? 1 : 0)
+          .reduce((value, elemento) => value + elemento);
+    return 0;
+  }
+}
+
+enum  StateHomeEnum {
+  noImageSelect,
+  imageSelect,
+  noInternet
 }

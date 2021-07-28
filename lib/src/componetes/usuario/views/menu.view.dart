@@ -103,8 +103,14 @@ Widget  _header(HomeController state) {
                                               avatar : Icon(Icons.photo_camera),
                                               onPressed: ()=>DialogImagePicker.openDialog(
                                                              titulo: 'Escoge tu Imagen',
-                                                             onTapArchivo : () => state.getImage('archivo'),
-                                                             onTapCamera  : () => state.getImage('camara'),
+                                                             onTapArchivo : () async {
+                                                               final selectImage = await state.getImage('archivo');
+                                                               this._selectFileImage(selectImage);
+                                                             },
+                                                             onTapCamera  : () async {
+                                                               final selectImage =  await state.getImage('camara');
+                                                               this._selectFileImage(selectImage);
+                                                             },
                                                              complete     : () => print('se cerro el dialogo')
                                               )                           
                                      )
@@ -126,16 +132,15 @@ Widget  _header(HomeController state) {
 
   _imageUsuario(HomeController  state) {
    if(state.image?.path == null && state.usuario.imagen == '')
-       return  CircleAvatar(
-                      backgroundColor : Colors.grey[300],
-                      radius          : 70,
-                      child           : Icon(
-                                        Icons.person,
-                                        color : Colors.grey[400],
-                                        size  : 100
-                      )
-                      );
-   
+    return  CircleAvatar(
+                   backgroundColor : Colors.grey[300],
+                   radius          : 70,
+                   child           : Icon(
+                                     Icons.person,
+                                     color : Colors.grey[400],
+                                     size  : 100
+                   )
+    );
    
   if(state.image?.path != null)
    return ClipRRect(
@@ -159,5 +164,15 @@ Widget  _header(HomeController state) {
             ),
 );
 }
-
+void _selectFileImage(StateHomeEnum selectImage){
+  if(selectImage == StateHomeEnum.imageSelect) Get.back();
+  if(selectImage == StateHomeEnum.noImageSelect){
+     Get.back();
+     Get.snackbar('Error', 'Imagen no selecionada');
+  }
+  if(selectImage == StateHomeEnum.noInternet){
+     Get.back();
+     Get.snackbar('Error', 'No hay Conexion a Internet');
+  }
+}
 }
