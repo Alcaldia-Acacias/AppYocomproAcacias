@@ -38,7 +38,7 @@ class ProductosController extends GetxController {
   bool loading  = false;
   
   Usuario usuario;
-
+  CategoriaProducto categoriaSelecionada;
   ScrollController controller = ScrollController(initialScrollOffset: 0);
   ScrollController controllerOferta = ScrollController(initialScrollOffset: 0);
 
@@ -52,9 +52,20 @@ class ProductosController extends GetxController {
      if(categorias.length == 0){
       this._getcategorias();
     }
-    this.controller.addListener(() {
-      if (controller.position.pixels == controller.position.maxScrollExtent)
-         this.getAllProductos();
+    this.controller.addListener(() async {
+      if (controller.position.pixels == controller.position.maxScrollExtent){
+          if(this.categoriaSelecionada.nombre == 'Todos'){
+            _paginaFilter = 0;
+            _pagina = 0;
+            this.getAllProductos();
+          }
+          else {
+            _paginaFilter++;
+            final productos = await this._getProductosByCategoria(categoriaSelecionada.id);
+            this.allProductos.addAll(productos);
+            update(['productos']);
+          }    
+      }
     });
     this.controllerOferta.addListener(() {
       if (controllerOferta.position.pixels == controllerOferta.position.maxScrollExtent)
@@ -95,19 +106,22 @@ class ProductosController extends GetxController {
    update(['productos']);
  }
 
-  void getAllProductos({bool oferta = false}) async {
+  Future<void> getAllProductos({bool oferta = false}) async {
     final response = await repositorio.getAllProductos(_pagina,oferta: oferta);
     if(response is ResponseProducto){
       if(oferta){
         this.allWithOfertaProductos.addAll(response.productos);
         _paginaOferta++;
         }
-      if(!oferta){
+      if(!oferta && this._pagina > 0){
          this.allProductos.addAll(response.productos);
         _pagina ++;
       }
+      if(!oferta && this._pagina  == 0){
+         this.allProductos = response.productos;
+        _pagina ++;
+      }
       if(_pagina > 1 || _paginaOferta > 1)
-      this._animationFinalController();
       update(['productos']);
     }
 
@@ -121,8 +135,10 @@ class ProductosController extends GetxController {
    final indexSelecionada = categorias.indexWhere((categoria) => categoria.selecionada);
    categorias[indexSelecionada] = categorias[indexSelecionada].copyWith(selecionada: false);
    categorias[indexCategoria] = categorias[indexCategoria].copyWith(selecionada: true);
-   this.allProductos = await this._getProductosByCategoria(categorias[indexCategoria].id);
+   this.categoriaSelecionada = categorias[indexCategoria];
+   this.allProductos = await this._getProductosByCategoria(this.categoriaSelecionada.id);
    update(['productos']);
+   this._animationResetController();
   }
   
    Future<void> getProductosByEmpresa(int idEmpresa) async {
@@ -238,8 +254,19 @@ class ProductosController extends GetxController {
    }
    if(response is ErrorResponse) print(response.getError);
  }
- void _animationFinalController() {
+
+ // animacion scroll final
+ /* void _animationFinalController() {
     controller.animateTo(controller.position.pixels + 100,
+        duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
+    controllerOferta.animateTo(controllerOferta.position.pixels + 100,
+        duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
+  } */
+
+ void _animationResetController() {
+    controller.animateTo(0,
+        duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
+    controllerOferta.animateTo(0,
         duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
   }
 
@@ -253,7 +280,8 @@ class ProductosController extends GetxController {
     }
     if(id == -1 ){
       this._pagina = 0;
-      this.getAllProductos();
+      this._paginaFilter =0;
+      await this.getAllProductos();
       return this.allProductos;
     }
     return this.allProductos;

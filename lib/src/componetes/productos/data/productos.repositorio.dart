@@ -29,6 +29,7 @@ class ProductosRepositorio {
   }
   Future<ResponseModel> getAllProductos(int page,{bool oferta}) async {
     try {
+      //await Future.delayed(Duration(seconds: 20));
       final response = await this._dio.get('/productos',queryParameters: {'page': page,'oferta' : oferta});
       final productos = response.data.map<Producto>((producto)=>Producto.toJson(producto)).toList();
       return ResponseProducto(productos: productos);

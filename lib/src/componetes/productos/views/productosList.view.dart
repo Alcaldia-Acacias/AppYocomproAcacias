@@ -88,34 +88,48 @@ class ProductosList extends StatelessWidget {
   }
 
 Widget _ofertas(ProductosController state) {
-   return Container(
-          margin: EdgeInsets.only(top:5),
-          height : 110,
-          child  : ListView.separated(
-                   controller       : state.controllerOferta,
-                   scrollDirection  : Axis.horizontal,
-                   separatorBuilder : (_,i) => SizedBox(width: 10),
-                   itemCount        : state.allWithOfertaProductos.length + 1,
-                   itemBuilder      : (_,i){
-                         if(i == state.allWithOfertaProductos.length){
-                           return Center(
-                                  child : Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child  : CircularProgressIndicator(),
-                                  ),
-                           );
-                         }
-                         return GestureDetector(
-                                child : ProductoCardSmall(producto: state.allWithOfertaProductos[i]),
-                                onTap : () {
-                                  Get.to(ProductoPage());
-                                  state.getProductosByEmpresa(state.allWithOfertaProductos[i].empresa.id);
-                                  state.selectProducto(state.allWithOfertaProductos[i]);
-                                }
-                                );
-                   }
-          )
-   );
+   if(state.allWithOfertaProductos.length == 0)
+      return Center(
+             child : Padding(
+                     padding: EdgeInsets.all(20),
+                     child  : Text('No hay Ofertas')
+             ),
+      );
+   if(state.allWithOfertaProductos.length > 0)
+    return Container(
+           margin: EdgeInsets.only(top:5),
+           height : 110,
+           child  : ListView.separated(
+                    controller       : state.controllerOferta,
+                    scrollDirection  : Axis.horizontal,
+                    separatorBuilder : (_,i) => SizedBox(width: 10),
+                    itemCount        : state.allWithOfertaProductos.length + 1,
+                    itemBuilder      : (_,i){
+                          if(i == state.allWithOfertaProductos.length && state.allWithOfertaProductos.length !=0){
+                            return Center(
+                                   child : Padding(
+                                           padding: EdgeInsets.all(20),
+                                           child  : CircularProgressIndicator(),
+                                   ),
+                            );
+                          }
+                          return GestureDetector(
+                                 child : ProductoCardSmall(producto: state.allWithOfertaProductos[i]),
+                                 onTap : () {
+                                   Get.to(ProductoPage());
+                                   state.getProductosByEmpresa(state.allWithOfertaProductos[i].empresa.id);
+                                   state.selectProducto(state.allWithOfertaProductos[i]);
+                                 }
+                                 );
+                    }
+           )
+    );
+    return Center(
+           child : Padding(
+                   padding: EdgeInsets.all(20),
+                   child  : CircularProgressIndicator(),
+           ),
+    );
   }
 
   Widget _productos(ProductosController state) {
