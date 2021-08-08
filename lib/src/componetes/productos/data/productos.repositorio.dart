@@ -1,4 +1,5 @@
 import 'package:comproacacias/src/componetes/productos/models/categoriaProducto.model.dart';
+import 'package:comproacacias/src/componetes/productos/models/pedido.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/producto.model.dart';
 import 'package:comproacacias/src/componetes/productos/models/response.producto.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/imageFile.model.dart';
@@ -105,6 +106,16 @@ class ProductosRepositorio {
           .map<Producto>((producto) => Producto.toJson(producto))
           .toList();
       return ResponseProducto(productos: productos);
+    } on DioError catch (error) {
+      return ErrorResponse(error);
+    }
+  } 
+
+  Future<ResponseModel> addPedido(Pedido pedido) async {
+    try {
+     
+      final response = await this._dio.post('/pedidos/add',data: {...pedido.toMap()});
+      return ResponseProducto(addPedido: response.data);
     } on DioError catch (error) {
       return ErrorResponse(error);
     }

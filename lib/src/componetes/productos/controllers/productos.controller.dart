@@ -34,6 +34,7 @@ class ProductosController extends GetxController {
   int _paginaOferta = 0;
   int _paginaFilter = 0;
   int cantidadProducto = 1;
+  int indexStackPedidos = 0;
   
   bool loading  = false;
   
@@ -201,16 +202,32 @@ class ProductosController extends GetxController {
    update(['carrito']);
   }
   //pedidos controller
-  void sendPedido(Pedido pedido) {
+  void sendPedido(Pedido pedido) async {
+
    final newPedido = pedido.copyWith(observacion: controllerObservacion.text);
-   var texto = 'Hola Buenos Dias ${newPedido.empresa.nombre} soy ${newPedido.usuario.nombre} mi pedido es';
-   newPedido.productos.forEach((producto) {
-     texto = '$texto  ${producto.cantidad} de ${producto.nombre},';
-   });
-   texto = '$texto y con las siguientes observaciones: ${newPedido.observacion}';
-   print(texto);
+   final response = await repositorio.addPedido(newPedido);
+   if(response is ResponseProducto){
+     controllerObservacion.text = '';
+     final texto = this._getTexto(newPedido);
+     this.goToWhatsapp(pedido.empresa.telefono, texto);
+     final index = this._indexPedidos(pedido.empresa.id);
+     this.pedidos.removeAt(index);
+     update(['pedidos','carrito']);
+   }
+   if(response is ErrorResponse){
+     print(response.getError);
+   }
   }
  
+  //pedido controller
+  String _getTexto(Pedido pedido){
+     var texto = 'Hola Buenos Dias ${pedido.empresa.nombre} soy ${pedido.usuario.nombre} mi pedido es';
+        pedido.productos.forEach((producto) {
+           texto = '$texto  ${producto.cantidad} de ${producto.nombre},';
+       });
+     texto = '$texto y con las siguientes observaciones: ${pedido.observacion}';
+     return texto;
+  }
 
   //pedidos controller 
   void deleteProductoOf(int index,int idEmpresa){
@@ -219,9 +236,13 @@ class ProductosController extends GetxController {
       this.pedidos.removeAt(indexPedido);
     else
       this.pedidos[indexPedido].productos.removeAt(index);
-    update(['pedidos']);
+    update(['pedidos','carrito']);
   }
-
+// pedidos controller
+   void selectTipoPedido(int index){
+      this.indexStackPedidos = index;
+      update(['pedidos']);
+   }
   void _getProductosByUsuario(int idUsuario) async {
     this.loading = true;
     update(['productos']);
@@ -306,16 +327,16 @@ class ProductosController extends GetxController {
     return this.pedidos
           .indexWhere((pedido) => pedido.empresa.id == idEmpresa);
   }
-  
+  // pedidos controller
   void goToWhatsapp(
     String telefono,
     String texto
   ) async {
     String url() {
       if (Platform.isIOS) {
-        return "whatsapp://wa.me/+57$telefono/?text=${Uri.parse('texto')}";
+        return "whatsapp://wa.me/+57$telefono/?text=$texto";
       } else {
-        return "whatsapp://send?phone=+57$telefono&text=${Uri.parse('texto')}";
+        return "whatsapp://send?phone=+57$telefono&text=$texto";
       }
     }
     if (await canLaunch(url())) {

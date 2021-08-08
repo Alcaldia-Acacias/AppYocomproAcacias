@@ -61,8 +61,8 @@ class Producto {
           cantidad          : cantidad           ?? this.cantidad
       );
 
-  Map<String,dynamic> toMap([int idEmpresa,int idProducto,int cantidad])=>{
-   "id"          : idProducto, 
+  Map<String,dynamic> toMap([int idEmpresa,int idProducto])=>{
+   "id"          : idProducto ?? this.id, 
    "nombre"      : nombre,
    "precio"      : precio,
    "descripcion" : descripcion,
@@ -70,6 +70,6 @@ class Producto {
    "id_empresa"  : idEmpresa,
    "id_categoria_producto" : categoria.id,
    "oferta"      : oferta,
-   "cantidad"    : cantidad
+   "cantidad"    : cantidad 
   };
 }

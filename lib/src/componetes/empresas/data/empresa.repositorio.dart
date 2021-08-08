@@ -12,8 +12,8 @@ import 'package:get/get.dart';
 class EmpresaRepositorio {
   final _dio = Get.find<Dio>();
 
-  Future<List<Producto>> getProductosByEmpresa(int idpublicaciones) async {
-    final response = await this._dio.get('/productos/empresa/$idpublicaciones');
+  Future<List<Producto>> getProductosByEmpresa(int idproductos) async {
+    final response = await this._dio.get('/productos/empresa/$idproductos');
     return response.data
         ?.map<Producto>((producto) => Producto.toJson(producto))
         ?.toList();

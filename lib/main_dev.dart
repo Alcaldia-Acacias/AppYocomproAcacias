@@ -7,6 +7,8 @@ import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/home/views/home.vista.dart';
 import 'package:comproacacias/src/componetes/login/views/offline.page.dart';
+import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
+import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/plugins/inyection.dependeci.dart';
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
@@ -38,7 +40,7 @@ main() async {
   await GetStorage.init();
   await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
-  Dependecias.init('http://localhost:8000');
+  Dependecias.init('http://192.168.1.6:8000');
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final internetCheck = await verificationInternet();
   runApp(MyApp(internetCheck: internetCheck));
@@ -80,11 +82,13 @@ class MyApp extends StatelessWidget {
           BindingsBuilder.put(() => HomeController(
               anonimo: _getEnumLogin(),
               repositorio: HomeRepocitorio(),
-              urlImagenes: 'http://localhost:8000/imagenes')),
+              urlImagenes: 'http://192.168.1.6:8000/imagenes')),
           BindingsBuilder.put(() =>
               PublicacionesController(repositorio: PublicacionesRepositorio())),
           BindingsBuilder.put(
               () => CategoriasController(repositorio: CategoriaRepositorio())),
+          BindingsBuilder.put(
+              () => ProductosController(repositorio: ProductosRepositorio())),
         ]),
         GetPage(
           name: '/',

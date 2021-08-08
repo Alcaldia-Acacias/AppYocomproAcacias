@@ -95,13 +95,8 @@ class EmpresasController extends GetxController {
     update(['empresa']);
   }
 
-  void changePage(String direccion) {
-    if (direccion == 'adelante')
-      pageViewController.nextPage(
-          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-    if (direccion == 'atras')
-      pageViewController.previousPage(
-          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+  void changePage(int pagina) {
+    pageViewController.animateToPage(pagina, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 
   void selectEmpresa(Empresa empresa){
@@ -175,7 +170,7 @@ class EmpresasController extends GetxController {
     this.loading = true;
     this.productos = await this.repositorio.getProductosByEmpresa(id);
     this.loading = false;
-    update();
+    update(['empresa']);
   }
 
   void getCalificaciones(int id) async {

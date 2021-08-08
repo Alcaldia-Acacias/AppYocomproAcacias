@@ -7,6 +7,9 @@ import 'package:comproacacias/src/componetes/empresas/widgets/calificacion.widge
 import 'package:comproacacias/src/componetes/empresas/widgets/calificar.widget.dart';
 import 'package:comproacacias/src/componetes/empresas/widgets/datosCard.widget.dart';
 import 'package:comproacacias/src/componetes/home/controllers/home.controller.dart';
+import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
+import 'package:comproacacias/src/componetes/productos/views/producto.view.dart';
+import 'package:comproacacias/src/componetes/productos/widgets/productoCardSmall.widget.dart';
 import 'package:comproacacias/src/componetes/publicaciones/controllers/publicaciones.controller.dart';
 import 'package:comproacacias/src/componetes/publicaciones/widgets/publicacion.widget.dart';
 import 'package:comproacacias/src/componetes/widgets/InputForm.widget.dart';
@@ -49,7 +52,7 @@ class PerfilEmpresaPage extends StatelessWidget {
                                                               _datos(),
                                                               _publicaciones(),
                                                               _calificaciones(),
-                                                              //_productos()
+                                                              _productos(state)
                                                            ],
                                                            onPageChanged: (page)=>state.getTitulo(page)
                                                           ,
@@ -205,25 +208,23 @@ class PerfilEmpresaPage extends StatelessWidget {
 
  Widget _titulo(String titulo, int pagina) {
    return Padding(
-     padding: const EdgeInsets.all(9.0),
-     child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              pagina == 0
-              ?
-              Container()
-              :
-              GestureDetector(
-              child: Icon(Icons.arrow_back_ios),
-              onTap: ()=>Get.find<EmpresasController>().changePage('atras'),
-              ),
-              Text(titulo,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16)),
-              GestureDetector(
-              child: Icon(Icons.arrow_forward_ios),
-              onTap: ()=>Get.find<EmpresasController>().changePage('adelante'),
-              ),
-            ],
+     padding: const EdgeInsets.symmetric(horizontal: 15),
+     child: Container(
+       height: 50,
+       decoration: BoxDecoration(
+                   color: Colors.white,
+                   borderRadius: BorderRadius.circular(10)
+       ),
+       child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+               _tabItem(pagina,'Datos',0),
+               _tabItem(pagina,'Publicaciones',1),
+               _tabItem(pagina,'Calificaciones',2),
+               _tabItem(pagina,'Productos',3)
+              
+              ],
+       )
      ),
    );
  }
@@ -252,48 +253,6 @@ Widget _publicaciones() {
          },
   );
 }
-
-/* Widget _productos() {
-  return GetBuilder<EmpresasController>(
-         builder: (state){
-           if(state.loading)
-              return Center(child: CircularProgressIndicator()); 
-           if(state.productos.length == 0)
-              return Center(child: Text('No hay Productos'));
-           return  ListView.builder(
-                   itemExtent   : 120,
-                   padding      : EdgeInsets.only(top: 10,left: 20,right: 20,bottom: 70),
-                   itemCount    : state.productos.length,
-                   itemBuilder  : (_, i) {
-                     if(propia)
-                       return Slidable(
-                              secondaryActions: <Widget>[
-                                                IconSlideAction(
-                                                caption : 'Editar',
-                                                color   : Colors.green,
-                                                icon    : Icons.edit,
-                                                onTap:  () => Get.to(FormProducto(update: true,producto:state.productos[i],idEmpresa:empresa.id))
-                                                ),
-                                                IconSlideAction(
-                                                caption : 'Eliminar',
-                                                color   : Colors.red,
-                                                icon    : Icons.delete,
-                                                onTap:  ()=>_dialogDeleteProducto(state.productos[i],i)
-                                                ),
-                                                ],
-                               actionPane: SlidableDrawerActionPane(),
-                               child: _cardProducto(state.productos, i)
-                       );
-                     return _cardProducto(state.productos, i);
-                   }
-           );
-
-
-         }
-  );
-
-
-} */
 
 void _calificar() {
    Get.defaultDialog(
@@ -325,59 +284,6 @@ void _calificar() {
             ),
    );
   }
-
-/* Widget  _imagen(String imagen,int i) {
-  return  GestureDetector(
-          child: ClipRRect(
-                 borderRadius: BorderRadius.circular(10),
-                 child: Hero(
-                        tag: i,
-                        child: CachedNetworkImage(
-                          imageUrl    : '$urlImagenLogo/galeria/$imagen',
-                          errorWidget : (_,url,error) => Icon(Icons.error),
-                          width:  80,
-                          height: 80,
-                          fit: BoxFit.cover
-                          ),
-                 ),
-        ),
-        onTap: (){
-          Get.to(ImagenesWidgetPage(imagenes: [imagen],id:i),
-           transition: Transition.noTransition
-          );
-        },
-        );
-} */
-
-/* Widget _nombre(String nombre) {
-  return  Text('$nombre',
-          overflow  : TextOverflow.ellipsis,
-          maxLines  : 2,
-          textAlign : TextAlign.end,
-           style: TextStyle(
-                  fontWeight : FontWeight.bold,
-                  fontSize   : 16
-          ),
-          );
-} */
-
-/* Widget _precio(int precio) {
-  return  ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-                 padding   : EdgeInsets.all(10),
-                 alignment : Alignment.center,
-                 width     : 100,
-                 color     : Get.theme.primaryColor,
-                 child     : Text('\u0024 $precio',
-                             style      : TextStyle(
-                             color      : Colors.white,
-                             fontWeight : FontWeight.bold
-                         ),
-                  )
-                  )
-           );
-} */
 
 Widget _calificaciones() {
   return GetBuilder<EmpresasController>(
@@ -434,56 +340,54 @@ Widget _calificaciones() {
 
 }
 
-/* Widget _cardProducto(List<Producto> productos,int i){
-  return Card(
-         child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       mainAxisSize: MainAxisSize.max,
-                       children: <Widget>[
-                                productos[i].imagen.isEmpty
-                                         ?
-                                         Image.asset('assets/imagenes/no_product.png')
-                                         :
-                                         _imagen(productos[i].imagen,i),
-                               Expanded(
-                               child: Column(
-                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                               crossAxisAlignment: CrossAxisAlignment.end,
-                               children: <Widget>[
-                                   _nombre(productos[i].nombre),
-                                   _precio(productos[i].precio)
-                                 ],
-                                 ),
-                    
-                               )
-                       ],
-                ),
-              )
-              );
-} */
+Widget  _productos(EmpresasController state) {
+  if(state.loading)
+  return Center(
+         child: CircularProgressIndicator(),
+  );
+  if(state.productos.length == 0)
+  return Center(
+         child: Text('No hay Productos'),
+  );
+  return GridView.builder(
+         padding      : EdgeInsets.symmetric(horizontal: 15,vertical: 30),
+         itemCount    : state.productos.length,
+         gridDelegate : SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,crossAxisSpacing: 10),
+         itemBuilder  : (_, index){
+           return  GestureDetector(
+            child : ProductoCardSmall(producto: state.productos[index]),
+            onTap : () {
+              Get.to(ProductoPage());
+              state.getProductosByEmpresa(state.productos[index].empresa.id);
+              Get.find<ProductosController>().selectProducto(state.productos[index]);
+            }
+           );
+         },
+         
+ );
+}
 
-/* void _dialogDeleteProducto(Producto producto, int index) {
-   Get.defaultDialog(
-   title: 'Desea borrar el producto',
-   content: Container(),
-   actions: [
-       RaisedButton(
-       textColor: Colors.white,
-       color: Get.theme.primaryColor,
-       child: Text('Eliminar'),
-       onPressed: ()=>Get.find<EmpresasController>().deleteProducto(producto.id,index)
-      ),
-       RaisedButton(
-       color: Colors.transparent,
-       child: Text('Cancelar'),
-       onPressed: ()=>Get.back()
-      )
-   ]
-   );
-
-  } */
+  _tabItem(int pagina, String titulo, int index) {
+    return  Container(
+            height: 50,
+            decoration: pagina == index
+                        ? BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                                  color: Get.theme.primaryColor,
+                                  width: 3
+                          )
+                        )
+                        )
+                        : null,
+            child: GestureDetector(
+                   child: Center(
+                          child: Text(titulo,textAlign: TextAlign.center)
+                   ),
+                   onTap: ()=> Get.find<EmpresasController>().changePage(index),
+            )
+            );
+  }
 
 }
 

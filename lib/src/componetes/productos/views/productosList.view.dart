@@ -120,7 +120,7 @@ Widget _ofertas(ProductosController state) {
                                    state.getProductosByEmpresa(state.allWithOfertaProductos[i].empresa.id);
                                    state.selectProducto(state.allWithOfertaProductos[i]);
                                  }
-                                 );
+                          );
                     }
            )
     );

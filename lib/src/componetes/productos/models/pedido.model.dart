@@ -9,9 +9,18 @@ final List<Producto> productos;
 final String observacion,id;
 final Empresa empresa;
 final Usuario usuario;
+final bool realizado;
 
 
-Pedido({this.id,this.empresa,this.usuario,this.observacion, this.productos});
+
+Pedido({
+this.id,
+this.empresa,
+this.usuario,
+this.observacion,
+this.productos,
+this.realizado
+});
 
 factory Pedido.toJson(Map<String,dynamic> json) =>
         Pedido(
@@ -19,16 +28,18 @@ factory Pedido.toJson(Map<String,dynamic> json) =>
         productos   : json['productos'].map<Producto>((producto)=>Producto.toJson(producto)),
         observacion : json['observacion'],
         empresa     : Empresa.toJson(json['empresa']),
-        usuario     : Usuario.toJson(json['usuario'])
+        usuario     : Usuario.toJson(json['usuario']),
+        realizado   : json['realizado']
         ); 
 
 
-Map<String,dynamic> toMap(int idEmpresa,int idUsuario) =>{
+Map<String,dynamic> toMap() =>{
   "id"          : id,
-  "productos"   : productos,
-  "id_empresa"  : idEmpresa,
-  "id_usuario"  : idUsuario,
-  "observacion" : observacion
+  "productos"   : productos.map((producto) => producto.toMap()).toList(),
+  "id_empresa"  : empresa.id,
+  "id_usuario"  : usuario.id,
+  "observacion" : observacion,
+  "id_usuario_pedido": empresa.idUsuario
 };
 
 Pedido copyWith({
