@@ -39,7 +39,7 @@ class ProductosController extends GetxController {
   bool loading  = false;
   
   Usuario usuario;
-  CategoriaProducto categoriaSelecionada;
+  CategoriaProducto categoriaSelecionada = CategoriaProducto(id: -1,nombre: 'Todos',selecionada: true);
   ScrollController controller = ScrollController(initialScrollOffset: 0);
   ScrollController controllerOferta = ScrollController(initialScrollOffset: 0);
 
@@ -57,15 +57,15 @@ class ProductosController extends GetxController {
       if (controller.position.pixels == controller.position.maxScrollExtent){
           if(this.categoriaSelecionada.nombre == 'Todos'){
             _paginaFilter = 0;
-            _pagina = 0;
             this.getAllProductos();
           }
           else {
             _paginaFilter++;
+            _pagina = 0;
             final productos = await this._getProductosByCategoria(categoriaSelecionada.id);
             this.allProductos.addAll(productos);
             update(['productos']);
-          }    
+          }
       }
     });
     this.controllerOferta.addListener(() {
