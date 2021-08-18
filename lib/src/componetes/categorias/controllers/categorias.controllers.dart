@@ -7,13 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CategoriasController extends GetxController {
+
   final CategoriaRepositorio repositorio;
 
   CategoriasController({this.repositorio});
+
   HomeController homeController = Get.find<HomeController>();
   String categoria = '';
+
   List<Empresa> empresas = [];
   List<Categoria> categorias = [];
+
   ScrollController controllerListEmpresas;
   TextEditingController buscarController = TextEditingController();
   int _pagina = 0;
@@ -34,13 +38,7 @@ class CategoriasController extends GetxController {
     this.getCategorias();
   }
 
-  void _animationFinalController() {
-    if (controllerListEmpresas.position.pixels != 0)
-      controllerListEmpresas.animateTo(
-          controllerListEmpresas.position.pixels + 100,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.fastOutSlowIn);
-  }
+  
 
   void getEmpresasByCategoria(String categoria) async {
     _pagina++;
@@ -92,5 +90,12 @@ class CategoriasController extends GetxController {
           controllerListEmpresas.position.pixels != 0)
         this.getEmpresasByCategoria(this.categoria);
     });
+  }
+  void _animationFinalController() {
+    if (controllerListEmpresas.position.pixels != 0)
+      controllerListEmpresas.animateTo(
+          controllerListEmpresas.position.pixels + 100,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.fastOutSlowIn);
   }
 }

@@ -7,6 +7,8 @@ import 'package:comproacacias/src/componetes/home/data/home.repositorio.dart';
 import 'package:comproacacias/src/componetes/home/models/loginEnum.model.dart';
 import 'package:comproacacias/src/componetes/home/views/home.vista.dart';
 import 'package:comproacacias/src/componetes/login/views/offline.page.dart';
+import 'package:comproacacias/src/componetes/productos/controllers/productos.controller.dart';
+import 'package:comproacacias/src/componetes/productos/data/productos.repositorio.dart';
 import 'package:comproacacias/src/plugins/inyection.dependeci.dart';
 import 'package:comproacacias/src/componetes/login/controller/login.controller.dart';
 import 'package:comproacacias/src/componetes/login/data/login.repositorio.dart';
@@ -90,7 +92,8 @@ class MyApp extends StatelessWidget {
         bindings: [
           BindingsBuilder.put( () => HomeController(anonimo: _getEnumLogin(),repositorio:HomeRepocitorio(),urlImagenes: 'https://api.yocomproacacias.com/imagenes')),
           BindingsBuilder.put( () => PublicacionesController(repositorio:PublicacionesRepositorio())),
-          BindingsBuilder.put( () => CategoriasController(repositorio:CategoriaRepositorio()))
+          BindingsBuilder.put( () => CategoriasController(repositorio:CategoriaRepositorio())),
+          BindingsBuilder.put( () => ProductosController(repositorio:ProductosRepositorio()))
         ]
         ),
         GetPage(

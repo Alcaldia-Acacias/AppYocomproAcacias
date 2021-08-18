@@ -113,7 +113,6 @@ class ProductosRepositorio {
 
   Future<ResponseModel> addPedido(Pedido pedido) async {
     try {
-     
       final response = await this._dio.post('/pedidos/add',data: {...pedido.toMap()});
       return ResponseProducto(addPedido: response.data);
     } on DioError catch (error) {
