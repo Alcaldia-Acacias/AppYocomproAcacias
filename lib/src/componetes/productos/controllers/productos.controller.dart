@@ -334,13 +334,13 @@ class ProductosController extends GetxController {
   ) async {
     String url() {
       if (Platform.isIOS) {
-        return "whatsapp://wa.me/+57$telefono/?text=$texto";
+         return "whatsapp://wa.me/+57$telefono/?text=${Uri.encodeFull('$texto')}";
       } else {
         return "whatsapp://send?phone=+57$telefono&text=$texto";
       }
     }
     if (await canLaunch(url())) {
-      await launch(url());
+      await launch(url(),forceSafariVC: false);
     } else {
       throw 'Could not launch ${url()}';
     }

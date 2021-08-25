@@ -76,12 +76,12 @@ class LoginFormPage extends StatelessWidget {
 
   _buttonSubmit(bool loading) {
     return MaterialButton(
-        textColor: Colors.white,
-        padding: EdgeInsets.all(15),
-        child: Text('Ingresar'),
-        color: Get.theme.accentColor,
-        minWidth: double.maxFinite,
-        onPressed: () => _submit());
+        textColor : Colors.white,
+        padding   : EdgeInsets.all(15),
+        child     : Text('Ingresar'),
+        color     : Get.theme.accentColor,
+        minWidth  : double.maxFinite,
+        onPressed : () => _submit());
   }
 
   _submit() {
