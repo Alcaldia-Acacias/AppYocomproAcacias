@@ -93,7 +93,7 @@ class InputForm extends StatelessWidget {
              validator         : (texto){
                                  if(texto.isEmpty && requerido) 
                                    return "es requerido";
-                                 if((!GetUtils.isEmail(texto) && !GetUtils.hasMatch(texto,r'^[3]{1}[0-8]{2}\d{7}')) && isEmail)
+                                 if((!GetUtils.isEmail(texto) && !GetUtils.hasMatch(texto,r'^[3]{1}[0-9]{2}\d{7}')) && isEmail)
                                    return "no es un correo o numero valido";
                                 /*  if((!GetUtils.hasMatch(texto,r'^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{8,16}$')) && obscure)
                                    return "no es una contraseña valida"; */

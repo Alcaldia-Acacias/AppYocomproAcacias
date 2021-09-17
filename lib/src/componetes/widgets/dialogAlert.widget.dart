@@ -8,6 +8,7 @@ class AlertDialogLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor : Colors.transparent,
+      
       content         : SizedBox(
       height          : 40, child: Center(child: CircularProgressIndicator())),
       title           : Text(titulo, textAlign: TextAlign.center),
@@ -16,3 +17,4 @@ class AlertDialogLoading extends StatelessWidget {
     );
   }
 }
+

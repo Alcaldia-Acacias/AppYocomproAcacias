@@ -10,6 +10,7 @@ import 'package:comproacacias/src/componetes/productos/models/producto.model.dar
 import 'package:comproacacias/src/componetes/productos/models/response.producto.dart';
 import 'package:comproacacias/src/componetes/publicaciones/models/imageFile.model.dart';
 import 'package:comproacacias/src/componetes/response/models/error.model.dart';
+import 'package:comproacacias/src/componetes/widgets/dialogAlert.widget.dart';
 import 'package:comproacacias/src/plugins/compress.image.dart';
 import 'package:comproacacias/src/plugins/image_piker.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +85,7 @@ class FormProductoController extends GetxController {
 
   void addProducto() async {
     if (this._validate()) {
+      this._openDialogo('Agregando Producto');
       final response = await this
           .repositorio
           .addProducto(this._getProducto(), empresaSelecionada.id, imagenes);
@@ -92,7 +94,9 @@ class FormProductoController extends GetxController {
         Get.back();
       }
       if(response is ErrorResponse){
+        Get.back();
         Get.snackbar('Error', 'Ocurrio un error');
+    
       }
     }
     else print('Error en los datos');
@@ -182,6 +186,13 @@ void getImage(String tipo, [bool cambiar = false, int index]) async {
    return true;
  }
 
+ void _openDialogo(String texto) {
+    Get.dialog(
+    AlertDialogLoading(titulo: texto),
+    barrierDismissible: false,
+    )
+    .whenComplete(() => Get.back());
+  }
    
 }
 

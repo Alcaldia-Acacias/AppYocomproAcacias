@@ -42,7 +42,7 @@ class InicioPage extends StatelessWidget {
                                _top()
                            ],
              ),
-               ),
+            ),
              
       ),
     );
