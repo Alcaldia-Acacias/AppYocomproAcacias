@@ -72,6 +72,7 @@ final String urlImagenes = Get.find<HomeController>().urlImagenes;
                                            controller        : state.precioController,
                                            foco              : state.precioFoco,
                                            leftIcon          : Icons.monetization_on_outlined,
+                                           number            : true,
                                            requerido         : true,
                                            ),
                                            _oferta(state),

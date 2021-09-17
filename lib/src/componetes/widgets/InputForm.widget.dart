@@ -8,8 +8,9 @@ class InputForm extends StatelessWidget {
   final String placeholder,textHelp,initialValue;
   final IconData leftIcon,rightIcon;
   final FocusNode foco;
-  final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon,textarea,autofocus,textcenter,enabled;
+  final bool lastInput,requerido,obscure,isEmail,readOnly,isButtonIcon,textarea,autofocus,textcenter,enabled,number;
   final Function onEditingComplete,onButtonIcon;
+
  
 
 
@@ -29,6 +30,7 @@ class InputForm extends StatelessWidget {
   this.readOnly  = false,
   this.isButtonIcon  = false,
   this.textarea = false,
+  this.number = false,
   this.autofocus   = false,
   this.textcenter = false,
   this.enabled = true,
@@ -55,7 +57,7 @@ class InputForm extends StatelessWidget {
                                  :
                                  TextInputAction.next,
              maxLines          : textarea ? null : 1,
-             keyboardType      : textarea ? TextInputType.multiline : null,
+             keyboardType      : _selectInput(),
              obscureText       : obscure,
              controller        : controller,
              onEditingComplete : onEditingComplete,
@@ -102,5 +104,13 @@ class InputForm extends StatelessWidget {
              },
       ),
     );
+  }
+
+  _selectInput() {
+    if(textarea)
+      return TextInputType.multiline;
+    if(number)
+      return TextInputType.number;
+    return null;
   }
 }
