@@ -186,8 +186,8 @@ class LoginController extends GetxController {
   }
 
   void goToPolitica() async {
-    if (await canLaunch('https://www.acacias.gov.co/publicaciones/1/politicas-de-privacidad-y-condiciones-de-uso/')) {
-      await launch('https://www.acacias.gov.co/publicaciones/1/politicas-de-privacidad-y-condiciones-de-uso/');
+    if (await canLaunch('https://yocomproacacias.com/politicas')) {
+      await launch('https://yocomproacacias.com/politicas');
     } else {
       throw 'Could not launch';
     }
