@@ -15,5 +15,5 @@ factory Calificacion.toJson(Map<String,dynamic> json)
          usuario    : Usuario.toJson(json['usuario']) ?? null,
          extrellas  : json['extrellas'] ?? null,
          comentario : json['comentario'] ?? ''
-         );
+      );
 }

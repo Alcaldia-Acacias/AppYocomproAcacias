@@ -3,4 +3,5 @@
 <string name="app_name">YoComproAcacias</string>
 <string name="facebook_app_id">740152296610262</string>
 <string name="fb_login_protocol_scheme">fb740152296610262</string>
+<string name="facebook_client_token">7e1fba5d845e6740ab8fcd4b9bae2668</string>
 </resources>

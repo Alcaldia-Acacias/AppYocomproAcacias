@@ -40,7 +40,7 @@ main() async {
   await GetStorage.init();
   await FacebookAuth.instance.logOut();
   //await GetStorage().erase();
-  Dependecias.init('http://localhost:8000');
+  Dependecias.init('http://api.acacias.gov.co');
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   final internetCheck = await verificationInternet();
   runApp(MyApp(internetCheck: internetCheck));
@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
           BindingsBuilder.put(() => HomeController(
               anonimo: _getEnumLogin(),
               repositorio: HomeRepocitorio(),
-              urlImagenes: 'http://localhost:8000/imagenes')),
+              urlImagenes: 'http://api.acacias.gov.co/imagenes')),
           BindingsBuilder.put(() =>
               PublicacionesController(repositorio: PublicacionesRepositorio())),
           BindingsBuilder.put(

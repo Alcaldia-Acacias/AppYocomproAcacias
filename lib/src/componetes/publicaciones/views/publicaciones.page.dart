@@ -23,13 +23,13 @@ class PublicacionesPage extends StatelessWidget {
                              child: RefreshIndicator(
                                     onRefresh: ()  async  => state.getNewPublicaciones(),
                                     child    : CustomScrollView(
-                                                 controller: state.controller,
-                                                 slivers: <Widget>[
-                                                           appBarSliver(),
-                                                           listPublicaciones(state)
-                                                 ],
+                                               controller : state.controller,
+                                               slivers    : <Widget>[
+                                                            appBarSliver(),
+                                                            listPublicaciones(state)
+                                               ],
                                     ),
-                         ),
+                             ),
                        ),
                        backgroundColor: Colors.grey[300],
                        floatingActionButton: state.homeController.anonimo == EnumLogin.usuario

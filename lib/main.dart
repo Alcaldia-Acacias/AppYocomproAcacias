@@ -32,9 +32,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
  main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
-  
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Intl.defaultLocale = 'es_ES';

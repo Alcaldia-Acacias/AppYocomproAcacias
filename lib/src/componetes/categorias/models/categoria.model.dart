@@ -6,7 +6,7 @@ class Categoria {
   Categoria({this.id, this.nombre});
 
   factory Categoria.toJson(Map<String, dynamic> json) => Categoria(
-        id: json['id'],
+        id    : json['id'],
         nombre: json['nombre'],
       );
       
